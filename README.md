@@ -1,2 +1,2 @@
 # saltbush
-Saltbush processes drone imagery to calculate spectral diversity based on a number of continuous metrics (CV, SV, CHV), and calculates taxonomic diversity based on a number of taxonomic metrics from field survey data
+Saltbush uses drone and ausplots field survey data to calculate the predictive accuracy of a range of continuous spectral metrics (CV, SV, CHV)
