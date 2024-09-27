@@ -4,16 +4,21 @@
 \alias{create_multiband_image}
 \title{Create multiband image}
 \usage{
-create_multiband_image(mosaics_dir, desired_band_order)
+create_multiband_image(input_dir, desired_band_order, output_dir)
 }
 \arguments{
-\item{mosaics_dir}{Description of the parameter x.}
+\item{desired_band_order}{Order of files to be combined. should be in wavelength order. provide list of file basenames in correct order}
 
-\item{desired_band_order}{description}
+\item{output_dir}{Folder to store combined tif file}
+
+\item{mosaics_dir}{Folder which contains single band tifs to be combined}
 }
 \value{
-combined tif image
+combined tif file
 }
 \description{
-A description of what your function does.
+Combines single reflectance band tifs into a multiband image.
+}
+\examples{
+create_multiband_image('001_site_mosaics', c('blue', 'green', 'red', 'red_edge', 'nir'), 'data_out/001_site')
 }

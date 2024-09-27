@@ -11,10 +11,10 @@
 #' @export
 #' @import tools
 #' @import terra
-#'
-create_multiband_image <- function(mosaics_dir, desired_band_order, output_dir){
+
+create_multiband_image <- function(input_dir, desired_band_order, output_dir){
   # folder list | recursive = won't pick folders within folders
-  folders <- list.dirs(mosaics_dir, full.names = FALSE, recursive = FALSE)
+  folders <- list.dirs(input_dir, full.names = FALSE, recursive = FALSE)
 
   ## NOTE: spectral band image tif file names must be named after their band (e.g., blue, nir, etc),
   #  otherwise change 'desired_band_order' to match file names
@@ -23,7 +23,7 @@ create_multiband_image <- function(mosaics_dir, desired_band_order, output_dir){
   # loop thru each folder
   for (folder in folders) {
     # create path
-    folder_path <- file.path(mosaics_dir, folder)
+    folder_path <- file.path(input_dir, folder)
 
     # list of tif files
     tif_files <- list.files(folder_path, pattern = "\\.tif$", full.names = TRUE)
