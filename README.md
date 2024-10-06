@@ -1,3 +1,3 @@
 # saltbush
-Saltbush processes drone and ausplots field survey data to calculate the predictive accuracy of a range of spectral metrics
-in estimating taxonomic plant diversity
+saltbush processes ausplots drone and field survey data to calculate spectral + taxonomic diversity values
+for assessment of the 'spectral variability hypothesis' in arid australia.
