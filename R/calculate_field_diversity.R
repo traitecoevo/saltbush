@@ -6,6 +6,8 @@
 #' twentyfour_field_diversity <- calculate_field_diversity(twentyfour_field_survey_data)
 #' @export
 #' @import dplyr
+#' @import tidyr
+#' @import vegan
 
 calculate_field_diversity <- function(survey_data){
   # get unique site names
