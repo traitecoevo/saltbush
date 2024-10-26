@@ -15,6 +15,3 @@ a list, containing 'field diversity' - values of species richness, shannon's ind
 \description{
 Takes ausplot survey data, calculates field diversity for each site
 }
-\examples{
-twentyfour_field_diversity <- calculate_field_diversity(twentyfour_field_survey_data)
-}

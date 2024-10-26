@@ -4,25 +4,31 @@
 \alias{find_optimum_thresholds}
 \title{Find Optimum Thresholds}
 \usage{
-find_optimum_thresholds(df, class, band, site, class_value)
+find_optimum_thresholds(
+  df,
+  class_col,
+  band_or_index_col,
+  site_col,
+  class_value
+)
 }
 \arguments{
-\item{df}{description}
+\item{df}{Input must be a df with columns for site name, pixel value, class}
 
-\item{class}{name of column where class/catgegories are stored for}
+\item{class_col}{name of column where object class are stored}
 
-\item{band}{description}
+\item{band_or_index_col}{name of column where pixel values are stored - e.g. 'ndvi' or 'nir_values'}
 
-\item{site}{description}
+\item{site_col}{name of site column - which indicates where pixel values + class data are obtained from}
 
-\item{class_value}{description}
+\item{class_value}{value/s of class that should be masked - e.g. for ndvi, 'non-veg' or c('bare_ground','rocks), for nir, 'shadow'}
 }
 \value{
 a df with optimum thresholds for each site
 }
 \description{
-Takes input ground truth data to find optimum NDVI and NIR Thresholds for image masking. Input must be a df with column for band values and column indicating class (i.e. )
+Takes input ground truth data to find optimum thresholds for image masking.
 }
 \examples{
-ndvi_thresholds <- find_optimum_thresholds(ndvi_values, class = 'class', value = 'ndvi', site = 'site', class_value = 'veg')
+ndvi_thresholds <- find_optimum_thresholds(ndvi_values, class = 'class', value = 'nir', site = 'site', class_value = 'shadow')
 }

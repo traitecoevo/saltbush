@@ -7,26 +7,26 @@
 create_masked_raster(
   input,
   output_dir,
-  NDVI_Thresh = 0.2,
-  NIR_Thresh = 0.2,
-  NDVI_Thresh_df = NULL,
-  NIR_Thresh_df = NULL,
+  ndvi_threshold = NULL,
+  nir_threshold = NULL,
+  ndvi_threshold_df = NULL,
+  nir_threshold_df = NULL,
   red_band_index = 3,
   NIR_band_index = 5
 )
 }
 \arguments{
-\item{input}{can be a directory, string of files, or single file.}
+\item{input}{can be a directory containing multiple tif/envi files, string of files, or single file.}
 
 \item{output_dir}{an output directory for the masked raster/s to be saved}
 
-\item{NDVI_Thresh}{a threshold NDVI threshold to be applied to all rasters}
+\item{ndvi_threshold}{NDVI threshold (values beneath this contain non-veg pixels and should be masked)}
 
-\item{NIR_Thresh}{a threshold NIR threshold to be applied to all rasters}
+\item{nir_threshold}{NIR threshold (values beneath this contain shadows and should be masked)}
 
-\item{NDVI_Thresh_df}{optional - a two columned df with 'site' (must match input file name) and  threshold values for each file}
+\item{ndvi_threshold_df}{optional - a two columned df with 'site' col (site values must match first string of input file name) and  threshold values for each file}
 
-\item{NIR_Thresh_df}{optional - a two columned df with 'site' (must match input file name) and  threshold values for each file}
+\item{nir_threshold_df}{optional - a two columned df with 'site' col (site values must match first string of input file name) and  threshold values for each file}
 
 \item{red_band_index}{layer number for red band}
 
@@ -36,13 +36,13 @@ create_masked_raster(
 A masked raster image, saved in the output directory
 }
 \description{
-Creates a masked raster, removing shadows and non-vegetation pixcels using input ndvi and nir threshold values
+Creates a masked raster, non-vegetation pixels using input ndvi & nir threshold values
 }
 \examples{
 create_masked_raster(input = 'data_out/combined_rasters/2024',
 output_dir = 'data_out/combined_rasters/masked/2024',
-NDVI_Thresh_df = ndvi_threshold_df_24,
-NIR_Thresh_df = nir_threshold_df_24,
+ndvi_threshold_df = ndvi_threshold_df_24,
+nir_threshold_df = nir_threshold_df_24,
 red_band_index = 3,
 NIR_band_index = 5)
 }
