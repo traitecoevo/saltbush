@@ -18,8 +18,8 @@
 #'NIR_band_index = 5)
 #' @export
 #' @import terra
+#' @import raster
 #' @import tools
-#' @import stringr
 
 # CREATE_MASKED_RASTER FUNCTION
 #input can be directory with a number of files, a single file, or string of files.
@@ -51,7 +51,7 @@ create_masked_raster <- function(input, output_dir,
 
   for (file in files) {
     # extract the site identifier from file name
-    file_name <- strsplit(basename(file))
+    file_name <- basename(file)
 
     if (!is.null(ndvi_threshold_df)) {
 
@@ -60,7 +60,8 @@ create_masked_raster <- function(input, output_dir,
 
 
         ndvi_threshold <- ndvi_threshold_df$threshold[ndvi_threshold_df$site == site_id]
-      } else {
+      }
+    if (length(ndvi_threshold) == 0 ) {
         stop(paste("No NDVI threshold values found for file", file_name))
     }
 
@@ -71,7 +72,8 @@ create_masked_raster <- function(input, output_dir,
       site_id <- nir_threshold_df$site[grepl(nir_threshold_df$site, file_name)]
 
         nir_threshold <- nir_threshold_df$threshold[nir_threshold_df$site == site_id]
-      } else {
+      }
+    if (length(nir_threshold) == 0) {
         stop(paste("No NIR threshold values found for file", file_name))
     }
 
@@ -98,4 +100,7 @@ create_masked_raster <- function(input, output_dir,
     print(paste("Masked raster saved to:", masked_filename))
   }
 }
+
+library(tools)
+create_masked_raster('C:/Users/adele/Documents/fg_spectral_diversity/data_out/combined_rasters/2024/NSABHC0009_combined_image.tif', 'test', ndvi_threshold = 0.02, nir_threshold = 0.04)
 
