@@ -7,7 +7,16 @@
 #' @param output_dir Folder to store combined tif file
 #' @return  combined tif file
 #' @examples
-#' create_multiband_image('2024_band_rasters', c('blue', 'green', 'red', 'red_edge', 'nir'), 'data_out/2024_rasters')
+#' input_dir <- tempdir()
+#' for (i in 1:3) {
+#'   band <- rast(ncol=10, nrow=10, vals = runif(100, 0, 1))
+#'   writeRaster(band, filename = file.path(input_dir, paste0("band", i, ".tif")), overwrite = TRUE)
+#' }
+#' output_dir <- file.path(tempdir(), "output_dir")
+#' if (!dir.exists(output_dir)) {
+#'   dir.create(output_dir, recursive = TRUE)
+#' }
+#' create_multiband_image(input_dir, c('band1','band2','band3'), output_dir)
 #' @export
 #' @import tools
 #' @import terra
@@ -51,3 +60,5 @@ create_multiband_image <- function(input_dir, desired_band_order, output_dir){
     plot(combined_image)
   }
 }
+
+print(input_dir)

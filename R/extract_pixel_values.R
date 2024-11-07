@@ -5,7 +5,8 @@
 #' @param wavelength_names wavelength names for each band, must match order of stacked layers
 #' @return a df with pixel values for each of the image layers
 #' @examples
-#' unmasked_pixel_values <- extract_pixel_values(raster_files_unmasked, subplot_files, c('blue', 'green', 'red', 'red_edge', 'nir'))
+#' raster_files <- 'doc/multiband_image' ## need to remove the subplotting part of this function....
+#' unmasked_pixel_values <- extract_pixel_values(raster_files, subplot_files, c('blue', 'green', 'red', 'red_edge', 'nir'))
 #' @export
 #' @import raster
 #' @import dplyr

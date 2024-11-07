@@ -4,10 +4,14 @@
 #' @param site_col name of site column - which indicates where pixel values + class data are obtained from
 #' @param band_or_index_col name of column where pixel values are stored - e.g. 'ndvi' or 'nir_values'
 #' @param class_col name of column where object class are stored
-#' @param class_value value/s of class that should be masked - e.g. for ndvi, 'non-veg' or c('bare_ground','rocks), for nir, 'shadow'
+#' @param class_value value/s of class that should be masked - e.g. for ndvi, 'non-veg' or c('bare_ground','rocks'), for nir, 'shadow'
 #' @return a df with optimum thresholds for each site
 #' @examples
-#' ndvi_thresholds <- find_optimum_thresholds(ndvi_values, class = 'class', value = 'nir', site = 'site', class_value = 'shadow')
+#' ndvi_values <- data.frame(site = rep(c("site_one", "site_two"), each = 100),
+#` point = rep(1:100, times = 2),
+#` ndvi = runif(200, min = -1, max = 1),
+#` class = sample(rep(c('veg', 'non-veg'), each = 100)))
+#' ndvi_thresholds <- find_optimum_thresholds(ndvi_values, class = 'class', value = 'nir', site = 'site', class_value = 'non-veg')
 #' @export
 #' @import pROC
 #' @import dplyr

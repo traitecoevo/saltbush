@@ -10,10 +10,11 @@
 #' @param nir_band_index layer number for nir band
 #' @return A masked raster image, saved in the output directory
 #' @examples
-#' create_masked_raster(input = 'data_out/combined_rasters/2024',
-#'output_dir = 'data_out/combined_rasters/masked/2024',
-#'ndvi_threshold_df = ndvi_threshold_df_24,
-#'nir_threshold_df = nir_threshold_df_24,
+#'input_folder <- 'doc/multiband_image'
+#'create_masked_raster(input_folder,
+#'output_dir = 'tempdir()',
+#'ndvi_threshold = 0.02,
+#'nir_threshold = 0.04,
 #'red_band_index = 3,
 #'NIR_band_index = 5)
 #' @export
