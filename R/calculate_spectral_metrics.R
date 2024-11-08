@@ -1,45 +1,67 @@
-#rarefraction cv function
-calculate_cv <- function(pixel_values_df,
-                         subplots = 'subplot_id',
-                         wavelengths,
-                         rarefaction = TRUE,
-                         min_points = NULL,
-                         n = 999) {
+#' @title Calculate spectral metrics
+#' @description Calculates CV, SV, and CHV from pixel values dataframe with columns for each wavelength + site_name + aoi_id
+#' @param pixel_values_df the data frame containing pixel values, obtained from extract_pixel_values function
+#' @param wavelengths a list of wavelengths which correspond to column names from pixel_values_df
+#' @param rarefaction either TRUE or FALSE to apply rarefaction step. substantially increases processing time
+#' @param min_points if rarefaction = T, the minimum number of pixels for any aoi - to standardise uneven number of pixels across different sites
+#' @param n if rarefaction = T, number of subset permutations
+#' @return a dataframe containing spectral metrics for each aois within each site/raster
+#' @example set.seed(123)
+#' df <- data.frame(
+#' site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
+#' aoi_id = 1,
+#' blue = runif(20000, min = 0, max = 1),
+#' green = runif(20000, min = 0, max = 1),
+#' red = runif(20000, min = 0, max = 1),
+#' red_edge = runif(20000, min = 0, max = 1),
+#' nir = runif(20000, min = 0, max = 1))
+#' pixelvalues <- calculate_spectral_metrics(df, wavelengths = c('blue','green','red','red_edge','nir'), rarefaction = T, min_points = 5000, n = 999)
+#' @export
+#' @import dplyr
+#' @import data.table
+#' @import geometry
 
-  # Convert the dataframe to a data.table for efficiency
+# rarefraction cv function
+calculate_cv <- function(pixel_values_df,
+                         wavelengths,
+                         rarefaction = FALSE,
+                         min_points = NULL,
+                         n = NULL) {
+
+  # convert to a data.table for efficiency
   setDT(pixel_values_df)
 
   if (rarefaction) {
-    # Initialize a list to store CV values for each replication
+    # initialize a list to store CV values for each replication
     cv_list <- vector("list", n)
 
-    # Resample and calculate CV for each iteration
+    # resample and calculate CV for each iteration
     for (i in seq_len(n)) {
-      # Sample to the minimum number of points per subplot
-      sampled_df <- pixel_values_df[, .SD[sample(.N, min_points)], by = subplots, .SDcols = wavelengths]
+      # sample to the minimum number of points per aoi
+      sampled_df <- pixel_values_df[, .SD[sample(.N, min_points)], by = aoi_id, .SDcols = wavelengths]
 
-      # Calculate CV for each wavelength within each subplot
-      cv_data <- sampled_df[, lapply(.SD, function(x) sd(x) / abs(mean(x, na.rm = TRUE))), by = subplots]
+      # calculate CV for each wavelength within each aoi
+      cv_data <- sampled_df[, lapply(.SD, function(x) sd(x) / abs(mean(x, na.rm = TRUE))), by = aoi_id]
 
-      # Sum across wavelengths and normalize by the number of bands (ignoring NAs)
+      # sum across wavelengths and normalize by the number of bands (ignoring NAs)
       cv_data[, CV := rowSums(.SD, na.rm = TRUE) / (length(wavelengths) - rowSums(is.na(.SD))), .SDcols = wavelengths]
 
-      # Store CV values along with subplots
-      cv_list[[i]] <- cv_data[, .(subplot_id = subplots, CV), by = subplots]  # Ensure subplot_id is included
+      # store CV values along with aoi_id
+      cv_list[[i]] <- cv_data[, .(aoi_id, CV)]
     }
 
-    # Collapse the list of CV data tables into a single data table and calculate the average CV for each subplot
-    cv <- rbindlist(cv_list)[, .(CV = mean(CV, na.rm = TRUE)), by = subplots]
+    # collapse the list of CV data tables into a single data table and calculate the average CV for each aoi
+    cv <- rbindlist(cv_list)[, .(CV = mean(CV, na.rm = TRUE)), by = aoi_id]
 
   } else {
-    # If rarefaction is FALSE, directly calculate the CV without resampling
-    cv <- pixel_values_df[, lapply(.SD, function(x) sd(x) / abs(mean(x, na.rm = TRUE))), by = subplots, .SDcols = wavelengths]
+    # if rarefaction is FALSE, directly calculate the CV without resampling
+    cv <- pixel_values_df[, lapply(.SD, function(x) sd(x) / abs(mean(x, na.rm = TRUE))), by = aoi_id, .SDcols = wavelengths]
 
-    # Sum across wavelengths and normalize by the number of bands (ignoring NAs)
+    # sum across wavelengths and normalize by the number of bands (ignoring NAs)
     cv[, CV := rowSums(.SD, na.rm = TRUE) / (length(wavelengths) - rowSums(is.na(.SD))), .SDcols = wavelengths]
 
-    # Ensure subplot_id is included in the output
-    cv <- cv[, .(subplot_id = subplots, CV)]
+    # keep aoi_id in the output
+    cv <- cv[, .(aoi_id, CV)]
   }
 
   return(cv)
@@ -48,29 +70,30 @@ calculate_cv <- function(pixel_values_df,
 
 
 # sv function
-calculate_sv <- function(pixel_values_df, subplots = 'subplot_id', wavelengths) {
-  # Convert pixel_values_df to data.table for better performance
+calculate_sv <- function(pixel_values_df, wavelengths) {
+  # convert pixel_values_df to data.table for better performance
   setDT(pixel_values_df)
 
-  # Calculate the number of points per subplot
-  spectral_points <- pixel_values_df[, .(points = .N), by = subplots]
+  # calculate the number of points per aoi
+  spectral_points <- pixel_values_df[, .(points = .N), by = aoi_id]
 
-  # Calculate spectral variance (SV)
+  # calculate spectral variance (SV)
   sv <- pixel_values_df[, lapply(.SD, function(x) sum((x - mean(x, na.rm = TRUE))^2)),
                         .SDcols = wavelengths,
-                        by = subplots]
+                        by = aoi_id]
 
-  # Sum across wavelengths
+  # cum across wavelengths
   sv[, SS := rowSums(.SD), .SDcols = wavelengths]
 
-  # Join with the spectral points
-  sv <- sv[spectral_points, on = subplots]
+  # join with the spectral points
+  sv <- sv[spectral_points, on = "aoi_id"]
 
-  # Calculate SV
+  # calculate SV
   sv[, SV := SS / (points - 1)]
 
-  return(sv[, .(subplot_id = get(subplots), SV)])
+  return(sv[, .(aoi_id, SV)])
 }
+
 
 # chv function
 calculate_chv <- function(df, dim) {
@@ -85,80 +108,80 @@ calculate_chv <- function(df, dim) {
   return(CHV)
 }
 
-# function to calculate chv for each subplot
+# function to calculate chv for each aoi
 calculate_chv_nopca <- function(df,
                                 wavelengths,
-                                subplots = 'subplot_id',
-                                rarefaction = TRUE,
+                                rarefaction = FALSE,
                                 min_points = NULL,
-                                n = 999) {
+                                n = NULL) {
 
-  # Convert df to data.table for better performance
+  # convert to data.table for better performance
   setDT(df)
 
-  results <- data.table(subplot_id = character(), CHV_nopca = double())
+  results <- data.table(aoi_id = double(), CHV_nopca = double())
 
-  # Loop through each subplot
-  for (subplot in unique(df[[subplots]])) {
-    # Subset data for current subplot
-    subplot_sample <- df[get(subplots) == subplot, ..wavelengths]
+  # loop through each aoi_id
+  for (aoi in unique(df$aoi_id)) {
+    # subset data for current aoi_id
+    aoi_sample <- df[aoi_id == aoi, ..wavelengths]
 
     if (rarefaction) {
-      # Resample CHV n times and calculate the mean
+      # resample CHV n times and calculate the mean
       chv_values <- replicate(n, {
-        resampled <- subplot_sample[sample(.N, min_points, replace = FALSE)]
+        resampled <- aoi_sample[sample(.N, min_points, replace = FALSE)]
 
-        # Convert to matrix for convex hull calculation
+        # convert to matrix for convex hull calculation
         CHV_matrix <- as.matrix(resampled)
 
-        # Calculate CHV
+        # calculate CHV
         chv_out <- geometry::convhulln(CHV_matrix, option = "FA")
         return(chv_out$vol)
       })
 
       mean_chv <- mean(chv_values)
     } else {
-      # Calculate CHV without resampling
-      CHV_matrix <- as.matrix(subplot_sample)
+      # calculate CHV without rarefaction
+      CHV_matrix <- as.matrix(aoi_sample)
       chv_out <- geometry::convhulln(CHV_matrix, option = "FA")
       mean_chv <- chv_out$vol
     }
 
-    # Store results in data.table
-    results <- rbind(results, data.table(subplot_id = subplot, CHV_nopca = mean_chv), fill = TRUE)
+    # store results in data.table
+    results <- rbind(results, data.table(aoi_id = aoi, CHV_nopca = mean_chv), fill = TRUE)
   }
 
   return(results)
 }
 
+
 ## FUNCTION FOR CALCULATING ALL METRICS
 calculate_spectral_metrics <- function(pixel_values_df,
                                        masked = TRUE,
                                        wavelengths,
-                                       min_points,
-                                       n = 999,
-                                       rarefaction = TRUE) {  # Add rarefaction here
+                                       rarefaction = FALSE,
+                                       min_points = NULL,
+                                       n = NULL) {
   results <- list()
 
-  for (identifier in unique(pixel_values_df$identifier)) {
-    site_pixel_values <- pixel_values_df %>% filter(identifier == !!identifier)
+  for (site in unique(pixel_values_df$site_name)) {
+    site_pixel_values <- pixel_values_df %>% filter(site_name == site)
 
-    # Calculate metrics, pass rarefaction where needed
+    # calculate metrics, pass rarefaction where needed
     cv <- calculate_cv(site_pixel_values, wavelengths = wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
     sv <- calculate_sv(site_pixel_values, wavelengths = wavelengths)
     chv <- calculate_chv_nopca(site_pixel_values, wavelengths, rarefaction = rarefaction, min_points = min_points)
 
-    results[[identifier]] <- list(CV = cv, SV = sv, CHV = chv)
+    results[[site]] <- list(CV = cv, SV = sv, CHV = chv)
   }
 
-  combined_cv <- bind_rows(lapply(results, function(x) x$CV), .id = 'identifier')
-  combined_sv <- bind_rows(lapply(results, function(x) x$SV), .id = 'identifier')
-  combined_chv <- bind_rows(lapply(results, function(x) x$CHV), .id = 'identifier')
+  combined_cv <- bind_rows(lapply(results, function(x) x$CV), .id = 'site')
+  combined_sv <- bind_rows(lapply(results, function(x) x$SV), .id = 'site')
+  combined_chv <- bind_rows(lapply(results, function(x) x$CHV), .id = 'site')
 
   # create a data frame for combined metrics
   combined_metrics <- combined_cv %>%
-    left_join(combined_sv, by = c("identifier", "subplot_id")) %>%
-    left_join(combined_chv, by = c("identifier", "subplot_id"))
+    left_join(combined_sv, by = c("site", "aoi_id")) %>%
+    left_join(combined_chv, by = c("site", "aoi_id"))
 
   combined_metrics <- combined_metrics %>%
     mutate(image_type = ifelse(masked, 'masked', 'unmasked'))

@@ -5,8 +5,9 @@
 #' @param wavelength_names wavelength names for each band, must match order of stacked layers
 #' @return a df with pixel values for each of the image layers
 #' @examples
-#' raster_files <- 'doc/multiband_image' ## need to remove the subplotting part of this function....
-#' unmasked_pixel_values <- extract_pixel_values(raster_files, subplot_files, c('blue', 'green', 'red', 'red_edge', 'nir'))
+#' raster_files <- list.files('doc/multiband_image', pattern = '.tif$', full.names = TRUE)
+#' aoi_files <- list.files('doc/fishnet', pattern = '.shp$', full.names = TRUE)
+#' pixelvalues <- extract_pixel_values(raster_files, aoi_files, c('blue','green','red','red_edge','nir'))
 #' @export
 #' @import raster
 #' @import dplyr
@@ -23,14 +24,11 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
     site_name <- str_extract(basename(raster_file), "^[^_]+")
 
     #choose the corresponding subplot file
-    subplot_file <- aoi_files[grep(paste0('^', site_name), basename(aoi_files))]
+    aoi_file <- aoi_files[grep(paste0('^', site_name), basename(aoi_files))]
 
-    # read in subplot file and select geometries
-    subplots <- read_sf(subplot_file) %>%
+    # read in aoi file and select geometries
+    aois <- read_sf(aoi_file) %>%
       dplyr::select('geometry')
-
-    # apply subplot ids
-    # subplots$subplot_id <- unlist(lapply(1:5, function(i) paste(i, 1:5, sep="_")))
 
     # read in raster file
     raster_data <- stack(raster_file)
@@ -41,25 +39,26 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
     # create empty list
     pixel_values_list <- list()
 
-    for (i in 1:nrow(subplots)){
+    for (i in 1:nrow(aois)){
 
-      # select the i-th subplot and its id
-      subplot <- subplots[i, ]
-      #subplot_id <- subplot$subplot_id
-      subplot_id <- i
+      # select the i-th aoi and its id
+      aoi <- aois[i, ]
+
+      #aoi_id <- subplot$subplot_id
+      aoi_id <- i
 
       # convert to spatial object
-      subplot_sp <- as(subplot, "Spatial")
+      aoi_sp <- as(aoi, "Spatial")
 
       # crop and mask raster using current subplot
-      cropped_raster <- crop(raster_data, subplot_sp)
-      masked_raster <- mask(cropped_raster, subplot_sp)
+      cropped_raster <- crop(raster_data, aoi_sp)
+      masked_raster <- mask(cropped_raster, aoi_sp)
 
       # extract pixel values
       pixel_values  <- as.data.frame(getValues(masked_raster))
 
       # add subplot id to pixel values df
-      pixel_values$aoi_id <- subplot_id
+      pixel_values$aoi_id <- aoi_id
 
       #add to list
       pixel_values_list[[i]] <- pixel_values

@@ -2,10 +2,16 @@
 #' @description Takes ausplot survey data, calculates field diversity for each site
 #' @param survey_data a df obtained from ausplotsR package with survey data for appropriate sites
 #' @return a list, containing 'field diversity' - values of species richness, shannon's index, simpsons index, exponential shannon's, inverse simpson, pielou's evenness, and 'community matrices'
+#' ausplotdata <- get_ausplots(veg.vouchers = T, veg.PI = T)
+#' twentyfour_survey_data <- veg$veg.PI %>%
+#'  left_join(veg$site.info %>% dplyr::select(site_unique, visit_start_date), by = "site_unique") %>%
+#'  filter(substr(visit_start_date, 1, 4) == '2024')
+#'  twentyfour_diversity <- calculate_field_diversity(twentyfour_survey_data)
 #' @export
 #' @import dplyr
 #' @import tidyr
 #' @import vegan
+#' @import ausplotsR
 
 calculate_field_diversity <- function(survey_data){
   # get unique site names
