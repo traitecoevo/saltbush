@@ -5,6 +5,7 @@
 # saltbush
 *saltbush* processes  drone and ausplot field survey data to calculate spectral + taxonomic diversity values
 for assessment of the 'spectral variability hypothesis'.
+
 Spectral diversity metrics:
 + co-efficient of variance (CV)
 + spectral variance (SV)
