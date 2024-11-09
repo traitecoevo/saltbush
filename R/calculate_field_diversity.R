@@ -28,65 +28,7 @@ calculate_field_diversity <- function(survey_data){
   for (site in ausplot_sites) {
     # Filter data for the current site
     site_survey_data <- survey_data %>%
-      filter(site_location_name == site)
-
-    # extract only direction of the transect (no numbers)
-    site_survey_data$transect_direction <- gsub('[[:digit:]]+', '', site_survey_data$transect)
-
-    # extract only number of the transect (no direction)
-    site_survey_data$transect_number <- as.numeric(gsub(".*?([0-9]+).*", "\\1", site_survey_data$transect))
-
-    # create variable for fixed transect direction (to order them all transects in the same direction)
-    site_survey_data$transect_direction2 <- NA
-
-    # create variable for fixed point number (inverse in some cases as if they had been collected in the same direction)
-    site_survey_data$point_number2 <- NA
-
-    # create XY empty variables for plot XY coordinates
-    site_survey_data$X_plot <- NA
-    site_survey_data$Y_plot <- NA
-
-    site_survey_data <- site_survey_data %>%
-      mutate(
-        point_number2 = case_when(
-          transect_direction == "E-W" ~ 100 - point_number,
-          transect_direction == "N-S" ~ 100 - point_number,
-          TRUE ~ point_number
-        ),
-        transect_direction2 = case_when(
-          transect_direction %in% c("W-E", "E-W") ~ "W-E",
-          transect_direction %in% c("N-S", "S-N") ~ "S-N"
-        )
-      )
-
-    # assign plotXY coordinates based on 'transect_direction2' and 'transect_number'
-    site_survey_data <- site_survey_data %>%
-      mutate(
-        X_plot = case_when(
-          transect_direction2 == "W-E" ~ point_number2,
-          transect_direction2 == "S-N" & transect_number == 1 ~ 10,
-          transect_direction2 == "S-N" & transect_number == 2 ~ 30,
-          transect_direction2 == "S-N" & transect_number == 3 ~ 50,
-          transect_direction2 == "S-N" & transect_number == 4 ~ 70,
-          transect_direction2 == "S-N" & transect_number == 5 ~ 90
-        ),
-        Y_plot = case_when(
-          transect_direction2 == "S-N" ~ point_number2,
-          transect_direction2 == "W-E" & transect_number == 1 ~ 10,
-          transect_direction2 == "W-E" & transect_number == 2 ~ 30,
-          transect_direction2 == "W-E" & transect_number == 3 ~ 50,
-          transect_direction2 == "W-E" & transect_number == 4 ~ 70,
-          transect_direction2 == "W-E" & transect_number == 5 ~ 90
-        )
-      )
-
-    # subplot rows and columns - +1 ensures 0 point values fall into correct subplot,
-    # pmin ensures 100 point values falls in correct subplot given +1
-    #site_survey_data$subplot_row <- pmin(ceiling((site_survey_data$Y_plot + 1) / 20), 5)
-    #site_survey_data$subplot_col <- pmin(ceiling((site_survey_data$X_plot + 1) / 20), 5)
-
-    # single ID for subplot row and column
-    #site_survey_data$subplot_id <- paste(site_survey_data$subplot_row, site_survey_data$subplot_col, sep = "_")
+      filter(site_unique == site)
 
     subplot_diversity <- site_survey_data %>%
       drop_na(standardised_name) %>%
