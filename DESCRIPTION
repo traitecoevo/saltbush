@@ -18,9 +18,9 @@ Imports:
     stringr,
     vegan,
     tidyr,
-    tidyverse,
     geometry,
     sf,
+    ausplotsR,
     terra
 Suggests: 
     testthat (>= 3.0.0)

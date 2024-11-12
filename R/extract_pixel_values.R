@@ -4,10 +4,6 @@
 #' @param aoi_files area of interest file - shapefile containing one or more site polygons for each raster
 #' @param wavelength_names wavelength names for each band, must match order of stacked layers
 #' @return a df with pixel values for each of the image layers
-#' @examples
-#' raster_files <- list.files('doc/multiband_image', pattern = '.tif$', full.names = TRUE)
-#' aoi_files <- list.files('doc/fishnet', pattern = '.shp$', full.names = TRUE)
-#' pixelvalues <- extract_pixel_values(raster_files, aoi_files, c('blue','green','red','red_edge','nir'))
 #' @export
 #' @import raster
 #' @import dplyr

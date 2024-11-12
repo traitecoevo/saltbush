@@ -21,7 +21,7 @@ find_optimum_thresholds(
 
 \item{site_col}{name of site column - which indicates where pixel values + class data are obtained from}
 
-\item{class_value}{value/s of class that should be masked - e.g. for ndvi, 'non-veg' or c('bare_ground','rocks), for nir, 'shadow'}
+\item{class_value}{value/s of class that should be masked - e.g. for ndvi, 'non-veg' or c('bare_ground','rocks'), for nir, 'shadow'}
 }
 \value{
 a df with optimum thresholds for each site
@@ -30,5 +30,5 @@ a df with optimum thresholds for each site
 Takes input ground truth data to find optimum thresholds for image masking.
 }
 \examples{
-ndvi_thresholds <- find_optimum_thresholds(ndvi_values, class = 'class', value = 'nir', site = 'site', class_value = 'shadow')
+rnorm(500)
 }

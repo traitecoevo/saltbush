@@ -6,16 +6,26 @@
 \usage{
 calculate_cv(
   pixel_values_df,
-  aoi_id,
   wavelengths,
-  rarefaction = F,
-  n = NULL,
-  min_points = NULL
+  rarefaction = FALSE,
+  min_points = NULL,
+  n = NULL
 )
 }
 \arguments{
-\item{df}{description}
+\item{pixel_values_df}{the data frame containing pixel values, obtained from extract_pixel_values function}
+
+\item{wavelengths}{a list of wavelengths which correspond to column names from pixel_values_df}
+
+\item{rarefaction}{either TRUE or FALSE to apply rarefaction step. substantially increases processing time}
+
+\item{min_points}{if rarefaction = T, the minimum number of pixels for any aoi - to standardise uneven number of pixels across different sites}
+
+\item{n}{if rarefaction = T, number of subset permutations}
+}
+\value{
+a dataframe containing spectral metrics for each aois within each site/raster
 }
 \description{
-Calculates continuous spectral metrics (CV, SV, CHV) based on input pixel value df
+Calculates CV, SV, and CHV from pixel values dataframe with columns for each wavelength + site_name + aoi_id
 }

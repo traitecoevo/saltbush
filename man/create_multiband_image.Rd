@@ -19,6 +19,3 @@ combined tif file
 \description{
 Combines single reflectance band tifs into a multiband image.
 }
-\examples{
-create_multiband_image('2024_band_rasters', c('blue', 'green', 'red', 'red_edge', 'nir'), 'data_out/2024_rasters')
-}

@@ -19,6 +19,3 @@ a df with pixel values for each of the image layers
 \description{
 Extracts pixel values from each layer of multiband image and creates pixel value df
 }
-\examples{
-unmasked_pixel_values <- extract_pixel_values(raster_files_unmasked, subplot_files, c('blue', 'green', 'red', 'red_edge', 'nir'))
-}

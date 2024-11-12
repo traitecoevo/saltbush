@@ -9,14 +9,6 @@
 #' @param red_band_index layer number for red band
 #' @param nir_band_index layer number for nir band
 #' @return A masked raster image, saved in the output directory
-#' @examples
-#'input_folder <- 'doc/multiband_image'
-#'create_masked_raster(input_folder,
-#'output_dir = 'tempdir()',
-#'ndvi_threshold = 0.02,
-#'nir_threshold = 0.04,
-#'red_band_index = 3,
-#'NIR_band_index = 5)
 #' @export
 #' @import terra
 #' @import raster
@@ -32,7 +24,7 @@
 create_masked_raster <- function(input, output_dir,
                                  ndvi_threshold = NULL, nir_threshold = NULL,
                                  ndvi_threshold_df = NULL, nir_threshold_df = NULL,
-                                 red_band_index = 3, NIR_band_index = 5) {
+                                 red_band_index = 3, nir_band_index = 5) {
 
   if (dir.exists(input)) {
     # list all ENVI or TIF files in the directory
@@ -83,7 +75,7 @@ create_masked_raster <- function(input, output_dir,
 
     # identify the bands for Red and NIR
     red <- raster_data[[red_band_index]]
-    nir <- raster_data[[NIR_band_index]]
+    nir <- raster_data[[nir_band_index]]
 
     # calculate NDVI
     ndvi <- (nir - red) / (nir + red)
@@ -102,6 +94,4 @@ create_masked_raster <- function(input, output_dir,
   }
 }
 
-library(tools)
-create_masked_raster('C:/Users/adele/Documents/fg_spectral_diversity/data_out/combined_rasters/2024/NSABHC0009_combined_image.tif', 'test', ndvi_threshold = 0.02, nir_threshold = 0.04)
 

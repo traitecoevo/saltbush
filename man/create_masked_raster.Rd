@@ -12,7 +12,7 @@ create_masked_raster(
   ndvi_threshold_df = NULL,
   nir_threshold_df = NULL,
   red_band_index = 3,
-  NIR_band_index = 5
+  nir_band_index = 5
 )
 }
 \arguments{
@@ -37,12 +37,4 @@ A masked raster image, saved in the output directory
 }
 \description{
 Creates a masked raster, non-vegetation pixels using input ndvi & nir threshold values
-}
-\examples{
-create_masked_raster(input = 'data_out/combined_rasters/2024',
-output_dir = 'data_out/combined_rasters/masked/2024',
-ndvi_threshold_df = ndvi_threshold_df_24,
-nir_threshold_df = nir_threshold_df_24,
-red_band_index = 3,
-NIR_band_index = 5)
 }
