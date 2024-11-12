@@ -11,7 +11,7 @@ for assessment of the 'spectral variability hypothesis'.
 ```r
  install.packages("remotes")
  remotes::install_github("traitecoevo/saltbush")
-```r
+
 
 Spectral diversity metrics:
 + co-efficient of variance (CV)
