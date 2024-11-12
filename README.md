@@ -6,6 +6,13 @@
 *saltbush* processes  drone and ausplot field survey data to calculate spectral + taxonomic diversity values
 for assessment of the 'spectral variability hypothesis'.
 
+
+# Installation
+```r
+ install.packages("remotes")
+ remotes::install_github("traitecoevo/saltbush")
+```r
+
 Spectral diversity metrics:
 + co-efficient of variance (CV)
 + spectral variance (SV)
@@ -18,8 +25,3 @@ Taxonomic diversity metrics:
 + pielou's evenness
 + exponential shannon's index
 + inverse simpson's index
-
-# Installation
-```r
- install.packages("remotes")
- remotes::install_github("traitecoevo/saltbush")
