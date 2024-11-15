@@ -5,6 +5,10 @@
 #' @param input_dir Directory containing folders with waveband tifs to be combined, or single folder with waveband tifs to be combined
 #' @param desired_band_order Order of files to be combined. should be in wavelength order. provide vector of file basenames in correct order
 #' @param output_dir Folder to store combined tif file
+#' @examples
+#' input_dir <- 'inst/doc/create_multiband_image'
+#' output_dir <- tempdir()
+#' create_multiband_image(input_dir, c('red', 'green', 'blue', 'red_edge', 'nir'), output_dir)
 #' @return  combined tif file
 #' @export
 
@@ -45,7 +49,7 @@ create_multiband_image <- function(input_dir, desired_band_order, output_dir){
                        filetype = "GTiff", gdal = c("INTERLEAVE=BAND"), overwrite = TRUE)
 
     # plot image - for checking
-    plot(combined_image)
+    plot(combined_image[[1:5]])
   }
 }
 
