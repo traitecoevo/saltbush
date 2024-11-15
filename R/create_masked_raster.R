@@ -8,6 +8,15 @@
 #' @param nir_threshold_df optional - a two columned df with 'site' col (site values must match first string of input file name) and  threshold values for each file
 #' @param red_band_index layer number for red band
 #' @param nir_band_index layer number for nir band
+#' @examples
+#' input_folder <- 'inst/doc/multiband_image'
+#' output_folder <- tempdir()
+#' create_masked_raster(input_folder,
+#'                     output_dir = output_folder,
+#'                     ndvi_threshold = 0.02,
+#'                     nir_threshold = 0.04,
+#'                     red_band_index = 3,
+#'                     nir_band_index = 5)
 #' @return A masked raster image, saved in the output directory
 #' @export
 

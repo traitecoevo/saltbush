@@ -13,16 +13,17 @@
 #' @examples
 #' set.seed(123)
 #' df <- data.frame(
-#' site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
-#' aoi_id = 1,
-#' blue = runif(20000, min = 0, max = 1),
-#' green = runif(20000, min = 0, max = 1),
-#' red = runif(20000, min = 0, max = 1),
-#' red_edge = runif(20000, min = 0, max = 1),
-#' nir = runif(20000, min = 0, max = 1))
-#' pixelvalues <- calculate_cv(df,
-#' wavelengths = c('blue','green','red','red_edge','nir'),
-#' rarefaction = TRUE, min_points = 5000, n = 999)
+#'   site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
+#'   aoi_id = 1,
+#'   blue = runif(20000, min = 0, max = 1),
+#'   green = runif(20000, min = 0, max = 1),
+#'   red = runif(20000, min = 0, max = 1),
+#'   red_edge = runif(20000, min = 0, max = 1),
+#'   nir = runif(20000, min = 0, max = 1))
+#' spectral_metrics <- calculate_spectral_metrics(df,
+#'                                                wavelengths = c('blue','green','red','red_edge','nir'),
+#'                                                rarefaction = TRUE, min_points = 5000, n = 999)
+
 calculate_cv <- function(pixel_values_df,
                          wavelengths,
                          rarefaction = FALSE,
@@ -70,7 +71,7 @@ calculate_cv <- function(pixel_values_df,
 
 
 
-# sv function\
+# sv function
 #' @import data.table
 #' @export
 calculate_sv <- function(pixel_values_df, wavelengths) {
@@ -177,7 +178,7 @@ calculate_spectral_metrics <- function(pixel_values_df,
     # calculate metrics, pass rarefaction where needed
     cv <- calculate_cv(site_pixel_values, wavelengths = wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
     sv <- calculate_sv(site_pixel_values, wavelengths = wavelengths)
-    chv <- calculate_chv_nopca(site_pixel_values, wavelengths, rarefaction = rarefaction, min_points = min_points)
+    chv <- calculate_chv_nopca(site_pixel_values, wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
 
     results[[site]] <- list(CV = cv, SV = sv, CHV = chv)
   }

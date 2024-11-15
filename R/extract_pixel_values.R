@@ -5,18 +5,9 @@
 #' @param wavelength_names wavelength names for each band, must match order of stacked layers
 #' @return a df with pixel values for each of the image layers
 #' @examples
-#' set.seed(123)
-#' df <- data.frame(
-#' site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
-#' aoi_id = 1,
-#' blue = runif(20000, min = 0, max = 1),
-#' green = runif(20000, min = 0, max = 1),
-#' red = runif(20000, min = 0, max = 1),
-#' red_edge = runif(20000, min = 0, max = 1),
-#' nir = runif(20000, min = 0, max = 1))
-#' pixelvalues <- calculate_cv(df,
-#' wavelengths = c('blue','green','red','red_edge','nir'),
-#' rarefaction = TRUE, min_points = 5000, n = 999)
+#' aoi_files <- list.files('inst/doc/fishnet', pattern = '_fishnet.shp$', full.names = TRUE)
+#' raster_files <- list.files('inst/doc/multiband_image', pattern = '.tif$', full.names = TRUE)
+#' pixelvalues <- extract_pixel_values(raster_files, aoi_files, c('blue', 'green', 'red', 'red_edge', 'nir'))
 #' @export
 
 extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
