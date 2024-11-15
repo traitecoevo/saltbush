@@ -19,3 +19,8 @@ a df with pixel values for each of the image layers
 \description{
 Extracts pixel values from each layer of multiband image and creates pixel value df
 }
+\examples{
+aoi_files <- list.files('inst/doc/fishnet', pattern = '_fishnet.shp$', full.names = TRUE)
+raster_files <- list.files('inst/doc/multiband_image', pattern = '.tif$', full.names = TRUE)
+pixelvalues <- extract_pixel_values(raster_files, aoi_files, c('blue', 'green', 'red', 'red_edge', 'nir'))
+}

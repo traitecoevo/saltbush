@@ -38,3 +38,13 @@ A masked raster image, saved in the output directory
 \description{
 Creates a masked raster, non-vegetation pixels using input ndvi & nir threshold values
 }
+\examples{
+input_folder <- 'inst/doc/multiband_image'
+output_folder <- tempdir()
+create_masked_raster(input_folder,
+                    output_dir = output_folder,
+                    ndvi_threshold = 0.02,
+                    nir_threshold = 0.04,
+                    red_band_index = 3,
+                    nir_band_index = 5)
+}

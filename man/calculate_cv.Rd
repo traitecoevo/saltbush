@@ -37,14 +37,14 @@ This help file applies to the functions \code{calculate_cv}, \code{calculate_sv}
 \examples{
 set.seed(123)
 df <- data.frame(
-site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
-aoi_id = 1,
-blue = runif(20000, min = 0, max = 1),
-green = runif(20000, min = 0, max = 1),
-red = runif(20000, min = 0, max = 1),
-red_edge = runif(20000, min = 0, max = 1),
-nir = runif(20000, min = 0, max = 1))
-pixelvalues <- calculate_cv(df,
-wavelengths = c('blue','green','red','red_edge','nir'),
-rarefaction = TRUE, min_points = 5000, n = 999)
+  site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
+  aoi_id = 1,
+  blue = runif(20000, min = 0, max = 1),
+  green = runif(20000, min = 0, max = 1),
+  red = runif(20000, min = 0, max = 1),
+  red_edge = runif(20000, min = 0, max = 1),
+  nir = runif(20000, min = 0, max = 1))
+spectral_metrics <- calculate_spectral_metrics(df,
+                                               wavelengths = c('blue','green','red','red_edge','nir'),
+                                               rarefaction = TRUE, min_points = 5000, n = 999)
 }

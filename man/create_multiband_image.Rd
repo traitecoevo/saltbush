@@ -19,3 +19,8 @@ combined tif file
 \description{
 Combines single reflectance band tifs into a multiband image.
 }
+\examples{
+input_dir <- 'inst/doc/create_multiband_image'
+output_dir <- tempdir()
+create_multiband_image(input_dir, c('red', 'green', 'blue', 'red_edge', 'nir'), output_dir)
+}

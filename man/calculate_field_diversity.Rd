@@ -15,3 +15,8 @@ a list, containing 'field diversity' - values of species richness, shannon's ind
 \description{
 Takes ausplot survey data, calculates field diversity for each site
 }
+\examples{
+plots_oi <- c("NSABHC0011-53606", "NSABHC0012-53607", "NSABHC0009-53604", "NSABHC0010-53605")
+ausplotdata <- ausplotsR::get_ausplots(plots_oi, veg.vouchers = T, veg.PI = T)$veg.PI
+veg_diversity <- calculate_field_diversity(ausplotdata)
+}
