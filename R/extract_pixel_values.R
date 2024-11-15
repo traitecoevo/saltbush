@@ -5,10 +5,6 @@
 #' @param wavelength_names wavelength names for each band, must match order of stacked layers
 #' @return a df with pixel values for each of the image layers
 #' @export
-#' @import raster
-#' @import dplyr
-#' @import sf
-#' @import stringr
 
 extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
 
@@ -27,7 +23,7 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
       dplyr::select('geometry')
 
     # read in raster file
-    raster_data <- stack(raster_file)
+    raster_data <- raster::stack(raster_file)
 
     # apply names - should be saved in wavelength order as per sect 1 of this script
     names(raster_data) <- wavelength_names

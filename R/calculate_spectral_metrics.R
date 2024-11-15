@@ -7,9 +7,6 @@
 #' @param n if rarefaction = T, number of subset permutations
 #' @return a dataframe containing spectral metrics for each aois within each site/raster
 #' @export
-#' @import dplyr
-#' @import data.table
-#' @import geometry
 
 # rarefraction cv function
 calculate_cv <- function(pixel_values_df,
@@ -108,7 +105,7 @@ calculate_chv_nopca <- function(df,
   # convert to data.table for better performance
   setDT(df)
 
-  results <- data.table(aoi_id = double(), CHV_nopca = double())
+  results <- data.table::data.table(aoi_id = double(), CHV_nopca = double())
 
   # loop through each aoi_id
   for (aoi in unique(df$aoi_id)) {
@@ -137,7 +134,7 @@ calculate_chv_nopca <- function(df,
     }
 
     # store results in data.table
-    results <- rbind(results, data.table(aoi_id = aoi, CHV_nopca = mean_chv), fill = TRUE)
+    results <- rbind(results, data.table::data.table(aoi_id = aoi, CHV_nopca = mean_chv), fill = TRUE)
   }
 
   return(results)

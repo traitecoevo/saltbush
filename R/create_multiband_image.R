@@ -7,8 +7,7 @@
 #' @param output_dir Folder to store combined tif file
 #' @return  combined tif file
 #' @export
-#' @import tools
-#' @import terra
+
 
 create_multiband_image <- function(input_dir, desired_band_order, output_dir){
   # folder list | recursive = won't pick folders within folders

@@ -10,9 +10,6 @@
 #' @param nir_band_index layer number for nir band
 #' @return A masked raster image, saved in the output directory
 #' @export
-#' @import terra
-#' @import raster
-#' @import tools
 
 # CREATE_MASKED_RASTER FUNCTION
 #input can be directory with a number of files, a single file, or string of files.
@@ -71,7 +68,7 @@ create_masked_raster <- function(input, output_dir,
     }
 
     # read the raster stack
-    raster_data <- stack(file)
+    raster_data <- raster::stack(file)
 
     # identify the bands for Red and NIR
     red <- raster_data[[red_band_index]]

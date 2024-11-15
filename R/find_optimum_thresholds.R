@@ -9,8 +9,7 @@
 #' @export
 #' @examples
 #' rnorm(500)
-#' @import pROC
-#' @import dplyr
+
 
 # add a for loop so nir and ndvi ground truth values can be given in the same df instead of seperately :)
 # FIND OPTIMUM THRESHOLDS FUNCTION
