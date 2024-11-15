@@ -10,6 +10,8 @@
 #' @aliases calculate_cv calculate_sv calculate_chv calculate_chv_nopca calculate_spectral_metrics
 #' @export
 #' @import data.table
+#' @importFrom dplyr %>%
+#' @importFrom dplyr left_join
 #' @examples
 #' set.seed(123)
 #' df <- data.frame(
@@ -161,7 +163,6 @@ calculate_chv_nopca <- function(df,
 }
 
 
-#' @import data.table
 #' @export
 calculate_spectral_metrics <- function(pixel_values_df,
                                        masked = TRUE,
@@ -182,17 +183,17 @@ calculate_spectral_metrics <- function(pixel_values_df,
     results[[site]] <- list(CV = cv, SV = sv, CHV = chv)
   }
 
-  combined_cv <- bind_rows(lapply(results, function(x) x$CV), .id = 'site')
-  combined_sv <- bind_rows(lapply(results, function(x) x$SV), .id = 'site')
-  combined_chv <- bind_rows(lapply(results, function(x) x$CHV), .id = 'site')
+  combined_cv <- dplyr::bind_rows(lapply(results, function(x) x$CV), .id = 'site')
+  combined_sv <- dplyr::bind_rows(lapply(results, function(x) x$SV), .id = 'site')
+  combined_chv <- dplyr::bind_rows(lapply(results, function(x) x$CHV), .id = 'site')
 
   # create a data frame for combined metrics
   combined_metrics <- combined_cv %>%
-    left_join(combined_sv, by = c("site", "aoi_id")) %>%
-    left_join(combined_chv, by = c("site", "aoi_id"))
+    dplyr::left_join(combined_sv, by = c("site", "aoi_id")) %>%
+    dplyr::left_join(combined_chv, by = c("site", "aoi_id"))
 
   combined_metrics <- combined_metrics %>%
-    mutate(image_type = ifelse(masked, 'masked', 'unmasked'))
+    dplyr::mutate(image_type = ifelse(masked, 'masked', 'unmasked'))
 
   return(combined_metrics)
 }
