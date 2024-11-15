@@ -5,6 +5,7 @@
 #' @export
 #' @import ausplotsR
 
+
 calculate_field_diversity <- function(survey_data){
   # get unique site names
   ausplot_sites <- unique(survey_data$site_location_name)

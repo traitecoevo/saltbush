@@ -2,7 +2,11 @@
 % Please edit documentation in R/calculate_spectral_metrics.R
 \name{calculate_cv}
 \alias{calculate_cv}
-\title{Calculate spectral metrics}
+\alias{calculate_sv}
+\alias{calculate_chv}
+\alias{calculate_chv_nopca}
+\alias{calculate_spectral_metrics}
+\title{Calculate Spectral Metrics}
 \usage{
 calculate_cv(
   pixel_values_df,
@@ -13,19 +17,34 @@ calculate_cv(
 )
 }
 \arguments{
-\item{pixel_values_df}{the data frame containing pixel values, obtained from extract_pixel_values function}
+\item{pixel_values_df}{A data frame containing pixel values, typically obtained from the \code{extract_pixel_values} function.}
 
-\item{wavelengths}{a list of wavelengths which correspond to column names from pixel_values_df}
+\item{wavelengths}{A list of wavelengths that correspond to column names in \code{pixel_values_df}.}
 
-\item{rarefaction}{either TRUE or FALSE to apply rarefaction step. substantially increases processing time}
+\item{rarefaction}{Logical; if TRUE, applies a rarefaction step that increases processing time.}
 
-\item{min_points}{if rarefaction = T, the minimum number of pixels for any aoi - to standardise uneven number of pixels across different sites}
+\item{min_points}{Integer; minimum number of pixels per \code{aoi} to standardize uneven pixel numbers across sites (used if \code{rarefaction = TRUE}).}
 
-\item{n}{if rarefaction = T, number of subset permutations}
+\item{n}{Integer; number of subset permutations if \code{rarefaction = TRUE}.}
 }
 \value{
-a dataframe containing spectral metrics for each aois within each site/raster
+A dataframe containing spectral metrics for each \code{aoi} within each site/raster.
 }
 \description{
-Calculates CV, SV, and CHV from pixel values dataframe with columns for each wavelength + site_name + aoi_id
+Calculates CV, SV, and CHV from a pixel values dataframe with columns for each wavelength, \code{site_name}, and \code{aoi_id}.
+This help file applies to the functions \code{calculate_cv}, \code{calculate_sv}, \code{calculate_chv}, \code{calculate_chv_nopca}, and \code{calculate_spectral_metrics}.
+}
+\examples{
+set.seed(123)
+df <- data.frame(
+site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
+aoi_id = 1,
+blue = runif(20000, min = 0, max = 1),
+green = runif(20000, min = 0, max = 1),
+red = runif(20000, min = 0, max = 1),
+red_edge = runif(20000, min = 0, max = 1),
+nir = runif(20000, min = 0, max = 1))
+pixelvalues <- calculate_cv(df,
+wavelengths = c('blue','green','red','red_edge','nir'),
+rarefaction = TRUE, min_points = 5000, n = 999)
 }

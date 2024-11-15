@@ -14,11 +14,7 @@ Imports:
     pROC,
     raster,
     data.table,
-    stringr,
-    vegan,
-    tidyr,
     geometry,
-    sf,
     ausplotsR,
     terra
 Suggests: 

@@ -1,14 +1,28 @@
-#' @title Calculate spectral metrics
-#' @description Calculates CV, SV, and CHV from pixel values dataframe with columns for each wavelength + site_name + aoi_id
-#' @param pixel_values_df the data frame containing pixel values, obtained from extract_pixel_values function
-#' @param wavelengths a list of wavelengths which correspond to column names from pixel_values_df
-#' @param rarefaction either TRUE or FALSE to apply rarefaction step. substantially increases processing time
-#' @param min_points if rarefaction = T, the minimum number of pixels for any aoi - to standardise uneven number of pixels across different sites
-#' @param n if rarefaction = T, number of subset permutations
-#' @return a dataframe containing spectral metrics for each aois within each site/raster
+#' @title Calculate Spectral Metrics
+#' @description Calculates CV, SV, and CHV from a pixel values dataframe with columns for each wavelength, `site_name`, and `aoi_id`.
+#' This help file applies to the functions `calculate_cv`, `calculate_sv`, `calculate_chv`, `calculate_chv_nopca`, and `calculate_spectral_metrics`.
+#' @param pixel_values_df A data frame containing pixel values, typically obtained from the `extract_pixel_values` function.
+#' @param wavelengths A list of wavelengths that correspond to column names in `pixel_values_df`.
+#' @param rarefaction Logical; if TRUE, applies a rarefaction step that increases processing time.
+#' @param min_points Integer; minimum number of pixels per `aoi` to standardize uneven pixel numbers across sites (used if `rarefaction = TRUE`).
+#' @param n Integer; number of subset permutations if `rarefaction = TRUE`.
+#' @return A dataframe containing spectral metrics for each `aoi` within each site/raster.
+#' @aliases calculate_cv calculate_sv calculate_chv calculate_chv_nopca calculate_spectral_metrics
 #' @export
-
-# rarefraction cv function
+#' @import data.table
+#' @examples
+#' set.seed(123)
+#' df <- data.frame(
+#' site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
+#' aoi_id = 1,
+#' blue = runif(20000, min = 0, max = 1),
+#' green = runif(20000, min = 0, max = 1),
+#' red = runif(20000, min = 0, max = 1),
+#' red_edge = runif(20000, min = 0, max = 1),
+#' nir = runif(20000, min = 0, max = 1))
+#' pixelvalues <- calculate_cv(df,
+#' wavelengths = c('blue','green','red','red_edge','nir'),
+#' rarefaction = TRUE, min_points = 5000, n = 999)
 calculate_cv <- function(pixel_values_df,
                          wavelengths,
                          rarefaction = FALSE,
@@ -16,7 +30,7 @@ calculate_cv <- function(pixel_values_df,
                          n = NULL) {
 
   # convert to a data.table for efficiency
-  setDT(pixel_values_df)
+  data.table::setDT(pixel_values_df)
 
   if (rarefaction) {
     # initialize a list to store CV values for each replication
@@ -56,7 +70,9 @@ calculate_cv <- function(pixel_values_df,
 
 
 
-# sv function
+# sv function\
+#' @import data.table
+#' @export
 calculate_sv <- function(pixel_values_df, wavelengths) {
   # convert pixel_values_df to data.table for better performance
   setDT(pixel_values_df)
@@ -83,6 +99,8 @@ calculate_sv <- function(pixel_values_df, wavelengths) {
 
 
 # chv function
+#' @import data.table
+#' @export
 calculate_chv <- function(df, dim) {
   CHV_df <- df %>%
     select(1:dim)
@@ -96,6 +114,8 @@ calculate_chv <- function(df, dim) {
 }
 
 # function to calculate chv for each aoi
+#' @import data.table
+#' @export
 calculate_chv_nopca <- function(df,
                                 wavelengths,
                                 rarefaction = FALSE,
@@ -141,7 +161,8 @@ calculate_chv_nopca <- function(df,
 }
 
 
-## FUNCTION FOR CALCULATING ALL METRICS
+#' @import data.table
+#' @export
 calculate_spectral_metrics <- function(pixel_values_df,
                                        masked = TRUE,
                                        wavelengths,
