@@ -49,7 +49,7 @@ create_multiband_image <- function(input_dir, desired_band_order, output_dir){
                        filetype = "GTiff", gdal = c("INTERLEAVE=BAND"), overwrite = TRUE)
 
     # plot image - for checking
-    plot(combined_image[[1:5]])
+    # plot(combined_image[[1:5]])
   }
 }
 
