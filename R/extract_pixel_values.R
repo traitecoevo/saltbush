@@ -20,13 +20,13 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
   for (raster_file in raster_files) {
 
     # identify the string that represents the site name
-    site_name <- str_extract(basename(raster_file), "^[^_]+")
+    site_name <- stringr::str_extract(basename(raster_file), "^[^_]+")
 
     #choose the corresponding subplot file
     aoi_file <- aoi_files[grep(paste0('^', site_name), basename(aoi_files))]
 
     # read in aoi file and select geometries
-    aois <- read_sf(aoi_file) %>%
+    aois <- sf::read_sf(aoi_file) %>%
       dplyr::select('geometry')
 
     # read in raster file
@@ -50,11 +50,11 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
       aoi_sp <- as(aoi, "Spatial")
 
       # crop and mask raster using current subplot
-      cropped_raster <- crop(raster_data, aoi_sp)
-      masked_raster <- mask(cropped_raster, aoi_sp)
+      cropped_raster <- raster::crop(raster_data, aoi_sp)
+      masked_raster <- raster::mask(cropped_raster, aoi_sp)
 
       # extract pixel values
-      pixel_values  <- as.data.frame(getValues(masked_raster))
+      pixel_values  <- as.data.frame(raster::getValues(masked_raster))
 
       # add subplot id to pixel values df
       pixel_values$aoi_id <- aoi_id
@@ -64,13 +64,13 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
 
     }
     # combined all pixel values into one df for current raster
-    all_pixel_values <- bind_rows(pixel_values_list) %>%
+    all_pixel_values <- dplyr::bind_rows(pixel_values_list) %>%
       na.omit()
 
     # add to overall list with all raster data pixel values
     all_pixel_values_list[[site_name]] <- all_pixel_values
   }
-  combined_values <- bind_rows(all_pixel_values_list, .id = 'site_name')
+  combined_values <- dplyr::bind_rows(all_pixel_values_list, .id = 'site_name')
 
   return(combined_values)
 }

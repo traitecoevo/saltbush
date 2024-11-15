@@ -34,5 +34,7 @@ ndvi_values <- data.frame(site = rep(c("site_one", "site_two"), each = 100),
 point = rep(1:100, times = 2),
 ndvi = runif(200, min = -1, max = 1),
 class = sample(rep(c('veg', 'non-veg'), each = 100)))
-ndvi_thresholds <- find_optimum_thresholds(ndvi_values, class_col = 'class', band_or_index_col = 'ndvi', site_col = 'site', class_value = 'non-veg')
+ndvi_thresholds <- find_optimum_thresholds(ndvi_values,
+class_col = 'class', band_or_index_col = 'ndvi',
+site_col = 'site', class_value = 'non-veg')
 }
