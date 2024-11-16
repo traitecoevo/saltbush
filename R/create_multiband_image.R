@@ -6,9 +6,9 @@
 #' @param desired_band_order Order of files to be combined. should be in wavelength order. provide vector of file basenames in correct order
 #' @param output_dir Folder to store combined tif file
 #' @examples
-#' input_dir <- 'inst/extdata/create_multiband_image'
+#' input_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
 #' output_dir <- tempdir()
-#' #create_multiband_image(input_dir, c('blue', 'green', 'red', 'red_edge', 'nir'), output_dir)
+#' create_multiband_image(input_dir, c('blue', 'green', 'red', 'red_edge', 'nir'), output_dir)
 #' @return  combined tif file
 #' @export
 
@@ -42,13 +42,14 @@ create_multiband_image <- function(input_dir, desired_band_order, output_dir){
     combined_image <- combined_image[[match(desired_band_order, band_names)]]
 
     # create output file as .tif and as .envi
-    output_filename <- file.path(output_dir, paste0(basename(folder), "_combined_image"))
+    output_filename <- file.path(output_dir, paste0(basename(folder), "_multiband_image"))
     # write .tif file
     terra::writeRaster(combined_image, filename = paste0(output_filename, '.tif'),
                        filetype = "GTiff", gdal = c("INTERLEAVE=BAND"), overwrite = TRUE)
 
+
     # plot image - for checking
-    # plot(combined_image[[1:5]])
+    terra::plot(combined_image)
   }
 }
 
