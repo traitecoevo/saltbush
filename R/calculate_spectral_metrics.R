@@ -176,7 +176,7 @@ calculate_spectral_metrics <- function(pixel_values_df,
     pixel_values_df$site_name <- "site1"
   }
    for (site in unique(pixel_values_df$site_name)) {
-    site_pixel_values <- pixel_values_df %>% filter(site_name == site)
+    site_pixel_values <- pixel_values_df %>% dplyr::filter(site_name == site)
 
     # calculate metrics, pass rarefaction where needed
     cv <- calculate_cv(site_pixel_values, wavelengths = wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
