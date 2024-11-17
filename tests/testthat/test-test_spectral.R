@@ -8,12 +8,12 @@ test_that("calculate_cv works", {
   red = runif(20000, min = 0, max = 1),
   red_edge = runif(20000, min = 0, max = 1),
   nir = runif(20000, min = 0, max = 1))
-  pixelvalues <- calculate_spectral_metrics(df,
+  pixelvalues <- calculate_cv(df,
   wavelengths = c('blue','green','red','red_edge','nir'),
   rarefaction = TRUE, min_points = 5000, n = 999)
   expect_type(pixelvalues,"data.frame")
-  #expect_true(pixelvalues$CV<0.6)
-  #expect_true(pixelvalues$aoi_id==1)
+  expect_true(pixelvalues$CV<0.6)
+  expect_true(pixelvalues$aoi_id==1)
 })
 
 test_that("extract_pixel_values works", {
