@@ -3,7 +3,7 @@
   <!-- badges: end -->
 
 # saltbush
-*saltbush* processes  drone and ausplot field survey data to calculate spectral + taxonomic diversity values
+*saltbush* processes drone imagery and ausplot vegetation survey data to calculate spectral + taxonomic diversity values
 for assessment of the 'spectral variability hypothesis'.
 
 
