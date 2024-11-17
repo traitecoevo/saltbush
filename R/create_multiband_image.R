@@ -31,12 +31,9 @@ create_multiband_image <- function(input_dir, desired_band_order, output_dir){
     # load as raster
     rasters <- lapply(tif_files, terra::rast)
 
-    # extract band names from file names
-    band_names <- tools::file_path_sans_ext(basename(tif_files))
-
     # stack rasters and assign band names
     combined_image <- terra::rast(rasters)
-    names(combined_image) <- band_names
+    band_names <- names(combined_image)
 
     # reorder the bands based on the desired band order
     combined_image <- combined_image[[match(desired_band_order, band_names)]]

@@ -39,12 +39,12 @@ A masked raster image, saved in the output directory
 Creates a masked raster, non-vegetation pixels using input ndvi & nir threshold values
 }
 \examples{
-input_folder <- 'inst/extdata/create_multiband_image'
-output_folder <- tempdir()
-# create_masked_raster(input_folder,
-#                    output_dir = output_folder,
-#                    ndvi_threshold = 0.02,
-#                   nir_threshold = 0.04,
-#                     red_band_index = 3,
-#                     nir_band_index = 5)
+input <- system.file("extdata/multiband_image", package = "saltbush")
+output_dir <- tempdir()
+create_masked_raster(input,
+                    output_dir,
+                    ndvi_threshold = 0.02,
+                   nir_threshold = 0.04,
+                     red_band_index = 3,
+                     nir_band_index = 5)
 }

@@ -9,14 +9,14 @@
 #' @param red_band_index layer number for red band
 #' @param nir_band_index layer number for nir band
 #' @examples
-#' input_folder <- 'inst/extdata/create_multiband_image'
-#' output_folder <- tempdir()
-#' # create_masked_raster(input_folder,
-#' #                    output_dir = output_folder,
-#' #                    ndvi_threshold = 0.02,
-#' #                   nir_threshold = 0.04,
-#' #                     red_band_index = 3,
-#' #                     nir_band_index = 5)
+#' input <- system.file("extdata/multiband_image", package = "saltbush")
+#' output_dir <- tempdir()
+#' create_masked_raster(input,
+#'                     output_dir,
+#'                     ndvi_threshold = 0.02,
+#'                    nir_threshold = 0.04,
+#'                      red_band_index = 3,
+#'                      nir_band_index = 5)
 #' @return A masked raster image, saved in the output directory
 #' @export
 
@@ -77,7 +77,7 @@ create_masked_raster <- function(input, output_dir,
     }
 
     # read the raster stack
-    raster_data <- raster::stack(file)
+    raster_data <- terra::rast(file)
 
     # identify the bands for Red and NIR
     red <- raster_data[[red_band_index]]
@@ -93,11 +93,12 @@ create_masked_raster <- function(input, output_dir,
     raster_data_masked <- terra::mask(raster_data, mask, maskvalue = TRUE, updatevalue = NA)
 
     # aave the masked raster
-    masked_filename <- file.path(output_dir, paste0(file_path_sans_ext(basename(file)), '_masked.tif'))
-    terra::writeRaster(raster_data_masked, filename = masked_filename, format = "GTiff", overwrite = TRUE)
+    masked_filename <- file.path(output_dir, paste0(tools::file_path_sans_ext(basename(file)), '_masked.tif'))
+    terra::writeRaster(raster_data_masked, filename = masked_filename, overwrite = TRUE)
 
     print(paste("Masked raster saved to:", masked_filename))
+
+    terra::plot(raster_data_masked)
   }
 }
-
 
