@@ -11,7 +11,7 @@ test_that("calculate_cv works", {
   pixelvalues <- calculate_cv(df,
   wavelengths = c('blue','green','red','red_edge','nir'),
   rarefaction = TRUE, min_points = 5000, n = 999)
-  expect_type(pixelvalues,"data.frame")
+  expect_type(pixelvalues,"list")
   expect_true(pixelvalues$CV<0.6)
   expect_true(pixelvalues$aoi_id==1)
 })
