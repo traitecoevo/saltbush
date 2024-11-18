@@ -16,6 +16,8 @@ Imports:
     data.table,
     stringr,
     sf,
+    tidyr,
+    vegan,
     geometry,
     ausplotsR,
     terra

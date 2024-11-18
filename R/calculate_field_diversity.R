@@ -8,7 +8,7 @@
 
 calculate_field_diversity <- function(survey_data){
   # get unique site names
-  ausplot_sites <- unique(survey_data$site_location_name)
+  ausplot_sites <- unique(my.data$site.info$site_location_name)
   ausplot_sites <- ausplot_sites[ausplot_sites != ""]
 
   # list to store results for all lists
@@ -24,28 +24,28 @@ calculate_field_diversity <- function(survey_data){
       dplyr::filter(site_unique == site)
 
     subplot_diversity <- site_survey_data %>%
-      dplyr:drop_na(standardised_name) %>%
-      dplyr:filter(!standardised_name %in% c('Dead grass', 'Dead shrub')) %>%
+      tidyr::drop_na(standardised_name) %>%
+      dplyr::filter(!standardised_name %in% c('Dead grass', 'Dead shrub')) %>%
       #group_by(subplot_id) %>%
-      dplyr:summarise(species_richness = n_distinct(standardised_name))
+      dplyr::summarise(species_richness = n_distinct(standardised_name))
 
     community_matrix <- site_survey_data %>%
       drop_na(standardised_name) %>%
-      dplyr:filter(!standardised_name %in% c('Dead grass', 'Dead shrub')) %>%
+      dplyr::filter(!standardised_name %in% c('Dead grass', 'Dead shrub')) %>%
       #count(subplot_id, standardised_name) %>%
-      dplyr:count(standardised_name) %>%
-      dplyr:spread(standardised_name, n, fill = 0)
+      dplyr::count(standardised_name) %>%
+      tidyr::spread(standardised_name, n, fill = 0)
 
     # store the community matrix  in the list
     community_matrices[[site]] <- community_matrix
 
     # calculate diversity indices
-    shannon_diversity <- diversity(community_matrix[, -1], index = "shannon")
-    simpson_diversity <- diversity(community_matrix[, -1], index = "simpson")
-    inv_simpson <- diversity(community_matrix[, -1], index = 'invsimpson')
+    shannon_diversity <- vegan::diversity(community_matrix[, -1], index = "shannon")
+    simpson_diversity <- vegan::diversity(community_matrix[, -1], index = "simpson")
+    inv_simpson <- vegan::diversity(community_matrix[, -1], index = 'invsimpson')
 
     subplot_diversity <- subplot_diversity %>%
-      mutate(shannon_diversity = shannon_diversity,
+      dplyr::mutate(shannon_diversity = shannon_diversity,
              simpson_diversity = simpson_diversity,
              pielou_evenness = shannon_diversity / log(species_richness),
              exp_shannon = exp(shannon_diversity),
@@ -57,7 +57,7 @@ calculate_field_diversity <- function(survey_data){
   }
 
   # combine into one df
-  field_diversity <- bind_rows(all_site_results, .id = "site")
+  field_diversity <- dplyr::bind_rows(all_site_results, .id = "site")
 
   return(list(
     field_diversity = field_diversity,
