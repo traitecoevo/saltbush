@@ -22,7 +22,7 @@
 #'   red = runif(20000, min = 0, max = 1),
 #'   red_edge = runif(20000, min = 0, max = 1),
 #'   nir = runif(20000, min = 0, max = 1))
-#' spectral_metrics <- calculate_cv(df,
+#' spectral_metrics <- calculate_spectral_metrics(df,
 #'    wavelengths = c('blue','green','red','red_edge','nir'),
 #'    rarefaction = TRUE, min_points = 5000, n = 999)
 
@@ -183,7 +183,7 @@ calculate_spectral_metrics <- function(pixel_values_df,
     sv <- calculate_sv(site_pixel_values, wavelengths = wavelengths)
     chv <- calculate_chv_nopca(site_pixel_values, wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
 
-    results <- list(CV = cv, SV = sv, CHV = chv)
+    results[[site]] <- list(CV = cv, SV = sv, CHV = chv)
   }
 
   combined_cv <- dplyr::bind_rows(lapply(results, function(x) x$CV), .id = 'site')
