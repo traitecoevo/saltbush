@@ -9,7 +9,6 @@
 #' field_diversity <- calculate_field_diversity(my.data)
 #'
 
-
 calculate_field_diversity <- function(survey_data){
   # get unique site names
   ausplot_sites <- unique(survey_data$site_unique)
