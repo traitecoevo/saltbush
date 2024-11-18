@@ -24,7 +24,7 @@
 #'   nir = runif(20000, min = 0, max = 1))
 #' spectral_metrics <- calculate_spectral_metrics(df,
 #'    wavelengths = c('blue','green','red','red_edge','nir'),
-#'    rarefaction = TRUE, min_points = 5000, n = 999)
+#'    rarefaction = TRUE, min_points = 50, n = 5)
 
 calculate_cv <- function(pixel_values_df,
                          wavelengths,
