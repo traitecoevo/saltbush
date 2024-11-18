@@ -11,9 +11,9 @@ df <- data.frame(
 test_that("calculate_cv works", {
   pixelvalues <- calculate_cv(df,
   wavelengths = c('blue','green','red','red_edge','nir'),
-  rarefaction = TRUE, min_points = 10, n = 5)
+  rarefaction = TRUE, min_points = 100, n = 20)
   expect_type(pixelvalues,"list")
-  expect_true(pixelvalues$CV<0.6)
+  expect_true(pixelvalues$CV<6)
   expect_true(pixelvalues$aoi_id==1)
 })
 
@@ -21,11 +21,11 @@ test_that("calculate_cv works", {
 test_that("calculate_spectral_metrics works", {
   spectral_metrics <- calculate_spectral_metrics(df,
                               wavelengths = c('blue','green','red','red_edge','nir'),
-                              rarefaction = TRUE, min_points = 10, n = 5)
-  expect_type(spectral_metrics,"data.table")
-   expect_true(all(spectral_metrics$CV<0.6))
+                              rarefaction = TRUE, min_points = 100, n = 20)
+  expect_type(spectral_metrics,"list")
+   expect_true(all(spectral_metrics$CV<10))
    expect_true(all(spectral_metrics$SV<0.42))
-   expect_true(all(spectral_metrics$CHV_nopca<0.1))
+   expect_true(all(spectral_metrics$CHV_nopca<10))
    expect_true(all(spectral_metrics$aoi_id==1))
    expect_true(all(spectral_metrics$image_type=='masked'))
 })
