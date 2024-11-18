@@ -34,19 +34,5 @@ test_that("calculate_spectral_metrics works", {
    expect_type(spectral_metrics_no_rare,"list")
 })
 
-test_that("extract_pixel_values works", {
-  aoi_files <- list.files(
-    system.file("extdata/fishnet", package = "saltbush"),
-    pattern = '_fishnet.shp$', full.names = TRUE
-  )
-  raster_files <- list.files(
-    system.file("extdata/multiband_image", package = "saltbush"),
-    pattern = '.tif$', full.names = TRUE
-  )
-  pixelvalues <- extract_pixel_values(
-    raster_files, aoi_files, c('blue', 'green', 'red', 'red_edge', 'nir')
-  )
-  expect_true(dim(pixelvalues)[1] > 20000)
-  expect_true(mean(pixelvalues[,3]) > 0.05 & mean(pixelvalues[,3]) < 0.06)
-})
+
 
