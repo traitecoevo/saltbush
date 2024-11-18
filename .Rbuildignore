@@ -3,4 +3,4 @@
 ^\.github$
 ^LICENSE\.md$
 ^\.DS_Store$
-^\README.Rmd$
+^README\.Rmd$

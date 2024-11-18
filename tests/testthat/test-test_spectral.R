@@ -23,11 +23,15 @@ test_that("calculate_spectral_metrics works", {
                               wavelengths = c('blue','green','red','red_edge','nir'),
                               rarefaction = TRUE, min_points = 100, n = 20)
   expect_type(spectral_metrics,"list")
-   expect_true(all(spectral_metrics$CV<10))
-   expect_true(all(spectral_metrics$SV<0.42))
-   expect_true(all(spectral_metrics$CHV_nopca<10))
+   expect_true(all(spectral_metrics$CV<1))
+   expect_true(all(spectral_metrics$SV<0.5))
+   expect_true(all(spectral_metrics$CHV_nopca<0.4))
    expect_true(all(spectral_metrics$aoi_id==1))
    expect_true(all(spectral_metrics$image_type=='masked'))
+   spectral_metrics_no_rare <- calculate_spectral_metrics(df,
+                                                  wavelengths = c('blue','green','red','red_edge','nir'),
+                                                  rarefaction = FALSE, min_points = 100, n = 20)
+   expect_type(spectral_metrics_no_rare,"list")
 })
 
 test_that("extract_pixel_values works", {
