@@ -44,7 +44,7 @@ df <- data.frame(
   red = runif(20000, min = 0, max = 1),
   red_edge = runif(20000, min = 0, max = 1),
   nir = runif(20000, min = 0, max = 1))
-spectral_metrics <- calculate_cv(df,
+spectral_metrics <- calculate_spectral_metrics(df,
    wavelengths = c('blue','green','red','red_edge','nir'),
    rarefaction = TRUE, min_points = 5000, n = 999)
 }
