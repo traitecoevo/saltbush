@@ -6,7 +6,9 @@
 [![R-CMD-check](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
-<!-- badges: end --> \# saltbush
+<!-- badges: end -->
+
+# saltbush
 
 *saltbush* processes drone imagery and ausplot vegetation survey data to
 calculate spectral + taxonomic diversity values for assessment of the
@@ -19,9 +21,17 @@ calculate spectral + taxonomic diversity values for assessment of the
  remotes::install_github("traitecoevo/saltbush")
 ```
 
-Spectral diversity metrics: + co-efficient of variance (CV) + spectral
-variance (SV) + convex hull volume (CHV)
+### Spectral diversity metrics:
 
-Taxonomic diversity metrics: + species richness + shannon’s diversity
-index + simpson’s diversity index + pielou’s evenness + exponential
-shannon’s index + inverse simpson’s index
+- co-efficient of variance (CV)
+- spectral variance (SV)
+- convex hull volume (CHV)
+
+### Taxonomic diversity metrics:
+
+- species richness
+- shannon’s diversity index
+- simpson’s diversity index
+- pielou’s evenness
+- exponential shannon’s index
+- inverse simpson’s index

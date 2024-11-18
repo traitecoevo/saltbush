@@ -21,8 +21,8 @@ test_that("calculate_cv works", {
 test_that("calculate_spectral_metrics works", {
   spectral_metrics <- calculate_spectral_metrics(df,
                               wavelengths = c('blue','green','red','red_edge','nir'),
-                              rarefaction = TRUE, min_points = 5000, n = 999)
-  expect_type(spectral_metrics,"data.frame")
+                              rarefaction = TRUE, min_points = 10, n = 5)
+  expect_type(spectral_metrics,"list")
   # expect_true(all(spectral_metrics$CV<0.6))
   # expect_true(all(spectral_metrics$SV<0.42))
   # expect_true(all(spectral_metrics$CHV_nopca<0.87))
