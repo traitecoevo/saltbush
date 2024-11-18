@@ -4,11 +4,15 @@
 #' @return a list, containing 'field diversity' - values of species richness, shannon's index, simpsons index, exponential shannon's, inverse simpson, pielou's evenness, and 'community matrices'
 #' @export
 #' @import ausplotsR
+#' @examples
+#' my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("SATFLB0004", "QDAMGD0022", "NTASTU0002"),veg.PI=TRUE)$veg.PI
+#' field_diversity <- calculate_field_diversity(my.data)
+#'
 
 
 calculate_field_diversity <- function(survey_data){
   # get unique site names
-  ausplot_sites <- unique(my.data$site.info$site_location_name)
+  ausplot_sites <- unique(survey_data$site_unique)
   ausplot_sites <- ausplot_sites[ausplot_sites != ""]
 
   # list to store results for all lists
@@ -27,10 +31,10 @@ calculate_field_diversity <- function(survey_data){
       tidyr::drop_na(standardised_name) %>%
       dplyr::filter(!standardised_name %in% c('Dead grass', 'Dead shrub')) %>%
       #group_by(subplot_id) %>%
-      dplyr::summarise(species_richness = n_distinct(standardised_name))
+      dplyr::summarise(species_richness = dplyr::n_distinct(standardised_name))
 
     community_matrix <- site_survey_data %>%
-      drop_na(standardised_name) %>%
+      tidyr::drop_na(standardised_name) %>%
       dplyr::filter(!standardised_name %in% c('Dead grass', 'Dead shrub')) %>%
       #count(subplot_id, standardised_name) %>%
       dplyr::count(standardised_name) %>%
