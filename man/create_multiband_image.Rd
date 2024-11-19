@@ -4,7 +4,13 @@
 \alias{create_multiband_image}
 \title{Create multiband image}
 \usage{
-create_multiband_image(input_dir, desired_band_order, output_dir)
+create_multiband_image(
+  input_dir,
+  desired_band_order,
+  output_dir,
+  make_plot = FALSE,
+  return_raster = FALSE
+)
 }
 \arguments{
 \item{input_dir}{Directory containing folders with waveband tifs to be combined, or single folder with waveband tifs to be combined}
@@ -12,12 +18,16 @@ create_multiband_image(input_dir, desired_band_order, output_dir)
 \item{desired_band_order}{Order of files to be combined. should be in wavelength order. provide vector of file basenames in correct order}
 
 \item{output_dir}{Folder to store combined tif file}
+
+\item{make_plot}{Logical that determines whether a plot is produced for checking the output, default is FALSE}
+
+\item{return_raster}{Logical that determines whether raster is returned}
 }
 \value{
 combined tif file
 }
 \description{
-Combines single reflectance band tifs into a multiband image.
+Combines single reflectance band tifs into a multiband image.  Saves a file rather than returning an object as default
 }
 \examples{
 input_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
