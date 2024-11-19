@@ -11,8 +11,8 @@
 
 calculate_field_diversity <- function(survey_data){
   # get unique site names
-  ausplot_sites <- unique(survey_data$site_unique)
-  ausplot_sites <- ausplot_sites[ausplot_sites != ""]
+  ausplot_surveys <- unique(survey_data$site_unique)
+  ausplot_surveys <- ausplot_sites[ausplot_sites != ""]
 
   # list to store results for all lists
   all_site_results <- list()
@@ -21,10 +21,10 @@ calculate_field_diversity <- function(survey_data){
   community_matrices <- list()
 
   # loop thru each unique site
-  for (site in ausplot_sites) {
+  for (survey in ausplot_surveys) {
     # Filter data for the current site
     site_survey_data <- survey_data |>
-      dplyr::filter(site_unique == site)
+      dplyr::filter(site_unique == survey)
 
     subplot_diversity <- site_survey_data |>
       tidyr::drop_na(standardised_name) |>
@@ -40,7 +40,7 @@ calculate_field_diversity <- function(survey_data){
       tidyr::spread(standardised_name, n, fill = 0)
 
     # store the community matrix  in the list
-    community_matrices[[site]] <- community_matrix
+    community_matrices[[survey]] <- community_matrix
 
     # calculate diversity indices
     shannon_diversity <- vegan::diversity(community_matrix[, -1], index = "shannon")
@@ -53,10 +53,10 @@ calculate_field_diversity <- function(survey_data){
              pielou_evenness = shannon_diversity / log(species_richness),
              exp_shannon = exp(shannon_diversity),
              inv_simpson = inv_simpson,
-             site = site)
+             survey = survey)
 
     # store  result for  current site
-    all_site_results[[site]] <- subplot_diversity
+    all_site_results[[survey]] <- subplot_diversity
   }
 
   # combine into one df
