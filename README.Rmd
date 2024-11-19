@@ -49,3 +49,17 @@ library(saltbush)
 + exponential shannon's index
 + inverse simpson's index
 
+## Usage
+
+1. Download example plot data from AusPlots. The `veg.PI` part extracts the point intercept data from the AusPlots data structure.
+
+```{r}
+my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("SATFLB0004", "QDAMGD0022", "NTASTU0002"), veg.PI=TRUE)$veg.PI
+```
+
+2. Calculate diversity from the point intercepts using different diversity metrics
+
+```{r}
+field_diversity <- calculate_field_diversity(my.data)
+field_diversity
+```
