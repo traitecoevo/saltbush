@@ -8,7 +8,7 @@
 coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
 <!-- badges: end -->
 
-# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="200"/>
+# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="220"/>
 
 *saltbush* processes drone imagery and ausplot vegetation survey data to
 calculate spectral + taxonomic diversity values for assessment of the
@@ -62,16 +62,21 @@ my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("SATFLB0004", "QDAMGD0022", "NT
 field_diversity <- calculate_field_diversity(my.data)
 field_diversity
 #> $field_diversity
-#>   species_richness shannon_diversity simpson_diversity
-#> 1               28          2.379688         0.8649789
-#> 2               22          2.200076         0.8509874
-#> 3               20          2.179534         0.8242833
-#> 4               18          2.149992         0.8375000
-#>   pielou_evenness exp_shannon inv_simpson             site
-#> 1       0.7141483   10.801533    7.406252 SATFLB0004-58658
-#> 2       0.7117585    9.025696    6.710843 NTASTU0002-58429
-#> 3       0.7275464    8.842187    5.690977 QDAMGD0022-53501
-#> 4       0.7438460    8.584786    6.153846 SATFLB0004-53705
+#>               site species_richness shannon_diversity
+#> 1 SATFLB0004-58658               28          2.379688
+#> 2 NTASTU0002-58429               22          2.200076
+#> 3 QDAMGD0022-53501               20          2.179534
+#> 4 SATFLB0004-53705               18          2.149992
+#>   simpson_diversity pielou_evenness exp_shannon inv_simpson
+#> 1         0.8649789       0.7141483   10.801533    7.406252
+#> 2         0.8509874       0.7117585    9.025696    6.710843
+#> 3         0.8242833       0.7275464    8.842187    5.690977
+#> 4         0.8375000       0.7438460    8.584786    6.153846
+#>             survey
+#> 1 SATFLB0004-58658
+#> 2 NTASTU0002-58429
+#> 3 QDAMGD0022-53501
+#> 4 SATFLB0004-53705
 #> 
 #> $community_matrices
 #> $community_matrices$`SATFLB0004-58658`
