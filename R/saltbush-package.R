@@ -3,7 +3,7 @@
 #' @description
 #' Drone data is complex and extracting spectral diversity values requires several processing steps. This package is designed to be part of the workflow for analyzing these images
 #'
-#' @name APCalign
+#' @name saltbush
 #' @docType package
 #' @references If you have any questions, comments or suggestions, please
 #' submit an issue at our
