@@ -10,11 +10,6 @@ name: test-coverage.yaml
 
 permissions: read-all
 
-coverage:
-  status:
-    patch:
-        informational: true
-
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
