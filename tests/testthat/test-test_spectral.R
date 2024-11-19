@@ -44,5 +44,22 @@ test_that('calculate_spectral_metrics works', {
   expect_true(all(metrics$site == 'site1'))
 })
 
+test_that('calculate_spectral_metrics works with rarefaction', {
+  metrics <- calculate_spectral_metrics(df_test,
+                                        wavelengths = colnames(df_test[, 2:4]),
+                                        rarefaction = TRUE,
+                                        min_points = 10, n=100)
+  expect_equal(round(metrics$CV[1], 3),  0.296)
+  expect_equal(round(metrics$CV[2], 3), 0.143)
+  expect_equal(round(metrics$SV[1], 5), 0.02631)
+  expect_equal(round(metrics$SV[2], 5), 0.02660)
+  expect_equal(round(metrics$CHV_nopca[1], 5), 0.00612)
+  expect_equal(round(metrics$CHV_nopca[2], 5), 0.00663)
+  expect_true(metrics$aoi_id[1] == 1)
+  expect_true(metrics$aoi_id[2] == 2)
+  expect_true(all(metrics$image_type == 'masked'))
+  expect_true(all(metrics$site == 'site1'))
+})
+
 
 
