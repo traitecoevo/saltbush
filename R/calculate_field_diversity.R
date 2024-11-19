@@ -12,7 +12,7 @@
 calculate_field_diversity <- function(survey_data){
   # get unique site names
   ausplot_surveys <- unique(survey_data$site_unique)
-  ausplot_surveys <- ausplot_sites[ausplot_sites != ""]
+  ausplot_surveys <- ausplot_surveys[ausplot_surveys != ""]
 
   # list to store results for all lists
   all_site_results <- list()
