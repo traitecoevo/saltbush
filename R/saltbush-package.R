@@ -32,7 +32,7 @@
 NULL
 utils::globalVariables(
   c(
-    ".", "%>%", "select", "aoi_id", "..wavelengths", "CV", "site_unique",
+    ".", "select", "aoi_id", "..wavelengths", "CV", "site_unique",
     "dplyr", "drop_na", "standardised_name", "filter", "summarise",
     "n_distinct", "count", "spread", "n", "diversity", "mutate",
     "species_richness", "bind_rows", "site_name", "left_join", "SS",

@@ -26,7 +26,7 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
     aoi_file <- aoi_files[grep(paste0('^', site_name), basename(aoi_files))]
 
     # read in aoi file and select geometries
-    aois <- sf::read_sf(aoi_file) %>%
+    aois <- sf::read_sf(aoi_file) |>
       dplyr::select('geometry')
 
     # read in raster file
@@ -64,7 +64,7 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
 
     }
     # combined all pixel values into one df for current raster
-    all_pixel_values <- dplyr::bind_rows(pixel_values_list) %>%
+    all_pixel_values <- dplyr::bind_rows(pixel_values_list) |>
       na.omit()
 
     # add to overall list with all raster data pixel values

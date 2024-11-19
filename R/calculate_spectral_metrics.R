@@ -10,8 +10,6 @@
 #' @aliases calculate_cv calculate_sv calculate_chv calculate_chv_nopca calculate_spectral_metrics
 #' @export
 #' @import data.table
-#' @importFrom dplyr %>%
-#' @importFrom dplyr left_join
 #' @examples
 #' set.seed(123)
 #' df <- data.frame(
@@ -105,7 +103,7 @@ calculate_sv <- function(pixel_values_df, wavelengths) {
 #' @import data.table
 #' @export
 calculate_chv <- function(df, dim) {
-  CHV_df <- df %>%
+  CHV_df <- df |>
     select(1:dim)
 
   # convert to matrix
@@ -176,7 +174,7 @@ calculate_spectral_metrics <- function(pixel_values_df,
     pixel_values_df$site_name <- "site1"
   }
    for (site in unique(pixel_values_df$site_name)) {
-    site_pixel_values <- pixel_values_df %>% dplyr::filter(site_name == site)
+    site_pixel_values <- pixel_values_df |> dplyr::filter(site_name == site)
 
     # calculate metrics, pass rarefaction where needed
     cv <- calculate_cv(site_pixel_values, wavelengths = wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
@@ -191,11 +189,11 @@ calculate_spectral_metrics <- function(pixel_values_df,
   combined_chv <- dplyr::bind_rows(lapply(results, function(x) x$CHV), .id = 'site')
 
   # create a data frame for combined metrics
-  combined_metrics <- combined_cv %>%
-    dplyr::left_join(combined_sv, by = c("site", "aoi_id")) %>%
+  combined_metrics <- combined_cv |>
+    dplyr::left_join(combined_sv, by = c("site", "aoi_id")) |>
     dplyr::left_join(combined_chv, by = c("site", "aoi_id"))
 
-  combined_metrics <- combined_metrics %>%
+  combined_metrics <- combined_metrics |>
     dplyr::mutate(image_type = ifelse(masked, 'masked', 'unmasked'))
 
   return(combined_metrics)
