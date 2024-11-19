@@ -23,7 +23,7 @@ library(saltbush)
 [![Codecov test coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
 <!-- badges: end -->
 
-# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="150"/>
+# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="200"/>
 
 *saltbush* processes drone imagery and ausplot vegetation survey data to calculate spectral + taxonomic diversity values for assessment of the 'spectral variability hypothesis'.
 
