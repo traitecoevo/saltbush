@@ -51,6 +51,39 @@ library(saltbush)
 
 ## Usage
 
+## Spectral metrics
+
+1. List raster files and area of interest files
+
+```{r}
+raster_files <- list.files(system.file("extdata/example", package = "saltbush"),
+    pattern = '.tif$', full.names = TRUE)
+
+aoi_files <- list.files(system.file("extdata/aoi", package = "saltbush"),
+    pattern = 'NSABHC0009_aoi.shp$', full.names = TRUE)
+
+
+```
+
+2. Extract pixel values
+
+```{r}
+pixel_values <- extract_pixel_values(raster_files, 
+                                     aoi_files)
+
+head(pixel_values)  
+```
+
+3. Calculate spectral metrics
+```{r}
+metrics <- calculate_spectral_metrics(pixel_values, masked = F, wavelengths = colnames(pixel_values[, 2:6]), rarefaction = F)
+
+head(metrics)
+
+```
+
+## Taxonomic metrics
+
 1. Download example plot data from AusPlots. The `veg.PI` part extracts the point intercept data from the AusPlots data structure.
 
 ```{r}

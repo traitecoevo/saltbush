@@ -1,5 +1,5 @@
 #' @title Create Masked Raster
-#' @description Creates a masked raster, non-vegetation pixels using input ndvi & nir threshold values
+#' @description Creates a masked raster, removes non-vegetation pixels using input ndvi & nir threshold values
 #' @param input can be a directory containing multiple tif/envi files, string of files, or single file.
 #' @param output_dir an output directory for the masked raster/s to be saved
 #' @param ndvi_threshold NDVI threshold (values beneath this contain non-veg pixels and should be masked)

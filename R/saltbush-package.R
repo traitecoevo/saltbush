@@ -14,7 +14,6 @@
 #'
 #' * [calculate_cv]
 #' * [calculate_sv]
-#' * [calculate_chv]
 #' * [calculate_chv_nopca]
 #' * [calculate_spectral_metrics]
 #' * [create_masked_raster]

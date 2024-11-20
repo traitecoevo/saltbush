@@ -25,8 +25,8 @@ test_that('calculate_chv_nopca works', {
   chv <- calculate_chv_nopca(df_test,
                              wavelengths = colnames(df_test[, 2:4]),
                              rarefaction = F)
-  expect_equal(round(chv$CHV_nopca[1], 5), 0.00612)
-  expect_equal(round(chv$CHV_nopca[2], 5), 0.00663)
+  expect_equal(round(chv$CHV[1], 5), 0.00612)
+  expect_equal(round(chv$CHV[2], 5), 0.00663)
 })
 
 test_that('calculate_spectral_metrics works', {
@@ -36,8 +36,8 @@ test_that('calculate_spectral_metrics works', {
   expect_equal(round(metrics$CV[2], 3), 0.143)
   expect_equal(round(metrics$SV[1], 5), 0.02631)
   expect_equal(round(metrics$SV[2], 5), 0.02660)
-  expect_equal(round(metrics$CHV_nopca[1], 5), 0.00612)
-  expect_equal(round(metrics$CHV_nopca[2], 5), 0.00663)
+  expect_equal(round(metrics$CHV[1], 5), 0.00612)
+  expect_equal(round(metrics$CHV[2], 5), 0.00663)
   expect_true(metrics$aoi_id[1] == 1)
   expect_true(metrics$aoi_id[2] == 2)
   expect_true(all(metrics$image_type == 'masked'))
@@ -53,8 +53,8 @@ test_that('calculate_spectral_metrics works with rarefaction', {
   expect_equal(round(metrics$CV[2], 3), 0.143)
   expect_equal(round(metrics$SV[1], 5), 0.02631)
   expect_equal(round(metrics$SV[2], 5), 0.02660)
-  expect_equal(round(metrics$CHV_nopca[1], 5), 0.00612)
-  expect_equal(round(metrics$CHV_nopca[2], 5), 0.00663)
+  expect_equal(round(metrics$CHV[1], 5), 0.00612)
+  expect_equal(round(metrics$CHV[2], 5), 0.00663)
   expect_true(metrics$aoi_id[1] == 1)
   expect_true(metrics$aoi_id[2] == 2)
   expect_true(all(metrics$image_type == 'masked'))
