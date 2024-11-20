@@ -157,11 +157,29 @@ calculate_spectral_metrics <- function(pixel_values_df,
                                        min_points = NULL,
                                        n = NULL) {
   results <- list()
+
+  # add site name if not included in df
   if (!"site_name" %in% colnames(pixel_values_df)) {
     pixel_values_df$site_name <- "site1"
   }
+
+  # loop thru different sites
    for (site in unique(pixel_values_df$site_name)) {
+     # create df for site pixel values
     site_pixel_values <- pixel_values_df |> dplyr::filter(site_name == site)
+
+
+    #add error msg if n and/or min_points not provided
+    if (rarefaction){
+      if(is.null(n) || is.null(min_points)) {
+        stop("if rarefaction = T, n and min_points must be provided")
+      }
+
+    # add error msg if min_points exceeds rows in site_pixel_values df
+    if (min_points > nrow(site_pixel_values)){
+      stop(paste("'min points' (",min_points,") exceeds number of rows in site_pixel_values for site:",site))
+    }
+  }
 
     # calculate metrics, pass rarefaction where needed
     cv <- calculate_cv(site_pixel_values, wavelengths = wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
