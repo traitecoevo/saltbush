@@ -21,24 +21,15 @@ calculate spectral + taxonomic diversity values for assessment of the
  remotes::install_github("traitecoevo/saltbush")
 ```
 
+## Usage
+
+## Spectral metrics
+
 ### Spectral diversity metrics:
 
 - co-efficient of variance (CV)
 - spectral variance (SV)
 - convex hull volume (CHV)
-
-### Taxonomic diversity metrics:
-
-- species richness
-- shannon’s diversity index
-- simpson’s diversity index
-- pielou’s evenness
-- exponential shannon’s index
-- inverse simpson’s index
-
-## Usage
-
-## Spectral metrics
 
 1.  List raster files and area of interest files
 
@@ -79,6 +70,15 @@ head(metrics)
 
 ## Taxonomic metrics
 
+### Taxonomic diversity metrics:
+
+- species richness
+- shannon’s diversity index
+- simpson’s diversity index
+- pielou’s evenness
+- exponential shannon’s index
+- inverse simpson’s index
+
 1.  Download example plot data from AusPlots. The `veg.PI` part extracts
     the point intercept data from the AusPlots data structure.
 
@@ -97,75 +97,20 @@ my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("SATFLB0004", "QDAMGD0022", "NT
 ```
 
 2.  Calculate diversity from the point intercepts using different
-    diversity metrics
+    diversity metrics. The output is a list which includes taxonomic
+    metrics, and also community matrices for checks.
 
 ``` r
 field_diversity <- calculate_field_diversity(my.data)
-field_diversity
-#> $field_diversity
-#>               site species_richness shannon_diversity simpson_diversity pielou_evenness exp_shannon
-#> 1 SATFLB0004-58658               28          2.379688         0.8649789       0.7141483   10.801533
-#> 2 NTASTU0002-58429               22          2.200076         0.8509874       0.7117585    9.025696
-#> 3 QDAMGD0022-53501               20          2.179534         0.8242833       0.7275464    8.842187
-#> 4 SATFLB0004-53705               18          2.149992         0.8375000       0.7438460    8.584786
-#>   inv_simpson           survey
-#> 1    7.406252 SATFLB0004-58658
-#> 2    6.710843 NTASTU0002-58429
-#> 3    5.690977 QDAMGD0022-53501
-#> 4    6.153846 SATFLB0004-53705
-#> 
-#> $community_matrices
-#> $community_matrices$`SATFLB0004-58658`
-#>   Acacia pravifolia Alectryon oleifolius subsp. canescens Arthropodium
-#> 1                 2                                     1           13
-#>   Bursaria spinosa subsp. spinosa Callitris glaucophylla Carrichtera annua Cassinia laevis
-#> 1                              12                    110                23              17
-#>   Daucus glochidiatus Dodonaea viscosa subsp. angustissima Eremophila deserti Eucalyptus intertexta
-#> 1                   1                                   37                  1                   115
-#>   Hakea leucoptera subsp. leucoptera Leiocarpa semicalva subsp. semicalva
-#> 1                                 42                                    1
-#>   Lomandra multiflora subsp. dura Millotia Na Olearia decurrens Oxalis perennans
-#> 1                               1        3  7                18                1
-#>   Pauridia glabella var. glabella Poaceae Ptilotus obovatus Rhagodia parabolica Scleranthus pungens
-#> 1                               8       2                22                  49                   3
-#>   Sida petrophila Triodia Wahlenbergia Wurmbea Xanthorrhoea quadrangulata
-#> 1               2       1            1       1                          2
-#> 
-#> $community_matrices$`NTASTU0002-58429`
-#>   Atalaya hemiglauca Bauhinia cunninghamii Brachychiton diversifolius subsp. diversifolius
-#> 1                  1                     2                                               3
-#>   Brachychiton paradoxus Chrysopogon fallax Corymbia confertiflora Corymbia polycarpa
-#> 1                      1                 77                     21                 47
-#>   Corymbia terminalis Dichanthium fecundum Dodonaea oxyptera Dolichandrone filiformis
-#> 1                 103                   98                 2                        2
-#>   Erythrophleum chlorostachys Eucalyptus chlorophylla Eucalyptus pruinosa Eulalia aurea
-#> 1                          25                      29                  26             6
-#>   Flueggea virosa subsp. melanthesoides Gardenia ewartii subsp. ewartii Glycine tomentella Na
-#> 1                                     1                               3                  6  2
-#>   Schizachyrium fragile Terminalia canescens Themeda triandra
-#> 1                     1                    8              168
-#> 
-#> $community_matrices$`QDAMGD0022-53501`
-#>   Amaranthus mitchellii Aristida latifolia Astrebla elymoides Astrebla pectinata
-#> 1                     1                  7                 27                 57
-#>   Boerhavia schomburgkiana Bothriochloa ewartiana Cenchrus ciliaris Chloris pectinata
-#> 1                        1                      6                32                 1
-#>   Cynodon convergens Cyperus gilesii Dactyloctenium radulans Eulalia aurea Iseilema vaginiflorum Na
-#> 1                  1               3                       4             3                     2  2
-#>   Neptunia dimorphantha Poaceae Sida fibulifera Sida goniocarpa Sporobolus actinocladus
-#> 1                     1      11               4               4                       5
-#>   Vachellia farnesiana
-#> 1                    3
-#> 
-#> $community_matrices$`SATFLB0004-53705`
-#>   Acacia ligulata Alectryon oleifolius Bursaria spinosa subsp. spinosa Callitris glaucophylla
-#> 1               1                    7                               4                    108
-#>   Carrichtera annua Cassinia laevis Dodonaea viscosa subsp. angustissima Eremophila deserti
-#> 1                 5              19                                   16                  7
-#>   Eucalyptus intertexta Hakea leucoptera Olearia decurrens Ptilotus obovatus Rhagodia parabolica
-#> 1                    97               32                10                31                  43
-#>   Scleranthus pungens Senna artemisioides subsp. x artemisioides Sida petrophila Triodia
-#> 1                   1                                          1              15       1
-#>   Xanthorrhoea quadrangulata
-#> 1                          3
+field_diversity$field_diversity
+#>        site_unique site_location_name species_richness shannon_diversity simpson_diversity
+#> 1 SATFLB0004-58658         SATFLB0004               28          2.379688         0.8649789
+#> 2 NTASTU0002-58429         NTASTU0002               22          2.200076         0.8509874
+#> 3 QDAMGD0022-53501         QDAMGD0022               20          2.179534         0.8242833
+#> 4 SATFLB0004-53705         SATFLB0004               18          2.149992         0.8375000
+#>   pielou_evenness exp_shannon inv_simpson
+#> 1       0.7141483   10.801533    7.406252
+#> 2       0.7117585    9.025696    6.710843
+#> 3       0.7275464    8.842187    5.690977
+#> 4       0.7438460    8.584786    6.153846
 ```

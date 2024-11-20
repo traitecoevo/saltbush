@@ -22,7 +22,7 @@ calculate_field_diversity <- function(survey_data){
 
   # loop thru each unique site
   for (survey in ausplot_surveys) {
-    # Filter data for the current site
+    # filter data for the current site
     site_survey_data <- survey_data |>
       dplyr::filter(site_unique == survey)
 
@@ -48,19 +48,24 @@ calculate_field_diversity <- function(survey_data){
     inv_simpson <- vegan::diversity(community_matrix[, -1], index = 'invsimpson')
 
     subplot_diversity <- subplot_diversity |>
-      dplyr::mutate(shannon_diversity = shannon_diversity,
+      dplyr::mutate(site_location_name = substr(survey, 1, 10),
+             shannon_diversity = shannon_diversity,
              simpson_diversity = simpson_diversity,
              pielou_evenness = shannon_diversity / log(species_richness),
              exp_shannon = exp(shannon_diversity),
-             inv_simpson = inv_simpson,
-             survey = survey)
+             inv_simpson = inv_simpson)
+
+    # order columns
+    subplot_diversity <- subplot_diversity |>
+      dplyr::select(site_location_name, everything())
+
 
     # store  result for  current site
     all_site_results[[survey]] <- subplot_diversity
   }
 
   # combine into one df
-  field_diversity <- dplyr::bind_rows(all_site_results, .id = "site")
+  field_diversity <- dplyr::bind_rows(all_site_results, .id = "site_unique")
 
   return(list(
     field_diversity = field_diversity,
