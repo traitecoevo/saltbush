@@ -28,11 +28,16 @@
   #'
   #' @export
 
-create_multiband_image <- function(input_dir, desired_band_order, output_dir, make_plot = FALSE, return_raster=FALSE){
+
+create_multiband_image <- function(input_dir,
+                                   desired_band_order,
+                                   output_dir,
+                                   make_plot = FALSE,
+                                   return_raster = FALSE) {
   # folder list | recursive = won't pick folders within folders
   folders <- list.dirs(input_dir, full.names = T, recursive = FALSE)
 
-  if (length(folders) == 0){
+  if (length(folders) == 0) {
     folders <- input_dir
   }
   ## NOTE: 'desired_band_order' must match file names
@@ -40,7 +45,6 @@ create_multiband_image <- function(input_dir, desired_band_order, output_dir, ma
 
   # loop thru each folder
   for (folder in folders) {
-
     # list of tif files
     tif_files <- list.files(folder, pattern = "\\.tif$", full.names = TRUE)
 
@@ -57,16 +61,23 @@ create_multiband_image <- function(input_dir, desired_band_order, output_dir, ma
     # create output file as .tif and as .envi
     output_filename <- file.path(output_dir, paste0(basename(folder), "_multiband_image"))
     # write .tif file
-    terra::writeRaster(combined_image, filename = paste0(output_filename, '.tif'),
-                       filetype = "GTiff", gdal = c("INTERLEAVE=BAND"), overwrite = TRUE)
+    terra::writeRaster(
+      combined_image,
+      filename = paste0(output_filename, '.tif'),
+      filetype = "GTiff",
+      gdal = c("INTERLEAVE=BAND"),
+      overwrite = TRUE
+    )
 
 
     # plot image - for checking
-    if (make_plot) terra::plot(combined_image)
+    if (make_plot)
+      terra::plot(combined_image)
 
     #logic for what to return
-    if (return_raster) return(combined_image)
-    else return(NULL)
+    if (return_raster)
+      return(combined_image)
+    else
+      return(NULL)
   }
 }
-
