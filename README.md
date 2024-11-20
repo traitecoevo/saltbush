@@ -77,6 +77,8 @@ head(metrics)
 #> 1: NSABHC0009      1 0.3314709 0.001708346 3.302738e-10   unmasked
 ```
 
+## Taxonomic metrics
+
 1.  Download example plot data from AusPlots. The `veg.PI` part extracts
     the point intercept data from the AusPlots data structure.
 
