@@ -26,7 +26,7 @@ calculate_field_diversity <- function(survey_data){
     site_survey_data <- survey_data |>
       dplyr::filter(site_unique == survey)
 
-    subplot_diversity <- site_survey_data |>
+    plot_diversity <- site_survey_data |>
       tidyr::drop_na(standardised_name) |>
       dplyr::filter(!standardised_name %in% c('Dead grass', 'Dead shrub')) |>
       #group_by(subplot_id) |>
@@ -47,7 +47,7 @@ calculate_field_diversity <- function(survey_data){
     simpson_diversity <- vegan::diversity(community_matrix[, -1], index = "simpson")
     inv_simpson <- vegan::diversity(community_matrix[, -1], index = 'invsimpson')
 
-    subplot_diversity <- subplot_diversity |>
+    plot_diversity <- plot_diversity |>
       dplyr::mutate(site_location_name = substr(survey, 1, 10),
              shannon_diversity = shannon_diversity,
              simpson_diversity = simpson_diversity,
@@ -56,19 +56,19 @@ calculate_field_diversity <- function(survey_data){
              inv_simpson = inv_simpson)
 
     # order columns
-    subplot_diversity <- subplot_diversity |>
+    plot_diversity <- plot_diversity |>
       dplyr::select(site_location_name, everything())
 
 
     # store  result for  current site
-    all_site_results[[survey]] <- subplot_diversity
+    all_site_results[[survey]] <- plot_diversity
   }
 
   # combine into one df
-  field_diversity <- dplyr::bind_rows(all_site_results, .id = "site_unique")
+  taxonomic_diversity <- dplyr::bind_rows(all_site_results, .id = "site_unique")
 
   return(list(
-    field_diversity = field_diversity,
+    taxonomic_diversity = taxonomic_diversity,
     community_matrices = community_matrices
   ))
 }

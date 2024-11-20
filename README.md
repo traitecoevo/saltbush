@@ -102,15 +102,15 @@ my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("SATFLB0004", "QDAMGD0022", "NT
 
 ``` r
 field_diversity <- calculate_field_diversity(my.data)
-field_diversity$field_diversity
-#>        site_unique site_location_name species_richness shannon_diversity simpson_diversity
-#> 1 SATFLB0004-58658         SATFLB0004               28          2.379688         0.8649789
-#> 2 NTASTU0002-58429         NTASTU0002               22          2.200076         0.8509874
-#> 3 QDAMGD0022-53501         QDAMGD0022               20          2.179534         0.8242833
-#> 4 SATFLB0004-53705         SATFLB0004               18          2.149992         0.8375000
-#>   pielou_evenness exp_shannon inv_simpson
-#> 1       0.7141483   10.801533    7.406252
-#> 2       0.7117585    9.025696    6.710843
-#> 3       0.7275464    8.842187    5.690977
-#> 4       0.7438460    8.584786    6.153846
+field_diversity$taxonomic_diversity
+#>        site_unique site_location_name species_richness shannon_diversity
+#> 1 SATFLB0004-58658         SATFLB0004               28          2.379688
+#> 2 NTASTU0002-58429         NTASTU0002               22          2.200076
+#> 3 QDAMGD0022-53501         QDAMGD0022               20          2.179534
+#> 4 SATFLB0004-53705         SATFLB0004               18          2.149992
+#>   simpson_diversity pielou_evenness exp_shannon inv_simpson
+#> 1         0.8649789       0.7141483   10.801533    7.406252
+#> 2         0.8509874       0.7117585    9.025696    6.710843
+#> 3         0.8242833       0.7275464    8.842187    5.690977
+#> 4         0.8375000       0.7438460    8.584786    6.153846
 ```

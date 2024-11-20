@@ -94,5 +94,5 @@ my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("SATFLB0004", "QDAMGD0022", "NT
 
 ```{r}
 field_diversity <- calculate_field_diversity(my.data)
-field_diversity$field_diversity
+field_diversity$taxonomic_diversity
 ```
