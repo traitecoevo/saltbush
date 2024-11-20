@@ -42,7 +42,7 @@ create_masked_raster(
 A masked raster image, saved in the output directory
 }
 \description{
-Creates a masked raster, non-vegetation pixels using input ndvi & nir threshold values
+Creates a masked raster, removes non-vegetation pixels using input ndvi & nir threshold values
 }
 \examples{
 input <- system.file("extdata/multiband_image", package = "saltbush")

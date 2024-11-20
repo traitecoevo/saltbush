@@ -1,13 +1,13 @@
 #' @title Calculate Spectral Metrics
 #' @description Calculates CV, SV, and CHV from a pixel values dataframe with columns for each wavelength, `site_name`, and `aoi_id`.
-#' This help file applies to the functions `calculate_cv`, `calculate_sv`, `calculate_chv`, `calculate_chv_nopca`, and `calculate_spectral_metrics`.
+#' This help file applies to the functions `calculate_cv`, `calculate_sv`, `calculate_chv_nopca`, and `calculate_spectral_metrics`.
 #' @param pixel_values_df A data frame containing pixel values, typically obtained from the `extract_pixel_values` function.
 #' @param wavelengths A list of wavelengths that correspond to column names in `pixel_values_df`.
 #' @param rarefaction Logical; if TRUE, applies a rarefaction step that increases processing time.
 #' @param min_points Integer; minimum number of pixels per `aoi` to standardize uneven pixel numbers across sites (used if `rarefaction = TRUE`).
 #' @param n Integer; number of subset permutations if `rarefaction = TRUE`.
 #' @return A dataframe containing spectral metrics for each `aoi` within each site/raster.
-#' @aliases calculate_cv calculate_sv calculate_chv calculate_chv_nopca calculate_spectral_metrics
+#' @aliases calculate_cv calculate_sv calculate_chv_nopca calculate_spectral_metrics
 #' @export
 #' @import data.table
 #' @examples
@@ -99,20 +99,7 @@ calculate_sv <- function(pixel_values_df, wavelengths) {
 }
 
 
-# chv function
-#' @import data.table
-#' @export
-calculate_chv <- function(df, dim) {
-  CHV_df <- df |>
-    select(1:dim)
 
-  # convert to matrix
-  CHV_matrix <- as.matrix(CHV_df)
-
-  # calculate chv
-  CHV <- geometry::convhulln(CHV_matrix, option = "FA")
-  return(CHV)
-}
 
 # function to calculate chv for each aoi
 #' @import data.table
@@ -126,7 +113,7 @@ calculate_chv_nopca <- function(df,
   # convert to data.table for better performance
   setDT(df)
 
-  results <- data.table::data.table(aoi_id = double(), CHV_nopca = double())
+  results <- data.table::data.table(aoi_id = double(), CHV = double())
 
   # loop through each aoi_id
   for (aoi in unique(df$aoi_id)) {
@@ -155,7 +142,7 @@ calculate_chv_nopca <- function(df,
     }
 
     # store results in data.table
-    results <- rbind(results, data.table::data.table(aoi_id = aoi, CHV_nopca = mean_chv), fill = TRUE)
+    results <- rbind(results, data.table::data.table(aoi_id = aoi, CHV = mean_chv), fill = TRUE)
   }
 
   return(results)

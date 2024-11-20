@@ -34,11 +34,46 @@ library(saltbush)
  remotes::install_github("traitecoevo/saltbush")
 ```
 
+## Usage
+
+## Spectral metrics
+
 ### Spectral diversity metrics:
 
 + co-efficient of variance (CV)
 + spectral variance (SV)
 + convex hull volume (CHV)
+
+1. List raster files and area of interest files
+
+```{r}
+raster_files <- list.files(system.file("extdata/example", package = "saltbush"),
+    pattern = '.tif$', full.names = TRUE)
+
+aoi_files <- list.files(system.file("extdata/aoi", package = "saltbush"),
+    pattern = 'NSABHC0009_aoi.shp$', full.names = TRUE)
+
+
+```
+
+2. Extract pixel values
+
+```{r}
+pixel_values <- extract_pixel_values(raster_files, 
+                                     aoi_files)
+
+head(pixel_values)  
+```
+
+3. Calculate spectral metrics
+```{r}
+metrics <- calculate_spectral_metrics(pixel_values, masked = F, wavelengths = colnames(pixel_values[, 2:6]), rarefaction = F)
+
+head(metrics)
+
+```
+
+## Taxonomic metrics
 
 ### Taxonomic diversity metrics:
 
@@ -49,17 +84,15 @@ library(saltbush)
 + exponential shannon's index
 + inverse simpson's index
 
-## Usage
-
 1. Download example plot data from AusPlots. The `veg.PI` part extracts the point intercept data from the AusPlots data structure.
 
 ```{r}
 my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("SATFLB0004", "QDAMGD0022", "NTASTU0002"), veg.PI=TRUE)$veg.PI
 ```
 
-2. Calculate diversity from the point intercepts using different diversity metrics
+2. Calculate diversity from the point intercepts using different diversity metrics. The output is a list which includes taxonomic metrics, and also community matrices for checks.
 
 ```{r}
 field_diversity <- calculate_field_diversity(my.data)
-field_diversity
+field_diversity$field_diversity
 ```

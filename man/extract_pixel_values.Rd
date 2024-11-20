@@ -4,14 +4,12 @@
 \alias{extract_pixel_values}
 \title{Extract pixel values}
 \usage{
-extract_pixel_values(raster_files, aoi_files, wavelength_names)
+extract_pixel_values(raster_files, aoi_files)
 }
 \arguments{
 \item{raster_files}{directory of input raster files}
 
 \item{aoi_files}{area of interest file - shapefile containing one or more site polygons for each raster}
-
-\item{wavelength_names}{wavelength names for each band, must match order of stacked layers}
 }
 \value{
 a df with pixel values for each of the image layers
@@ -20,10 +18,9 @@ a df with pixel values for each of the image layers
 Extracts pixel values from each layer of multiband image and creates pixel value df
 }
 \examples{
-aoi_files <- list.files('inst/extdata/fishnet',
-   pattern = '_fishnet.shp$', full.names = TRUE)
+aoi_files <- list.files('inst/extdata/aoi',
+   pattern = 'image_aoi.shp$', full.names = TRUE)
 raster_files <- list.files('inst/extdata/multiband_image',
    pattern = '.tif$', full.names = TRUE)
-pixelvalues <- extract_pixel_values(raster_files, aoi_files,
-   c('blue', 'green', 'red', 'red_edge', 'nir'))
+pixelvalues <- extract_pixel_values(raster_files, aoi_files)
 }

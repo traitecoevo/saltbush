@@ -17,16 +17,16 @@ expect_true(ndvi_thresholds$threshold[1] < 1)
 
 test_that("extract_pixel_values works", {
   aoi_files <- list.files(
-    system.file("extdata/fishnet", package = "saltbush"),
-    pattern = '_fishnet.shp$', full.names = TRUE
+    system.file("extdata/aoi", package = "saltbush"),
+    pattern = 'image_aoi.shp$', full.names = TRUE
   )
   raster_files <- list.files(
     system.file("extdata/multiband_image", package = "saltbush"),
     pattern = '.tif$', full.names = TRUE
   )
   pixelvalues <- extract_pixel_values(
-    raster_files, aoi_files, c('blue', 'green', 'red', 'red_edge', 'nir')
+    raster_files, aoi_files
   )
-  expect_true(dim(pixelvalues)[1] > 20000)
+  expect_true(dim(pixelvalues)[1] > 2000000)
   expect_true(mean(pixelvalues[,3]) > 0.05 & mean(pixelvalues[,3]) < 0.06)
 })

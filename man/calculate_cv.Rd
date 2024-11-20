@@ -3,7 +3,6 @@
 \name{calculate_cv}
 \alias{calculate_cv}
 \alias{calculate_sv}
-\alias{calculate_chv}
 \alias{calculate_chv_nopca}
 \alias{calculate_spectral_metrics}
 \title{Calculate Spectral Metrics}
@@ -32,7 +31,7 @@ A dataframe containing spectral metrics for each \code{aoi} within each site/ras
 }
 \description{
 Calculates CV, SV, and CHV from a pixel values dataframe with columns for each wavelength, \code{site_name}, and \code{aoi_id}.
-This help file applies to the functions \code{calculate_cv}, \code{calculate_sv}, \code{calculate_chv}, \code{calculate_chv_nopca}, and \code{calculate_spectral_metrics}.
+This help file applies to the functions \code{calculate_cv}, \code{calculate_sv}, \code{calculate_chv_nopca}, and \code{calculate_spectral_metrics}.
 }
 \examples{
 set.seed(123)
