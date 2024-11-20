@@ -29,7 +29,10 @@ calculate spectral + taxonomic diversity values for assessment of the
 the example data in this case is 5 bands sampled from a drone
 
 ``` r
-create_multiband_image("inst/extdata/create_multiband_image/",c('blue', 'green', 'red', 'red_edge', 'nir'), output_dir=tempdir(),make_plot = TRUE,return_raster = TRUE)
+create_multiband_image("inst/extdata/create_multiband_image/",
+                       c('blue', 'green', 'red', 'red_edge', 'nir'), 
+                       output_dir = tempdir(),
+                       make_plot = TRUE, return_raster = TRUE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
