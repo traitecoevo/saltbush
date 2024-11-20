@@ -26,6 +26,29 @@ calculate spectral + taxonomic diversity values for assessment of the
 1.  **Direct the package to the input files** in this case we use a
     drone image from Fowlers Gap, NSW, Australia
 
+the example data in this case is 5 bands sampled from a drone
+
+``` r
+create_multiband_image("inst/extdata/create_multiband_image/",c('blue', 'green', 'red', 'red_edge', 'nir'), output_dir=tempdir(),make_plot = TRUE,return_raster = TRUE)
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
+    #> class       : SpatRaster 
+    #> dimensions  : 1466, 1466, 5  (nrow, ncol, nlyr)
+    #> resolution  : 0.01519, 0.01519  (x, y)
+    #> extent      : 566521.2, 566543.5, 6561293, 6561316  (xmin, xmax, ymin, ymax)
+    #> coord. ref. : WGS 84 / UTM zone 54S (EPSG:32754) 
+    #> sources     : blue.tif  
+    #>               green.tif  
+    #>               red_edge.tif  
+    #>               ... and 2 more source(s)
+    #> names       :       blue,      green,        red,   red_edge,        nir 
+    #> min values  : 0.01265331, 0.01101853, 0.01276734, 0.01221969, 0.01856168 
+    #> max values  : 0.23392145, 0.20722562, 0.22469597, 0.17767203, 0.21024320
+
+this can be combined with an area of interest mask:
+
 ``` r
 
 raster_files <- list.files("inst/extdata/example",
@@ -56,7 +79,10 @@ head(pixel_values)
 
 ``` r
 
-metrics <- calculate_spectral_metrics(pixel_values, masked = F, wavelengths = colnames(pixel_values[, 2:6]), rarefaction = F)
+metrics <- calculate_spectral_metrics(pixel_values, 
+                                      masked = F, 
+                                      wavelengths = colnames(pixel_values[, 2:6]), 
+                                      rarefaction = F)
 
 head(metrics)
 #>          site aoi_id        CV          SV          CHV image_type
