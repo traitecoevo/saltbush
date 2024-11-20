@@ -1,18 +1,32 @@
-#' Create multiband image
-#'
-#' Combines single reflectance band tifs into a multiband image.  Saves a file rather than returning an object as default
-#'
-#' @param input_dir Directory containing folders with waveband tifs to be combined, or single folder with waveband tifs to be combined
-#' @param desired_band_order Order of files to be combined. should be in wavelength order. provide vector of file basenames in correct order
-#' @param output_dir Folder to store combined tif file
-#' @param make_plot Logical that determines whether a plot is produced for checking the output, default is FALSE
-#' @param return_raster Logical that determines whether raster is returned
-#' @examples
-#' input_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
-#' output_dir <- tempdir()
-#' create_multiband_image(input_dir, c('blue', 'green', 'red', 'red_edge', 'nir'), output_dir)
-#' @return  combined tif file
-#' @export
+  #' Create a Multiband Image from Single-Band TIF Files
+  #'
+  #' This function combines single reflectance band TIF files into a multiband image.
+  #' By default, it saves the combined multiband image to a file rather than returning an object.
+  #' The function supports reordering bands according to a specified wavelength order and
+  #' optionally creates a plot to visualize the output.
+  #'
+  #' @param input_dir A directory containing folders with waveband TIF files to be combined,
+  #' or a single folder with waveband TIF files to be combined.
+  #' @param desired_band_order A character vector specifying the desired order of the bands.
+  #' The order should match the file basenames (excluding extensions) and represent
+  #' the wavelength order.
+  #' @param output_dir A directory where the combined multiband TIF file will be saved.
+  #' @param make_plot Logical. If `TRUE`, a plot is generated to visualize the output for verification.
+  #' Default is `FALSE`.
+  #' @param return_raster Logical. If `TRUE`, the combined raster object is returned.
+  #' Default is `FALSE`.
+  #'
+  #' @return Saves a combined multiband TIF file in the specified `output_dir`.
+  #' If `return_raster = TRUE`, the function returns a `terra` raster object representing
+  #' the combined multiband image.
+  #'
+  #' @examples
+  #'
+  #' input_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
+  #' output_dir <- tempdir()
+  #' create_multiband_image(input_dir, c('blue', 'green', 'red', 'red_edge', 'nir'), output_dir)
+  #'
+  #' @export
 
 create_multiband_image <- function(input_dir, desired_band_order, output_dir, make_plot = FALSE, return_raster=FALSE){
   # folder list | recursive = won't pick folders within folders

@@ -14,7 +14,7 @@ test_that('create_multiband_image works', {
   expect_type(out, "S4")
 })
 
-test_that('create_multiband_image works', {
+test_that('create_masked_raster works', {
   input <- system.file("extdata/multiband_image", package = "saltbush")
   a <- create_masked_raster(
     input,
