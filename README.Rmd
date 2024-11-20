@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "90%"
 )
 
 library(saltbush)
@@ -39,7 +39,7 @@ library(saltbush)
 1. **Direct the package to the input files** in this case we use a drone image from Fowlers Gap, NSW, Australia
 
 the example data in this case is 5 bands sampled from a drone
-```{r, message=FALSE}
+```{r, message=FALSE, results='hide'}
 create_multiband_image("inst/extdata/create_multiband_image/",
                        c('blue', 'green', 'red', 'red_edge', 'nir'), 
                        output_dir = tempdir(),
