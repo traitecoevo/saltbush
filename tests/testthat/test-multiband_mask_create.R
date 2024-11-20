@@ -3,13 +3,15 @@ output_dir <- tempdir()
 
 test_that('create_multiband_image works', {
   input_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
-  create_multiband_image(input_dir,
+  out <- create_multiband_image(input_dir,
                          c('blue', 'green', 'red', 'red_edge', 'nir'),
-                         output_dir)
+                         output_dir,
+                         return_raster=TRUE)
   folder <- "extdata/create_multiband_image"
   output_filename <- file.path(output_dir, paste0(basename(folder), "_multiband_image"))
   file_that_should_exist <- paste0(output_filename, '.tif')
   expect_true(file.exists(file_that_should_exist))
+  expect_type(out, "S4")
 })
 
 test_that('create_multiband_image works', {
