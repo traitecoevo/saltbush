@@ -12,7 +12,9 @@ create_masked_raster(
   ndvi_threshold_df = NULL,
   nir_threshold_df = NULL,
   red_band_index = 3,
-  nir_band_index = 5
+  nir_band_index = 5,
+  make_plot = FALSE,
+  return_raster = FALSE
 )
 }
 \arguments{
@@ -31,6 +33,10 @@ create_masked_raster(
 \item{red_band_index}{layer number for red band}
 
 \item{nir_band_index}{layer number for nir band}
+
+\item{make_plot}{Logical that determines whether a plot is produced for checking the output, default is FALSE}
+
+\item{return_raster}{Logical that determines whether raster is returned}
 }
 \value{
 A masked raster image, saved in the output directory

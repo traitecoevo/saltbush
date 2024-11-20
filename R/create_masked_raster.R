@@ -8,6 +8,8 @@
 #' @param nir_threshold_df optional - a two columned df with 'site' col (site values must match first string of input file name) and  threshold values for each file
 #' @param red_band_index layer number for red band
 #' @param nir_band_index layer number for nir band
+#' @param make_plot Logical that determines whether a plot is produced for checking the output, default is FALSE
+#' @param return_raster Logical that determines whether raster is returned
 #' @examples
 #' input <- system.file("extdata/multiband_image", package = "saltbush")
 #' output_dir <- tempdir()
@@ -30,7 +32,8 @@
 create_masked_raster <- function(input, output_dir,
                                  ndvi_threshold = NULL, nir_threshold = NULL,
                                  ndvi_threshold_df = NULL, nir_threshold_df = NULL,
-                                 red_band_index = 3, nir_band_index = 5) {
+                                 red_band_index = 3, nir_band_index = 5,
+                                 make_plot = FALSE, return_raster = FALSE) {
 
   if (dir.exists(input)) {
     # list all ENVI or TIF files in the directory
@@ -98,7 +101,10 @@ create_masked_raster <- function(input, output_dir,
 
     print(paste("Masked raster saved to:", masked_filename))
 
-    terra::plot(raster_data_masked)
+    if (make_plot) terra::plot(raster_data_masked)
+
+    if (return_raster) return(raster_data_masked)
+    else return(NULL)
   }
 }
 
