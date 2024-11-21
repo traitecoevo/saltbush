@@ -1,10 +1,10 @@
 Package: saltbush
-Title: What the Package Does (One Line, Title Case)
+Title: Calculating Spectral Diversity From Multi- Or Hyper-spectral Drone Images
 Version: 0.0.0.9000
 Authors@R: 
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: saltbush is an R package for processing drone data to calculate spectral diversity metrics. To facilitate testing of the spectral-biodiversity relationship, it also calculates on-the-ground diversity from on-the ground, point-intercept surveys specifically from the AusPlots framework.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
