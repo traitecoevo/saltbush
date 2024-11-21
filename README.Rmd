@@ -25,7 +25,9 @@ library(saltbush)
 
 # saltbush <img src="man/figures/saltbush_hex.png" align="right" width="220"/>
 
-*saltbush* processes drone imagery and ausplot vegetation survey data to calculate spectral + taxonomic diversity values for assessment of the 'spectral variability hypothesis'.
+*saltbush* processes drone imagery to calculate spectral diversity values as part of the assessment of the 'spectral variability hypothesis' or the 'spectral-biodiversity relationship'. This was specifically implemented to connect with on-the-ground diversity as measured in the AusPlots project, so there are also functions to calculate on-the-ground diversity built on the [ausplotsR](https://github.com/ternaustralia/ausplotsR) and [vegan](https://github.com/vegandevs/vegan) packages.  The statistical methods for connecting diversity sampled on the ground to diversity sampled from the sky are still developing.  This package is aimed at making this methods development easier for researchers across the world. 
+
+Specifically we have used this package in a test in the Australian arid zone.  The results suggest that some of the methods below perform much better than others.  See our paper *Placeholder to link to the preprint once that's posted.*
 
 ## Installation
 
@@ -89,16 +91,16 @@ head(metrics)
 
 For a full discussion of this metrics see the manuscript  
 
-4. **Download plot data** from AusPlots. The `veg.PI` part extracts the point intercept data from the AusPlots data structure. In this case we use the same AusplotID as in the drone images above.  
+4. **Download plot data** from AusPlots. The `veg.PI` part extracts the point intercept data from the AusPlots data structure. In this case we use the same AusplotID as in the drone images above. This gets us data for two on-the-ground sampling visits to one particular AusPlot where we happen to have drone imagery. 
 
 ```{r, message=FALSE}
 my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("NSABHC0009"), veg.PI=TRUE)
 my.data$site.info$visit_date
 ```
 
-This gets us data for two on-the-ground sampling visits to one particular AusPlot where we happen to have drone imagery. 
 
-5. **Calculate on-the-ground diversity** from the point intercepts using different diversity metrics. The output is a list which includes taxonomic metrics, and also community matrices for checks.  Not that this takes the `PI` part of the AusPlot object which stands for point-intercept. For a general function to calculate on-the-ground diversity, see (vegan::diversity)[https://rdrr.io/cran/vegan/man/diversity.html].  
+
+5. **Calculate on-the-ground diversity** from the point intercepts using different diversity metrics. The output is a list which includes taxonomic metrics, and also community matrices for checks.  Not that this takes the `PI` part of the AusPlot object which stands for point-intercept. For a general function to calculate on-the-ground diversity, see [the diversity function from the vegan package](https://rdrr.io/cran/vegan/man/diversity.html).  
 
 ```{r}
 field_diversity <- calculate_field_diversity(my.data$veg.PI)
