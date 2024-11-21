@@ -10,15 +10,20 @@ Drone data is complex and extracting spectral diversity values requires several 
 }
 \section{Functions}{
 
+
+\strong{Drone imagery processing}
+\itemize{
+\item \link{create_masked_raster}
+\item \link{create_multiband_image}
+\item \link{extract_pixel_values}
+}
+
 \strong{Spectral diversity}
 \itemize{
 \item \link{calculate_cv}
 \item \link{calculate_sv}
 \item \link{calculate_chv_nopca}
 \item \link{calculate_spectral_metrics}
-\item \link{create_masked_raster}
-\item \link{create_multiband_image}
-\item \link{extract_pixel_values}
 }
 
 \strong{On the ground diversity}
@@ -31,6 +36,14 @@ Drone data is complex and extracting spectral diversity values requires several 
 If you have any questions, comments or suggestions, please
 submit an issue at our
 \href{https://github.com/traitecoevo/saltbush/issues}{GitHub repository}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/traitecoevo/saltbush}
+  \item Report bugs at \url{https://github.com/traitecoevo/saltbush/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})

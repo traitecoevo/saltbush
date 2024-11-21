@@ -10,15 +10,19 @@
 #' [GitHub repository](https://github.com/traitecoevo/saltbush/issues)
 #' @keywords internal
 #' @section Functions:
+#'
+#' **Drone imagery processing**
+#'
+#' * [create_masked_raster]
+#' * [create_multiband_image]
+#' * [extract_pixel_values]
+#'
 #' **Spectral diversity**
 #'
 #' * [calculate_cv]
 #' * [calculate_sv]
 #' * [calculate_chv_nopca]
 #' * [calculate_spectral_metrics]
-#' * [create_masked_raster]
-#' * [create_multiband_image]
-#' * [extract_pixel_values]
 #'
 #' **On the ground diversity**
 #'
