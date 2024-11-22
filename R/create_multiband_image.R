@@ -1,6 +1,6 @@
-  #' Create a Multiband Image from Single-Band TIF Files
+  #' @title Create a multiband image from single-band TIF files
   #'
-  #' This function combines single reflectance band TIF files into a multiband image.
+  #' @description This function combines single reflectance band TIF files into a multiband image.
   #' By default, it saves the combined multiband image to a file rather than returning an object.
   #' The function supports reordering bands according to a specified wavelength order and
   #' optionally creates a plot to visualize the output.

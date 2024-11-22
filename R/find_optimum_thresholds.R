@@ -1,5 +1,8 @@
-#' @title Find Optimum Thresholds
+#'
+#' @title Find optimum thresholds
+#'
 #' @description Takes input ground truth data to find optimum thresholds for image masking.
+#'
 #' @param df Input must be a df with columns for site name, pixel value, class
 #' @param site_col name of site column - which indicates where pixel values + class data are obtained from
 #' @param band_or_index_col name of column where pixel values are stored - e.g. 'ndvi' or 'nir_values'

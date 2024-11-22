@@ -5,7 +5,7 @@
 \alias{calculate_sv}
 \alias{calculate_chv_nopca}
 \alias{calculate_spectral_metrics}
-\title{Calculate Spectral Metrics}
+\title{Calculate spectral metrics}
 \usage{
 calculate_cv(
   pixel_values_df,

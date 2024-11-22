@@ -1,6 +1,8 @@
-#' @title Calculate Spectral Metrics
+#' @title Calculate spectral metrics
+#'
 #' @description Calculates CV, SV, and CHV from a pixel values dataframe with columns for each wavelength, `site_name`, and `aoi_id`.
 #' This help file applies to the functions `calculate_cv`, `calculate_sv`, `calculate_chv_nopca`, and `calculate_spectral_metrics`.
+#'
 #' @param pixel_values_df A data frame containing pixel values, typically obtained from the `extract_pixel_values` function.
 #' @param wavelengths A list of wavelengths that correspond to column names in `pixel_values_df`.
 #' @param rarefaction Logical; if TRUE, applies a rarefaction step that increases processing time.

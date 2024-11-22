@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_multiband_image.R
 \name{create_multiband_image}
 \alias{create_multiband_image}
-\title{Create a Multiband Image from Single-Band TIF Files}
+\title{Create a multiband image from single-band TIF files}
 \usage{
 create_multiband_image(
   input_dir,

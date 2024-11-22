@@ -1,6 +1,6 @@
-#' Create Masked Raster from Multiband Image
+#' @title Create masked raster from multiband image
 #'
-#' This function creates a masked raster by removing non-vegetation pixels based on NDVI and NIR threshold values.
+#' @description This function creates a masked raster by removing non-vegetation pixels based on NDVI and NIR threshold values.
 #' It supports processing single files, multiple files in a directory, or a list of file paths. Threshold values
 #' can be specified as single values or as a data frame with site-specific thresholds. The function assumes that
 #' the input layers are stacked in wavelength order and saves the masked raster to the specified output directory.

@@ -1,5 +1,7 @@
 #' @title Extract pixel values
+#'
 #' @description Extracts pixel values from each layer of multiband image and creates pixel value df
+#'
 #' @param raster_files directory of input raster files
 #' @param aoi_files area of interest file - shapefile containing one or more site polygons for each raster
 #' @return a df with pixel values for each of the image layers

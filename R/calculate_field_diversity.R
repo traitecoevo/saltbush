@@ -1,5 +1,8 @@
+#'
 #' @title Calculate field diversity
+#'
 #' @description Takes ausplot survey data, calculates field diversity for each site
+#'
 #' @param survey_data a df obtained from ausplotsR package with survey data for appropriate sites
 #' @return a list, containing 'field diversity' - values of species richness, shannon's index, simpsons index, exponential shannon's, inverse simpson, pielou's evenness, and 'community matrices'
 #' @export

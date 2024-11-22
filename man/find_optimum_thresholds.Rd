@@ -2,7 +2,7 @@
 % Please edit documentation in R/find_optimum_thresholds.R
 \name{find_optimum_thresholds}
 \alias{find_optimum_thresholds}
-\title{Find Optimum Thresholds}
+\title{Find optimum thresholds}
 \usage{
 find_optimum_thresholds(
   df,

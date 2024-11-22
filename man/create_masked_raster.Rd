@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_masked_raster.R
 \name{create_masked_raster}
 \alias{create_masked_raster}
-\title{Create Masked Raster from Multiband Image}
+\title{Create masked raster from multiband image}
 \usage{
 create_masked_raster(
   input,
