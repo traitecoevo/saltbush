@@ -13,14 +13,15 @@ coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://a
 *saltbush* processes drone imagery to calculate spectral diversity
 values as part of the assessment of the ‘spectral variability
 hypothesis’ or the ‘spectral-biodiversity relationship’. This was
-specifically implemented to connect with on-the-ground diversity as
-measured in the AusPlots project, so there are also functions to
-calculate on-the-ground diversity built on the
+specifically implemented to connect *from-the-sky* diversity with
+*on-the-ground* diversity as measured in the AusPlots project. There are
+also functions to calculate on-the-ground diversity built on the
 [ausplotsR](https://github.com/ternaustralia/ausplotsR) and
 [vegan](https://github.com/vegandevs/vegan) packages. The statistical
 methods for connecting diversity sampled on the ground to diversity
 sampled from the sky are still developing. This package is aimed at
-making this methods development easier for researchers across the world.
+making from-the-sky diversity methods development easier for researchers
+across the world.
 
 Specifically we have used this package in a test in the Australian arid
 zone. The results suggest that some of the methods below perform much
@@ -141,3 +142,9 @@ the calculated diversity metrics are:
 - pielou’s evenness
 - exponential shannon’s index
 - inverse simpson’s index
+
+6.  **Compare on-the-ground and from-the-sky diversity**
+
+High-resolution drone images are very large, and the example data
+included with the package on github are too small to do this
+meaningfully. We recommend doing this locally following the above steps.
