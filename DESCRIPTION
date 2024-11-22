@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description:processing drone data to calculate spectral diversity metrics. To facilitate testing of the spectral-biodiversity relationship, it also calculates on-the-ground diversity from on-the ground, point-intercept surveys specifically from the AusPlots framework.
+Description: processes drone data to calculate spectral diversity metrics. To facilitate testing of the spectral-biodiversity relationship, it also calculates on-the-ground diversity from on-the ground, point-intercept surveys specifically from the AusPlots framework.
 License: GPL (>= 3)
 URL: https://github.com/traitecoevo/saltbush
 BugReports: https://github.com/traitecoevo/saltbush/issues
