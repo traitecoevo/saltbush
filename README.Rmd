@@ -77,6 +77,7 @@ head(pixel_values)
 ```{r}
 
 metrics <- calculate_spectral_metrics(pixel_values, 
+                                      wavelengths = colnames(pixel_values[, 2:6]),
                                       masked = F,
                                       rarefaction = F)
 

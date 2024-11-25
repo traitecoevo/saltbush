@@ -13,7 +13,7 @@
 #' pixelvalues <- extract_pixel_values(raster_files, aoi_files)
 #' @export
 
-extract_pixel_values <- function(raster_files, aoi_files){
+extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
 
   all_pixel_values_list <- list()
 
@@ -31,6 +31,9 @@ extract_pixel_values <- function(raster_files, aoi_files){
 
     # read in raster file
     raster_data <- raster::stack(raster_file)
+
+    # apply consistent band names to each raster
+    names(raster_data) <- wavelength_names
 
     # create empty list
     pixel_values_list <- list()
