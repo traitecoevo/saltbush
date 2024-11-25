@@ -25,7 +25,7 @@ test_that("extract_pixel_values works", {
     pattern = '.tif$', full.names = TRUE
   )
   pixelvalues <- extract_pixel_values(
-    raster_files, aoi_files
+    raster_files, aoi_files, c('blue','green','red','red_edge','nir')
   )
   expect_true(dim(pixelvalues)[1] > 2000000)
   expect_true(mean(pixelvalues[,3]) > 0.05 & mean(pixelvalues[,3]) < 0.06)

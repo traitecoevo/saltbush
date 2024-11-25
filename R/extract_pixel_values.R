@@ -4,13 +4,14 @@
 #'
 #' @param raster_files directory of input raster files
 #' @param aoi_files area of interest file - shapefile containing one or more site polygons for each raster
+#' @param wavelength_names the wavelength corresponding to each layer of the raster_files
 #' @return a df with pixel values for each of the image layers
 #' @examples
 #' aoi_files <- list.files('inst/extdata/aoi',
 #'    pattern = 'image_aoi.shp$', full.names = TRUE)
 #' raster_files <- list.files('inst/extdata/multiband_image',
 #'    pattern = '.tif$', full.names = TRUE)
-#' pixelvalues <- extract_pixel_values(raster_files, aoi_files)
+#' pixelvalues <- extract_pixel_values(raster_files, aoi_files, c('blue','green','red','red_edge','nir'))
 #' @export
 
 extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){

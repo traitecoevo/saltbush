@@ -4,12 +4,14 @@
 \alias{extract_pixel_values}
 \title{Extract pixel values}
 \usage{
-extract_pixel_values(raster_files, aoi_files)
+extract_pixel_values(raster_files, aoi_files, wavelength_names)
 }
 \arguments{
 \item{raster_files}{directory of input raster files}
 
 \item{aoi_files}{area of interest file - shapefile containing one or more site polygons for each raster}
+
+\item{wavelength_names}{the wavelength corresponding to each layer of the raster_files}
 }
 \value{
 a df with pixel values for each of the image layers
@@ -22,5 +24,5 @@ aoi_files <- list.files('inst/extdata/aoi',
    pattern = 'image_aoi.shp$', full.names = TRUE)
 raster_files <- list.files('inst/extdata/multiband_image',
    pattern = '.tif$', full.names = TRUE)
-pixelvalues <- extract_pixel_values(raster_files, aoi_files)
+pixelvalues <- extract_pixel_values(raster_files, aoi_files, c('blue','green','red','red_edge','nir'))
 }
