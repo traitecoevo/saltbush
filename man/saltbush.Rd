@@ -46,7 +46,17 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Adele Gemmell \email{adelegemmell@hotmail.com} (\href{https://orcid.org/0009-0005-2419-7287}{ORCID})
+
+Authors:
+\itemize{
+  \item Will Cornwell \email{w.cornwell@unsw.edu.au} (\href{https://orcid.org/0000-0003-4080-4073}{ORCID}) [contributor]
+}
+
+Other contributors:
+\itemize{
+  \item Adrian Fisher \email{adrian.fisher@unsw.edu.au} (\href{https://orcid.org/0000-0002-6903-8053}{ORCID}) [contributor]
+}
 
 }
 \keyword{internal}
