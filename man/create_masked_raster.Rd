@@ -6,7 +6,7 @@
 \usage{
 create_masked_raster(
   input,
-  output_dir,
+  output_dir = tempdir(),
   ndvi_threshold = NULL,
   nir_threshold = NULL,
   ndvi_threshold_df = NULL,

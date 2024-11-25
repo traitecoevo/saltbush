@@ -7,7 +7,7 @@
 create_multiband_image(
   input_dir,
   desired_band_order,
-  output_dir,
+  output_dir = tempdir(),
   make_plot = FALSE,
   return_raster = FALSE
 )

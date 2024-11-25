@@ -23,7 +23,7 @@ library(saltbush)
 [![Codecov test coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
 <!-- badges: end -->
 
-# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="220"/>
+# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="200"/>
 
 *saltbush* processes drone imagery to calculate spectral diversity values as part of the assessment of the 'spectral variability hypothesis' or the 'spectral-biodiversity relationship'. This was specifically implemented to connect *from-the-sky* diversity with *on-the-ground* diversity as measured in the AusPlots project. There are also functions to calculate on-the-ground diversity built on the [ausplotsR](https://github.com/ternaustralia/ausplotsR) and [vegan](https://github.com/vegandevs/vegan) packages.  The statistical methods for connecting diversity sampled on the ground to diversity sampled from the sky are still developing.  This package is aimed at making from-the-sky diversity methods development easier for researchers across the world. 
 
@@ -40,7 +40,7 @@ Specifically we have used this package in a test in the Australian arid zone.  T
 
 1. **Direct the package to the input files** in this case we use a drone image from Fowlers Gap, NSW, Australia
 
-the example data in this case is 5 bands sampled from a drone
+The example data in this case is 5 bands sampled from a drone
 ```{r, message=FALSE, results='hide'}
 create_multiband_image("inst/extdata/create_multiband_image/",
                        c('blue', 'green', 'red', 'red_edge', 'nir'), 
@@ -49,7 +49,7 @@ create_multiband_image("inst/extdata/create_multiband_image/",
 ```
 
 
-this can be combined with an area of interest mask:
+The resulting multiband image can be combined with an area of interest shapefile:
 
 ```{r}
 
@@ -77,8 +77,7 @@ head(pixel_values)
 ```{r}
 
 metrics <- calculate_spectral_metrics(pixel_values, 
-                                      masked = F, 
-                                      wavelengths = colnames(pixel_values[, 2:6]), 
+                                      masked = F,
                                       rarefaction = F)
 
 head(metrics)
@@ -89,7 +88,7 @@ head(metrics)
 + spectral variance (SV)
 + convex hull volume (CHV)
 
-For a full discussion of this metrics see the manuscript  
+For a full discussion of these metrics see the manuscript  
 
 4. **Download plot data** from AusPlots. The `veg.PI` part extracts the point intercept data from the AusPlots data structure. In this case we use the same AusplotID as in the drone images above. This gets us data for two on-the-ground sampling visits to one particular AusPlot where we happen to have drone imagery. 
 
@@ -97,7 +96,6 @@ For a full discussion of this metrics see the manuscript
 my.data <- ausplotsR::get_ausplots(my.Plot_IDs=c("NSABHC0009"), veg.PI=TRUE)
 my.data$site.info$visit_date
 ```
-
 
 
 5. **Calculate on-the-ground diversity** from the point intercepts using different diversity metrics. The output is a list which includes taxonomic metrics, and also community matrices for checks.  Not that this takes the `PI` part of the AusPlot object which stands for point-intercept. For a general function to calculate on-the-ground diversity, see [the diversity function from the vegan package](https://rdrr.io/cran/vegan/man/diversity.html).  
@@ -109,7 +107,7 @@ field_diversity$taxonomic_diversity
 
 2012 was wetter than 2016 and there are a number of rain ephemeral species at this site so the higher species richness makes sense.  
 
-the calculated diversity metrics are:
+The calculated taxonomic diversity metrics are:
 
 + species richness
 + shannon's diversity index

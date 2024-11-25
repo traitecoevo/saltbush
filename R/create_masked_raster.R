@@ -42,7 +42,7 @@
 #think about how you can make this more general for users - e.g. it requires the plot id to
 # be in the file name currently - think about usability
 create_masked_raster <- function(input,
-                                 output_dir,
+                                 output_dir = tempdir(),
                                  ndvi_threshold = NULL,
                                  nir_threshold = NULL,
                                  ndvi_threshold_df = NULL,

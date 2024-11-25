@@ -8,7 +8,7 @@
 coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
 <!-- badges: end -->
 
-# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="220"/>
+# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="200"/>
 
 *saltbush* processes drone imagery to calculate spectral diversity
 values as part of the assessment of the ‘spectral variability
@@ -40,7 +40,7 @@ once that’s posted.*
 1.  **Direct the package to the input files** in this case we use a
     drone image from Fowlers Gap, NSW, Australia
 
-the example data in this case is 5 bands sampled from a drone
+The example data in this case is 5 bands sampled from a drone
 
 ``` r
 create_multiband_image("inst/extdata/create_multiband_image/",
@@ -51,7 +51,8 @@ create_multiband_image("inst/extdata/create_multiband_image/",
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="90%" />
 
-this can be combined with an area of interest mask:
+The resulting multiband image can be combined with an area of interest
+shapefile:
 
 ``` r
 
@@ -98,7 +99,7 @@ head(metrics)
 - spectral variance (SV)
 - convex hull volume (CHV)
 
-For a full discussion of this metrics see the manuscript
+For a full discussion of these metrics see the manuscript
 
 4.  **Download plot data** from AusPlots. The `veg.PI` part extracts the
     point intercept data from the AusPlots data structure. In this case
@@ -134,7 +135,7 @@ field_diversity$taxonomic_diversity
 2012 was wetter than 2016 and there are a number of rain ephemeral
 species at this site so the higher species richness makes sense.
 
-the calculated diversity metrics are:
+The calculated taxonomic diversity metrics are:
 
 - species richness
 - shannon’s diversity index
