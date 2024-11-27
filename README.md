@@ -68,7 +68,8 @@ aoi_files <- list.files("inst/extdata/aoi",
 ``` r
 
 pixel_values <- extract_pixel_values(raster_files, 
-                                     aoi_files)
+                                     aoi_files,
+                                     c('blue','green','red','red_edge','nir'))
 
 head(pixel_values)  
 #>    site_name       blue      green        red   red_edge        nir aoi_id
