@@ -8,6 +8,9 @@
 #' @param rarefaction Logical; if TRUE, applies a rarefaction step that increases processing time.
 #' @param min_points Integer; minimum number of pixels per `aoi` to standardize uneven pixel numbers across sites (used if `rarefaction = TRUE`).
 #' @param n Integer; number of subset permutations if `rarefaction = TRUE`.
+#' @param seed Integer or NULL; if provided, `set.seed(seed)` is called once at the
+#'   start of the function so the rarefaction sampling is reproducible. Default
+#'   `NULL` preserves the prior unseeded behaviour.
 #' @return A dataframe containing spectral metrics for each `aoi` within each site/raster.
 #' @aliases calculate_cv calculate_sv calculate_chv_nopca calculate_spectral_metrics
 #' @export
@@ -30,7 +33,10 @@ calculate_cv <- function(pixel_values_df,
                          wavelengths,
                          rarefaction = FALSE,
                          min_points = NULL,
-                         n = NULL) {
+                         n = NULL,
+                         seed = NULL) {
+
+  if (!is.null(seed)) set.seed(seed)
 
   # convert to a data.table for efficiency
   data.table::setDT(pixel_values_df)
@@ -110,7 +116,10 @@ calculate_chv_nopca <- function(df,
                                 wavelengths,
                                 rarefaction = FALSE,
                                 min_points = NULL,
-                                n = NULL) {
+                                n = NULL,
+                                seed = NULL) {
+
+  if (!is.null(seed)) set.seed(seed)
 
   # convert to data.table for better performance
   setDT(df)
@@ -157,7 +166,8 @@ calculate_spectral_metrics <- function(pixel_values_df,
                                        wavelengths,
                                        rarefaction = FALSE,
                                        min_points = NULL,
-                                       n = NULL) {
+                                       n = NULL,
+                                       seed = NULL) {
   results <- list()
 
   # add site name if not included in df
@@ -184,9 +194,9 @@ calculate_spectral_metrics <- function(pixel_values_df,
   }
 
     # calculate metrics, pass rarefaction where needed
-    cv <- calculate_cv(site_pixel_values, wavelengths = wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
+    cv <- calculate_cv(site_pixel_values, wavelengths = wavelengths, rarefaction = rarefaction, n = n, min_points = min_points, seed = seed)
     sv <- calculate_sv(site_pixel_values, wavelengths = wavelengths)
-    chv <- calculate_chv_nopca(site_pixel_values, wavelengths, rarefaction = rarefaction, n = n, min_points = min_points)
+    chv <- calculate_chv_nopca(site_pixel_values, wavelengths, rarefaction = rarefaction, n = n, min_points = min_points, seed = seed)
 
     results[[site]] <- list(CV = cv, SV = sv, CHV = chv)
   }
