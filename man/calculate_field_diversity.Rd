@@ -4,20 +4,41 @@
 \alias{calculate_field_diversity}
 \title{Calculate field diversity}
 \usage{
-calculate_field_diversity(survey_data)
+calculate_field_diversity(survey_data, group_by_cols = "site_unique")
 }
 \arguments{
 \item{survey_data}{a df obtained from ausplotsR package with survey data for appropriate sites}
+
+\item{group_by_cols}{character vector of column names in \code{survey_data} to
+group by. Defaults to \code{"site_unique"}, which gives one row per survey visit.
+Pass e.g. \code{c("site_unique", "subplot_id")} to compute diversity per subplot
+within each site.}
 }
 \value{
-a list, containing 'field diversity' - values of species richness, shannon's index, simpsons index, exponential shannon's, inverse simpson, pielou's evenness, and 'community matrices'
+a list, containing 'taxonomic_diversity' - values of species richness,
+shannon's index, simpsons index, exponential shannon's, inverse simpson,
+pielou's evenness, with one row per unique combination of \code{group_by_cols},
+and 'community_matrices' - a list of per-group community matrices keyed by
+the grouping values; each matrix has the \code{group_by_cols} as leading id
+columns followed by one column per species.
 }
 \description{
-Takes ausplot survey data, calculates field diversity for each site
+Takes ausplot survey data and calculates field diversity at the
+grouping specified by \code{group_by_cols}. The default groups by \code{site_unique}
+(one row per survey visit, matching the prior behaviour); passing
+\code{c("site_unique", "subplot_id")} (or any other vector of column names in
+\code{survey_data}) computes diversity at that finer granularity.
 }
 \examples{
+\dontrun{
 ausplot.pi.data <- ausplotsR::get_ausplots(my.Plot_IDs=
     c("SATFLB0004", "QDAMGD0022", "NTASTU0002"), veg.PI=TRUE)$veg.PI
-field_diversity <- calculate_field_diversity(ausplot.pi.data)
-
+# default: one row per survey visit
+site_div <- calculate_field_diversity(ausplot.pi.data)
+# subplot-level diversity within each visit
+subplot_div <- calculate_field_diversity(
+  ausplot.pi.data,
+  group_by_cols = c("site_unique", "subplot_id")
+)
+}
 }
