@@ -4,7 +4,12 @@
 \alias{extract_pixel_values}
 \title{Extract pixel values}
 \usage{
-extract_pixel_values(raster_files, aoi_files, wavelength_names)
+extract_pixel_values(
+  raster_files,
+  aoi_files,
+  wavelength_names,
+  aoi_id_col = NULL
+)
 }
 \arguments{
 \item{raster_files}{directory of input raster files}
@@ -12,6 +17,10 @@ extract_pixel_values(raster_files, aoi_files, wavelength_names)
 \item{aoi_files}{area of interest file - shapefile containing one or more site polygons for each raster}
 
 \item{wavelength_names}{the wavelength corresponding to each layer of the raster_files}
+
+\item{aoi_id_col}{Optional character; name of a column in the AOI shapefile
+to use as the per-feature \code{aoi_id}. When \code{NULL} (default), the loop index
+(\code{1:nrow(aois)}) is used, preserving the prior behaviour.}
 }
 \value{
 a df with pixel values for each of the image layers
