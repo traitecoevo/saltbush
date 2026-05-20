@@ -5,6 +5,9 @@
 #' @param raster_files directory of input raster files
 #' @param aoi_files area of interest file - shapefile containing one or more site polygons for each raster
 #' @param wavelength_names the wavelength corresponding to each layer of the raster_files
+#' @param aoi_id_col Optional character; name of a column in the AOI shapefile
+#'   to use as the per-feature `aoi_id`. When `NULL` (default), the loop index
+#'   (`1:nrow(aois)`) is used, preserving the prior behaviour.
 #' @return a df with pixel values for each of the image layers
 #' @examples
 #' aoi_files <- list.files('inst/extdata/aoi',
@@ -14,7 +17,7 @@
 #' pixelvalues <- extract_pixel_values(raster_files, aoi_files, c('blue','green','red','red_edge','nir'))
 #' @export
 
-extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
+extract_pixel_values <- function(raster_files, aoi_files, wavelength_names, aoi_id_col = NULL){
 
   all_pixel_values_list <- list()
 
@@ -26,12 +29,20 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
     #choose the corresponding subplot file
     aoi_file <- aoi_files[grep(paste0('^', site_name), basename(aoi_files))]
 
-    # read in aoi file and select geometries
-    aois <- sf::read_sf(aoi_file) |>
-      dplyr::select('geometry')
+    # read in aoi file and select geometries (and the id column if requested)
+    aois <- sf::read_sf(aoi_file)
+    if (!is.null(aoi_id_col)) {
+      if (!aoi_id_col %in% names(aois)) {
+        stop(sprintf("aoi_id_col '%s' not found in %s", aoi_id_col, basename(aoi_file)))
+      }
+      aoi_ids <- aois[[aoi_id_col]]
+    } else {
+      aoi_ids <- seq_len(nrow(aois))
+    }
+    aois <- dplyr::select(aois, 'geometry')
 
     # read in raster file
-    raster_data <- raster::stack(raster_file)
+    raster_data <- terra::rast(raster_file)
 
     # apply consistent band names to each raster
     names(raster_data) <- wavelength_names
@@ -39,25 +50,23 @@ extract_pixel_values <- function(raster_files, aoi_files, wavelength_names){
     # create empty list
     pixel_values_list <- list()
 
-    for (i in 1:nrow(aois)){
+    for (i in seq_len(nrow(aois))){
 
       # select the i-th aoi and its id
       aoi <- aois[i, ]
+      aoi_id <- aoi_ids[i]
 
-      #aoi_id <- subplot$subplot_id
-      aoi_id <- i
+      # convert sf to SpatVector for mask() to work with rast()
+      aoi_vect <- terra::vect(aoi)
 
-      # convert to spatial object
-      aoi_sp <- as(aoi, "Spatial")
-
-      # crop and mask raster using current subplot
-      cropped_raster <- raster::crop(raster_data, aoi_sp)
-      masked_raster <- raster::mask(cropped_raster, aoi_sp)
+      # crop and mask raster using current aoi
+      cropped_raster <- terra::crop(raster_data, aoi_vect)
+      masked_raster <- terra::mask(cropped_raster, aoi_vect)
 
       # extract pixel values
-      pixel_values  <- as.data.frame(raster::getValues(masked_raster))
+      pixel_values <- as.data.frame(masked_raster)
 
-      # add subplot id to pixel values df
+      # add aoi id to pixel values df
       pixel_values$aoi_id <- aoi_id
 
       #add to list
