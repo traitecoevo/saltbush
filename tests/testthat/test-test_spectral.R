@@ -61,5 +61,23 @@ test_that('calculate_spectral_metrics works with rarefaction', {
   expect_true(all(metrics$site == 'site1'))
 })
 
+test_that('seed makes rarefaction reproducible', {
+  # df_test has 10 rows per aoi; sampling min_points = 5 forces a strict subset
+  # so RNG state matters (unlike min_points = 10 which would be degenerate).
+  args <- list(df_test, wavelengths = colnames(df_test[, 2:4]),
+               rarefaction = TRUE, min_points = 5, n = 20)
+
+  a <- do.call(calculate_spectral_metrics, c(args, list(seed = 42)))
+  b <- do.call(calculate_spectral_metrics, c(args, list(seed = 42)))
+  c <- do.call(calculate_spectral_metrics, c(args, list(seed = 7)))
+
+  # same seed -> identical CV and CHV (SV is unseeded — no sampling)
+  expect_equal(a$CV, b$CV)
+  expect_equal(a$CHV, b$CHV)
+  # different seed -> different rarefaction draws -> different CV / CHV
+  expect_false(isTRUE(all.equal(a$CV, c$CV)))
+  expect_false(isTRUE(all.equal(a$CHV, c$CHV)))
+})
+
 
 

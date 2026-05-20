@@ -12,7 +12,8 @@ calculate_cv(
   wavelengths,
   rarefaction = FALSE,
   min_points = NULL,
-  n = NULL
+  n = NULL,
+  seed = NULL
 )
 }
 \arguments{
@@ -25,6 +26,10 @@ calculate_cv(
 \item{min_points}{Integer; minimum number of pixels per \code{aoi} to standardize uneven pixel numbers across sites (used if \code{rarefaction = TRUE}).}
 
 \item{n}{Integer; number of subset permutations if \code{rarefaction = TRUE}.}
+
+\item{seed}{Integer or NULL; if provided, \code{set.seed(seed)} is called once at the
+start of the function so the rarefaction sampling is reproducible. Default
+\code{NULL} preserves the prior unseeded behaviour.}
 }
 \value{
 A dataframe containing spectral metrics for each \code{aoi} within each site/raster.
