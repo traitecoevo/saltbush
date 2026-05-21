@@ -3,4 +3,9 @@
 ^\.github$
 ^LICENSE\.md$
 ^\.DS_Store$
+\.DS_Store$
 ^README\.Rmd$
+^data-raw$
+^\.claude$
+^doc$
+^Meta$
