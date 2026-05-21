@@ -3,13 +3,14 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
 <!-- badges: end -->
 
-# saltbush <img src="man/figures/saltbush_hex.png" align="right" width="200"/>
+# saltbush <img src="man/figures/saltbush_hex.png" alt="saltbush hex sticker" align="right" width="200"/>
 
 *saltbush* processes drone imagery to calculate spectral diversity
 values as part of the assessment of the ‘spectral variability
@@ -45,11 +46,11 @@ query so you can try the on-the-ground side without any external data:
 field_diversity <- calculate_field_diversity(ausplots_NSABHC0009)
 field_diversity$taxonomic_diversity
 #>        site_unique site_location_name species_richness shannon_diversity
-#> 1 NSABHC0009-58026         NSABHC0009               52          3.041263
-#> 2 NSABHC0009-53604         NSABHC0009               38          2.833114
+#> 1 NSABHC0009-58026         NSABHC0009               52          3.056908
+#> 2 NSABHC0009-53604         NSABHC0009               38          2.843074
 #>   simpson_diversity pielou_evenness exp_shannon inv_simpson
-#> 1         0.9195892       0.7696978    20.93167    12.43614
-#> 2         0.9039217       0.7788445    16.99831    10.40818
+#> 1         0.9203249       0.7736571    21.26171    12.55097
+#> 2         0.9043699       0.7815826    17.16846    10.45696
 ```
 
 For the from-the-sky side, the package bundles five single-band drone
@@ -77,9 +78,9 @@ metrics <- calculate_spectral_metrics(
 
 ``` r
 metrics
-#>          site aoi_id        CV          SV          CHV image_type
-#>        <char>  <num>     <num>       <num>        <num>     <char>
-#> 1: NSABHC0009      1 0.3314709 0.001708346 3.302738e-10   unmasked
+#>          site aoi_id       CV          SV          CHV image_type
+#>        <char>  <num>    <num>       <num>        <num>     <char>
+#> 1: NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked
 ```
 
 ## Worked example
