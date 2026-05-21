@@ -19,7 +19,7 @@ Hand-crafted for package examples. See
 \code{data-raw/synthetic_survey.R}.
 }
 \usage{
-synthetic_survey
+data(synthetic_survey)
 }
 \description{
 A small, hand-crafted data frame that mimics the shape of the \code{veg.PI}

@@ -20,7 +20,7 @@ Cached from \code{\link[ausplotsR:get_ausplots]{ausplotsR::get_ausplots()}} with
 \code{my.Plot_IDs = "NSABHC0009"}. See \code{data-raw/ausplots_NSABHC0009.R}.
 }
 \usage{
-ausplots_NSABHC0009
+data(ausplots_NSABHC0009)
 }
 \description{
 A cached subset of the point-intercept (\code{veg.PI}) table for AusPlots site
