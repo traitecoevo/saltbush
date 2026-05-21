@@ -1,0 +1,46 @@
+url: https://traitecoevo.github.io/saltbush/
+
+template:
+  bootstrap: 5
+
+reference:
+  - title: Drone imagery processing
+    desc: >
+      Build multiband images, mask non-vegetation pixels, and extract per-AOI
+      pixel values from drone imagery.
+    contents:
+      - create_multiband_image
+      - create_masked_raster
+      - find_optimum_thresholds
+      - extract_pixel_values
+
+  - title: Spectral diversity
+    desc: >
+      Calculate coefficient of variation (CV), spectral variance (SV), and
+      convex hull volume (CHV) from extracted pixel values.
+    contents:
+      - calculate_spectral_metrics
+      - calculate_cv
+      - calculate_sv
+      - calculate_chv_nopca
+
+  - title: On-the-ground diversity
+    desc: >
+      Compute taxonomic-diversity metrics from AusPlots point-intercept survey
+      data.
+    contents:
+      - calculate_field_diversity
+
+  - title: Example data
+    desc: >
+      Datasets bundled with the package for use in examples, tests, and the
+      vignette.
+    contents:
+      - synthetic_survey
+      - ausplots_NSABHC0009
+
+articles:
+  - title: Getting started
+    navbar: ~
+    contents:
+      - saltbush

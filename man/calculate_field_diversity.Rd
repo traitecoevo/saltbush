@@ -30,15 +30,27 @@ grouping specified by \code{group_by_cols}. The default groups by \code{site_uni
 \code{survey_data}) computes diversity at that finer granularity.
 }
 \examples{
-\dontrun{
-ausplot.pi.data <- ausplotsR::get_ausplots(my.Plot_IDs=
-    c("SATFLB0004", "QDAMGD0022", "NTASTU0002"), veg.PI=TRUE)$veg.PI
-# default: one row per survey visit
-site_div <- calculate_field_diversity(ausplot.pi.data)
-# subplot-level diversity within each visit
+# Default: one row per survey visit, using the bundled synthetic data.
+site_div <- calculate_field_diversity(synthetic_survey)
+site_div$taxonomic_diversity
+
+# Subplot-level diversity within each visit:
 subplot_div <- calculate_field_diversity(
-  ausplot.pi.data,
+  synthetic_survey,
   group_by_cols = c("site_unique", "subplot_id")
 )
+subplot_div$taxonomic_diversity
+
+# Cached real AusPlots point-intercept data for site NSABHC0009:
+field_diversity_real <- calculate_field_diversity(ausplots_NSABHC0009)
+field_diversity_real$taxonomic_diversity
+
+# To pull fresh data from the AusPlots database (requires network):
+\dontrun{
+ausplot.pi.data <- ausplotsR::get_ausplots(
+  my.Plot_IDs = c("SATFLB0004", "QDAMGD0022", "NTASTU0002"),
+  veg.PI = TRUE
+)$veg.PI
+calculate_field_diversity(ausplot.pi.data)
 }
 }

@@ -1,0 +1,121 @@
+---
+title: "Getting started with saltbush"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with saltbush}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "vignette-",
+  out.width = "90%"
+)
+library(saltbush)
+```
+
+This vignette walks through a complete spectral-diversity workflow using
+only data shipped with the package, so it runs offline. The workflow has
+two halves that you eventually combine:
+
+1. **From-the-sky:** turn drone imagery into spectral-diversity metrics
+   per area-of-interest (AOI).
+2. **From-the-ground:** turn AusPlots point-intercept data into
+   taxonomic-diversity metrics per site.
+
+## 1. Build a multiband image from single-band TIFs
+
+The example data ships with five single-band TIFs from a drone flight
+over Fowlers Gap, NSW (`blue`, `green`, `red`, `red_edge`, `nir`).
+
+```{r build-multiband, message = FALSE, results = "hide"}
+input_dir <- system.file("extdata/create_multiband_image",
+                         package = "saltbush")
+
+multiband <- create_multiband_image(
+  input_dir,
+  desired_band_order = c("blue", "green", "red", "red_edge", "nir"),
+  output_dir = tempdir(),
+  return_raster = TRUE
+)
+```
+
+## 2. Extract pixel values inside areas of interest
+
+We then combine the multiband image with an area-of-interest shapefile.
+The package ships a small aggregated raster and matching AOI for
+demonstration:
+
+```{r extract-pixels}
+raster_files <- list.files(
+  system.file("extdata/example", package = "saltbush"),
+  pattern = "\\.tif$", full.names = TRUE
+)
+
+aoi_files <- list.files(
+  system.file("extdata/aoi", package = "saltbush"),
+  pattern = "NSABHC0009_aoi\\.shp$", full.names = TRUE
+)
+
+pixel_values <- extract_pixel_values(
+  raster_files, aoi_files,
+  c("blue", "green", "red", "red_edge", "nir")
+)
+head(pixel_values)
+```
+
+## 3. Calculate spectral metrics
+
+`calculate_spectral_metrics()` returns three metrics per AOI:
+
+- **CV** — coefficient of variation
+- **SV** — spectral variance
+- **CHV** — convex hull volume
+
+```{r spectral-metrics}
+metrics <- calculate_spectral_metrics(
+  pixel_values,
+  wavelengths = c("blue", "green", "red", "red_edge", "nir"),
+  masked = FALSE,
+  rarefaction = FALSE
+)
+metrics
+```
+
+See the manuscript referenced in `?saltbush` for the full definitions
+and a discussion of when each metric is most useful.
+
+## 4. Compute on-the-ground taxonomic diversity
+
+For the from-the-ground side, the package ships a cached AusPlots
+point-intercept dataset for the same site (`NSABHC0009`) so the worked
+example does not need network access:
+
+```{r field-diversity}
+field_diversity <- calculate_field_diversity(ausplots_NSABHC0009)
+field_diversity$taxonomic_diversity
+```
+
+The returned metrics are species richness, Shannon's diversity,
+Simpson's diversity, Pielou's evenness, exponential Shannon's, and
+inverse Simpson's.
+
+To pull a fresh query from the AusPlots database (or to query other
+plots), use `ausplotsR::get_ausplots()`:
+
+```{r ausplotsR, eval = FALSE}
+my.data <- ausplotsR::get_ausplots(
+  my.Plot_IDs = c("NSABHC0009"), veg.PI = TRUE
+)
+calculate_field_diversity(my.data$veg.PI)
+```
+
+## 5. Comparing the two
+
+High-resolution drone images are very large; the example data shipped
+with the package is intentionally small (just enough to run examples
+and tests). To compare spectral and taxonomic diversity meaningfully,
+run the above steps on the full-resolution imagery for your own sites.

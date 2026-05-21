@@ -50,6 +50,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Adele Gemmell \email{adelegemmell@hotmail.com} (\href{https://orcid.org/0009-0005-2419-7287}{ORCID})
   \item Will Cornwell \email{w.cornwell@unsw.edu.au} (\href{https://orcid.org/0000-0003-4080-4073}{ORCID}) [contributor]
 }
 

@@ -1,6 +1,6 @@
 Package: saltbush
 Title: Spectral Diversity from Drone Images
-Version: 0.0.0.9000
+Version: 0.0.1.9000
 Authors@R: c(
     person(given = "Adele", family = "Gemmell", email = "adelegemmell@hotmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0005-2419-7287")),
@@ -11,7 +11,7 @@ Authors@R: c(
            )
 Description: processes drone data to calculate spectral diversity metrics. To facilitate testing of the spectral-biodiversity relationship, it also calculates on-the-ground diversity from on-the ground, point-intercept surveys specifically from the AusPlots framework.
 License: GPL (>= 3)
-URL: https://github.com/traitecoevo/saltbush
+URL: https://github.com/traitecoevo/saltbush, https://traitecoevo.github.io/saltbush/
 BugReports: https://github.com/traitecoevo/saltbush/issues
 Depends:
     R (>= 4.0.0)
@@ -25,10 +25,15 @@ Imports:
     vegan,
     geometry,
     terra
-Suggests: 
+Suggests:
     ausplotsR,
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/Needs/website: pkgdown
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
+LazyData: true
 Config/roxygen2/version: 7.3.3.9000
