@@ -97,5 +97,5 @@ create_masked_raster(input,
                      red_band_index = 3,
                      nir_band_index = 5)
 #> [1] "Files found: /home/runner/work/_temp/Library/saltbush/extdata/multiband_image/multiband_image.tif"
-#> [1] "Masked raster saved to: /tmp/RtmpspxTkq/multiband_image_masked.tif"
+#> [1] "Masked raster saved to: /tmp/RtmpCHxWb9/multiband_image_masked.tif"
 ```

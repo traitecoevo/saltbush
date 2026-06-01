@@ -14,7 +14,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/traitecoevo/saltbush/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/traitecoevo/saltbush/blob/v0.1.0/DESCRIPTION)
 
 Gemmell A, Cornwell W (2026). *saltbush: Spectral Diversity from Drone
 Images*. R package version 0.1.0,
