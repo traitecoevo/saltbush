@@ -69,16 +69,19 @@ create_masked_raster <- function(input,
     stop("No files found.")
   }
 
+  masked_rasters <- list()
+
   for (file in files) {
     # extract the site identifier from file name
     file_name <- basename(file)
 
     if (!is.null(ndvi_threshold_df)) {
-      # Use grepl to search if any site value is found in file_id
-      site_id <- ndvi_threshold_df$site[grepl(ndvi_threshold_df$site, file_name)]
+      # find which site identifier(s) are present in the file name
+      site_id <- ndvi_threshold_df$site[
+        vapply(ndvi_threshold_df$site, function(s) grepl(s, file_name), logical(1))
+      ]
 
-
-      ndvi_threshold <- ndvi_threshold_df$threshold[ndvi_threshold_df$site == site_id]
+      ndvi_threshold <- ndvi_threshold_df$threshold[ndvi_threshold_df$site %in% site_id]
     }
     if (length(ndvi_threshold) == 0) {
       stop(paste("No NDVI threshold values found for file", file_name))
@@ -86,10 +89,12 @@ create_masked_raster <- function(input,
 
 
     if (!is.null(nir_threshold_df)) {
-      # Use grepl to search if any site value is found in file_id
-      site_id <- nir_threshold_df$site[grepl(nir_threshold_df$site, file_name)]
+      # find which site identifier(s) are present in the file name
+      site_id <- nir_threshold_df$site[
+        vapply(nir_threshold_df$site, function(s) grepl(s, file_name), logical(1))
+      ]
 
-      nir_threshold <- nir_threshold_df$threshold[nir_threshold_df$site == site_id]
+      nir_threshold <- nir_threshold_df$threshold[nir_threshold_df$site %in% site_id]
     }
     if (length(nir_threshold) == 0) {
       stop(paste("No NIR threshold values found for file", file_name))
@@ -126,9 +131,14 @@ create_masked_raster <- function(input,
     if (make_plot)
       terra::plot(raster_data_masked)
 
-    if (return_raster)
-      return(raster_data_masked)
-    else
-      return(NULL)
+    masked_rasters[[masked_filename]] <- raster_data_masked
   }
+
+  if (return_raster) {
+    # return a single raster when one file was processed, else a named list
+    if (length(masked_rasters) == 1) return(masked_rasters[[1]])
+    return(masked_rasters)
+  }
+
+  return(invisible(NULL))
 }

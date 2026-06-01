@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
@@ -21,14 +21,15 @@ also functions to calculate on-the-ground diversity built on the
 [ausplotsR](https://github.com/ternaustralia/ausplotsR) and
 [vegan](https://github.com/vegandevs/vegan) packages. The statistical
 methods for connecting diversity sampled on the ground to diversity
-sampled from the sky are still developing. This package is aimed at
-making from-the-sky diversity methods development easier for researchers
-across the world.
+sampled from the sky are implemented and tested here. This package is
+aimed at making from-the-sky diversity methods development easier for
+researchers across the world.
 
 Specifically we have used this package in a test in the Australian arid
 zone. The results suggest that some of the methods below perform much
-better than others. See our paper *Placeholder to link to the preprint
-once that’s posted.*
+better than others. The code that reproduces that full analysis is
+available at
+[adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).
 
 ## Installation
 
@@ -53,8 +54,9 @@ field_diversity$taxonomic_diversity
 #> 2         0.9043699       0.7815826    17.16846    10.45696
 ```
 
-For the from-the-sky side, the package bundles five single-band drone
-TIFs you can stack and turn into spectral metrics:
+For the from-the-sky side, the package bundles a small clip of
+multispectral drone imagery from Fowlers Gap, NSW that you can turn into
+spectral metrics:
 
 ``` r
 raster_files <- list.files(
@@ -75,6 +77,25 @@ metrics <- calculate_spectral_metrics(
   masked = FALSE, rarefaction = FALSE
 )
 ```
+
+The five spectral bands of that clip:
+
+``` r
+drone <- terra::rast(raster_files)
+terra::plot(drone)
+```
+
+<img src="man/figures/README-drone-clip-bands-1.png" alt="The five spectral bands (blue, green, red, red edge, NIR) of the example drone image clip" width="100%" />
+
+A true-colour composite of the same clip:
+
+``` r
+terra::plotRGB(drone, r = 3, g = 2, b = 1, stretch = "hist")
+```
+
+<img src="man/figures/README-drone-clip-rgb-1.png" alt="True-colour composite of the example drone image clip" width="60%" />
+
+The spectral metrics for the area of interest:
 
 ``` r
 metrics
@@ -115,4 +136,6 @@ vignette("saltbush")
 High-resolution drone images are very large, and the example data
 included with the package on GitHub are too small to do this
 meaningfully. We recommend running the workflow locally on your own
-imagery following the steps in `vignette("saltbush")`.
+imagery following the steps in `vignette("saltbush")`. For a complete,
+real-world analysis built on `saltbush`, see the companion repository
+[adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).

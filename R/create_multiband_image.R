@@ -43,6 +43,8 @@ create_multiband_image <- function(input_dir,
   ## NOTE: 'desired_band_order' must match file names
   #  should be combined in wavelength order
 
+  combined_images <- list()
+
   # loop thru each folder
   for (folder in folders) {
     # list of tif files
@@ -74,10 +76,14 @@ create_multiband_image <- function(input_dir,
     if (make_plot)
       terra::plot(combined_image)
 
-    #logic for what to return
-    if (return_raster)
-      return(combined_image)
-    else
-      return(NULL)
+    combined_images[[basename(folder)]] <- combined_image
   }
+
+  # logic for what to return: a single raster for one folder, else a named list
+  if (return_raster) {
+    if (length(combined_images) == 1) return(combined_images[[1]])
+    return(combined_images)
+  }
+
+  return(invisible(NULL))
 }
