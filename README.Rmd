@@ -27,7 +27,7 @@ library(saltbush)
 
 *saltbush* processes drone imagery to calculate spectral diversity values as part of the assessment of the 'spectral variability hypothesis' or the 'spectral-biodiversity relationship'. This was specifically implemented to connect *from-the-sky* diversity with *on-the-ground* diversity as measured in the AusPlots project. There are also functions to calculate on-the-ground diversity built on the [ausplotsR](https://github.com/ternaustralia/ausplotsR) and [vegan](https://github.com/vegandevs/vegan) packages.  The statistical methods for connecting diversity sampled on the ground to diversity sampled from the sky are implemented and tested here.  This package is aimed at making from-the-sky diversity methods development easier for researchers across the world.
 
-Specifically we have used this package in a test in the Australian arid zone.  The results suggest that some of the methods below perform much better than others.
+Specifically we have used this package in a test in the Australian arid zone.  The results suggest that some of the methods below perform much better than others.  The code that reproduces that full analysis is available at [adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).
 
 ## Installation
 
@@ -98,4 +98,4 @@ vignette("saltbush")
 
 ## Comparing from-the-sky and from-the-ground diversity
 
-High-resolution drone images are very large, and the example data included with the package on GitHub are too small to do this meaningfully. We recommend running the workflow locally on your own imagery following the steps in `vignette("saltbush")`.
+High-resolution drone images are very large, and the example data included with the package on GitHub are too small to do this meaningfully. We recommend running the workflow locally on your own imagery following the steps in `vignette("saltbush")`. For a complete, real-world analysis built on `saltbush`, see the companion repository [adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).

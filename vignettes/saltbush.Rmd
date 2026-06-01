@@ -116,3 +116,7 @@ High-resolution drone images are very large; the example data shipped
 with the package is intentionally small (just enough to run examples
 and tests). To compare spectral and taxonomic diversity meaningfully,
 run the above steps on the full-resolution imagery for your own sites.
+
+For a complete, real-world analysis built on `saltbush` — including the
+full-resolution imagery workflow — see the companion repository
+[adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).

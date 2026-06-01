@@ -28,7 +28,9 @@ across the world.
 
 Specifically we have used this package in a test in the Australian arid
 zone. The results suggest that some of the methods below perform much
-better than others.
+better than others. The code that reproduces that full analysis is
+available at
+[adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).
 
 ## Installation
 
@@ -115,4 +117,6 @@ vignette("saltbush")
 High-resolution drone images are very large, and the example data
 included with the package on GitHub are too small to do this
 meaningfully. We recommend running the workflow locally on your own
-imagery following the steps in `vignette("saltbush")`.
+imagery following the steps in `vignette("saltbush")`. For a complete,
+real-world analysis built on `saltbush`, see the companion repository
+[adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).
