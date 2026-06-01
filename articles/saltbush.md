@@ -82,11 +82,6 @@ metrics
 #> 1: NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked
 ```
 
-See the manuscript referenced in
-[`?saltbush`](https://traitecoevo.github.io/saltbush/reference/saltbush.md)
-for the full definitions and a discussion of when each metric is most
-useful.
-
 ## 4. Compute on-the-ground taxonomic diversity
 
 For the from-the-ground side, the package ships a cached AusPlots
@@ -127,3 +122,7 @@ High-resolution drone images are very large; the example data shipped
 with the package is intentionally small (just enough to run examples and
 tests). To compare spectral and taxonomic diversity meaningfully, run
 the above steps on the full-resolution imagery for your own sites.
+
+For a complete, real-world analysis built on `saltbush` — including the
+full-resolution imagery workflow — see the companion repository
+[adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).

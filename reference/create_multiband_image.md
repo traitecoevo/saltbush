@@ -58,5 +58,4 @@ representing the combined multiband image.
 input_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
 output_dir <- tempdir()
 create_multiband_image(input_dir, c('blue', 'green', 'red', 'red_edge', 'nir'), output_dir)
-#> NULL
 ```

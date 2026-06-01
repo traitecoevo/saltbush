@@ -17,13 +17,13 @@ Source:
 [`DESCRIPTION`](https://github.com/traitecoevo/saltbush/blob/master/DESCRIPTION)
 
 Gemmell A, Cornwell W (2026). *saltbush: Spectral Diversity from Drone
-Images*. R package version 0.0.1.9000,
+Images*. R package version 0.1.0,
 <https://github.com/traitecoevo/saltbush>.
 
     @Manual{,
       title = {saltbush: Spectral Diversity from Drone Images},
       author = {Adele Gemmell and Will Cornwell},
       year = {2026},
-      note = {R package version 0.0.1.9000},
+      note = {R package version 0.1.0},
       url = {https://github.com/traitecoevo/saltbush},
     }
