@@ -22,9 +22,8 @@ also functions to calculate on-the-ground diversity built on the
 [vegan](https://github.com/vegandevs/vegan) packages. The statistical
 methods for connecting diversity sampled on the ground to diversity
 sampled from the sky are implemented and tested here. This package is
-aimed at
-making from-the-sky diversity methods development easier for researchers
-across the world.
+aimed at making from-the-sky diversity methods development easier for
+researchers across the world.
 
 Specifically we have used this package in a test in the Australian arid
 zone. The results suggest that some of the methods below perform much
@@ -55,8 +54,9 @@ field_diversity$taxonomic_diversity
 #> 2         0.9043699       0.7815826    17.16846    10.45696
 ```
 
-For the from-the-sky side, the package bundles five single-band drone
-TIFs you can stack and turn into spectral metrics:
+For the from-the-sky side, the package bundles a small clip of
+multispectral drone imagery from Fowlers Gap, NSW that you can turn into
+spectral metrics:
 
 ``` r
 raster_files <- list.files(
@@ -77,6 +77,25 @@ metrics <- calculate_spectral_metrics(
   masked = FALSE, rarefaction = FALSE
 )
 ```
+
+The five spectral bands of that clip:
+
+``` r
+drone <- terra::rast(raster_files)
+terra::plot(drone)
+```
+
+<img src="man/figures/README-drone-clip-bands-1.png" alt="The five spectral bands (blue, green, red, red edge, NIR) of the example drone image clip" width="100%" />
+
+A true-colour composite of the same clip:
+
+``` r
+terra::plotRGB(drone, r = 3, g = 2, b = 1, stretch = "hist")
+```
+
+<img src="man/figures/README-drone-clip-rgb-1.png" alt="True-colour composite of the example drone image clip" width="60%" />
+
+The spectral metrics for the area of interest:
 
 ``` r
 metrics

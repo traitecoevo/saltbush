@@ -45,7 +45,7 @@ field_diversity <- calculate_field_diversity(ausplots_NSABHC0009)
 field_diversity$taxonomic_diversity
 ```
 
-For the from-the-sky side, the package bundles five single-band drone TIFs you can stack and turn into spectral metrics:
+For the from-the-sky side, the package bundles a small clip of multispectral drone imagery from Fowlers Gap, NSW that you can turn into spectral metrics:
 
 ```{r quick-spectral, message = FALSE, results = "hide"}
 raster_files <- list.files(
@@ -66,6 +66,21 @@ metrics <- calculate_spectral_metrics(
   masked = FALSE, rarefaction = FALSE
 )
 ```
+
+The five spectral bands of that clip:
+
+```{r drone-clip-bands, fig.alt = "The five spectral bands (blue, green, red, red edge, NIR) of the example drone image clip", out.width = "100%"}
+drone <- terra::rast(raster_files)
+terra::plot(drone)
+```
+
+A true-colour composite of the same clip:
+
+```{r drone-clip-rgb, fig.alt = "True-colour composite of the example drone image clip", out.width = "60%"}
+terra::plotRGB(drone, r = 3, g = 2, b = 1, stretch = "hist")
+```
+
+The spectral metrics for the area of interest:
 
 ```{r show-spectral}
 metrics
