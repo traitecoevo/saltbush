@@ -46,7 +46,34 @@ field_diversity <- calculate_field_diversity(ausplots_NSABHC0009)
 field_diversity$taxonomic_diversity
 ```
 
-For the from-the-sky side, the package bundles a small clip of multispectral drone imagery from Fowlers Gap, NSW that you can turn into spectral metrics:
+For the from-the-sky side, `saltbush` turns multispectral drone imagery into spectral-diversity metrics. Here is an example scene from Fowlers Gap, NSW — its five spectral bands:
+
+```{r drone-clip-setup, include = FALSE}
+# Render the README clips from a full-resolution image when it is available
+# locally (data-raw/readme-hires/, git-ignored and excluded from the package),
+# otherwise fall back to the small image bundled with the package so the README
+# still builds anywhere. The package itself only ever ships the low-res version.
+hires_clip <- "data-raw/readme-hires/multiband_image.tif"
+clip_file <- if (file.exists(hires_clip)) {
+  hires_clip
+} else {
+  system.file("extdata/multiband_image/multiband_image.tif", package = "saltbush")
+}
+drone <- terra::rast(clip_file)
+names(drone) <- c("blue", "green", "red", "red_edge", "nir")
+```
+
+```{r drone-clip-bands, echo = FALSE, dpi = 150, fig.width = 8, fig.height = 5, fig.alt = "The five spectral bands (blue, green, red, red edge, NIR) of the example drone image", out.width = "100%"}
+terra::plot(drone)
+```
+
+and the same scene as a true-colour composite:
+
+```{r drone-clip-rgb, echo = FALSE, dpi = 150, fig.width = 6, fig.height = 6, fig.alt = "True-colour composite of the example drone image", out.width = "60%"}
+terra::plotRGB(drone, r = 3, g = 2, b = 1, stretch = "hist")
+```
+
+The package bundles a small example image and a matching area of interest, so you can go from imagery to spectral metrics:
 
 ```{r quick-spectral, message = FALSE, results = "hide"}
 raster_files <- list.files(
@@ -68,20 +95,7 @@ metrics <- calculate_spectral_metrics(
 )
 ```
 
-The five spectral bands of that clip:
-
-```{r drone-clip-bands, fig.alt = "The five spectral bands (blue, green, red, red edge, NIR) of the example drone image clip", out.width = "100%"}
-drone <- terra::rast(raster_files)
-terra::plot(drone)
-```
-
-A true-colour composite of the same clip:
-
-```{r drone-clip-rgb, fig.alt = "True-colour composite of the example drone image clip", out.width = "60%"}
-terra::plotRGB(drone, r = 3, g = 2, b = 1, stretch = "hist")
-```
-
-The spectral metrics for the area of interest:
+The resulting spectral metrics for each area of interest:
 
 ```{r show-spectral}
 metrics

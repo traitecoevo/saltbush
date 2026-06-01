@@ -55,9 +55,18 @@ field_diversity$taxonomic_diversity
 #> 2         0.9043699       0.7815826    17.16846    10.45696
 ```
 
-For the from-the-sky side, the package bundles a small clip of
-multispectral drone imagery from Fowlers Gap, NSW that you can turn into
-spectral metrics:
+For the from-the-sky side, `saltbush` turns multispectral drone imagery
+into spectral-diversity metrics. Here is an example scene from Fowlers
+Gap, NSW — its five spectral bands:
+
+<img src="man/figures/README-drone-clip-bands-1.png" alt="The five spectral bands (blue, green, red, red edge, NIR) of the example drone image" width="100%" />
+
+and the same scene as a true-colour composite:
+
+<img src="man/figures/README-drone-clip-rgb-1.png" alt="True-colour composite of the example drone image" width="60%" />
+
+The package bundles a small example image and a matching area of
+interest, so you can go from imagery to spectral metrics:
 
 ``` r
 raster_files <- list.files(
@@ -79,24 +88,7 @@ metrics <- calculate_spectral_metrics(
 )
 ```
 
-The five spectral bands of that clip:
-
-``` r
-drone <- terra::rast(raster_files)
-terra::plot(drone)
-```
-
-<img src="man/figures/README-drone-clip-bands-1.png" alt="The five spectral bands (blue, green, red, red edge, NIR) of the example drone image clip" width="100%" />
-
-A true-colour composite of the same clip:
-
-``` r
-terra::plotRGB(drone, r = 3, g = 2, b = 1, stretch = "hist")
-```
-
-<img src="man/figures/README-drone-clip-rgb-1.png" alt="True-colour composite of the example drone image clip" width="60%" />
-
-The spectral metrics for the area of interest:
+The resulting spectral metrics for each area of interest:
 
 ``` r
 metrics

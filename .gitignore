@@ -38,3 +38,6 @@ rsconnect/
 /doc/
 /Meta/
 docs
+
+# local-only high-res imagery for rendering README clips (not shipped, not committed)
+data-raw/readme-hires/
