@@ -8,6 +8,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 [![R-CMD-check](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
+[![DOI](https://zenodo.org/badge/859674921.svg)](https://zenodo.org/badge/latestdoi/859674921)
 <!-- badges: end -->
 
 # saltbush <img src="man/figures/saltbush_hex.png" alt="saltbush hex sticker" align="right" width="200"/>
