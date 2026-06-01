@@ -73,7 +73,11 @@
 <span><span class="co">#&gt;   simpson_diversity pielou_evenness exp_shannon inv_simpson</span></span>
 <span><span class="co">#&gt; 1         0.9203249       0.7736571    21.26171    12.55097</span></span>
 <span><span class="co">#&gt; 2         0.9043699       0.7815826    17.16846    10.45696</span></span></code></pre></div>
-<p>For the from-the-sky side, the package bundles a small clip of multispectral drone imagery from Fowlers Gap, NSW that you can turn into spectral metrics:</p>
+<p>For the from-the-sky side, <code>saltbush</code> turns multispectral drone imagery into spectral-diversity metrics. Here is an example scene from Fowlers Gap, NSW — its five spectral bands:</p>
+<p><img src="reference/figures/README-drone-clip-bands-1.png" alt="The five spectral bands (blue, green, red, red edge, NIR) of the example drone image" width="100%"></p>
+<p>and the same scene as a true-colour composite:</p>
+<p><img src="reference/figures/README-drone-clip-rgb-1.png" alt="True-colour composite of the example drone image" width="60%"></p>
+<p>The package bundles a small example image and a matching area of interest, so you can go from imagery to spectral metrics:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">raster_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example"</span>, package <span class="op">=</span> <span class="st">"saltbush"</span><span class="op">)</span>,</span>
@@ -92,17 +96,8 @@
 <span>  wavelengths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>, <span class="st">"red_edge"</span>, <span class="st">"nir"</span><span class="op">)</span>,</span>
 <span>  masked <span class="op">=</span> <span class="cn">FALSE</span>, rarefaction <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The five spectral bands of that clip:</p>
+<p>The resulting spectral metrics for each area of interest:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">drone</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">raster_files</span><span class="op">)</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">drone</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-drone-clip-bands-1.png" alt="The five spectral bands (blue, green, red, red edge, NIR) of the example drone image clip" width="100%"></p>
-<p>A true-colour composite of the same clip:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plotRGB.html" class="external-link">plotRGB</a></span><span class="op">(</span><span class="va">drone</span>, r <span class="op">=</span> <span class="fl">3</span>, g <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">1</span>, stretch <span class="op">=</span> <span class="st">"hist"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-drone-clip-rgb-1.png" alt="True-colour composite of the example drone image clip" width="60%"></p>
-<p>The spectral metrics for the area of interest:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">metrics</span></span>
 <span><span class="co">#&gt;          site aoi_id       CV          SV          CHV image_type</span></span>
 <span><span class="co">#&gt;        &lt;char&gt;  &lt;num&gt;    &lt;num&gt;       &lt;num&gt;        &lt;num&gt;     &lt;char&gt;</span></span>
@@ -112,7 +107,7 @@
 <h2 id="worked-example">Worked example<a class="anchor" aria-label="anchor" href="#worked-example"></a>
 </h2>
 <p>For a full walkthrough — multiband-image construction, AOI extraction, spectral metrics, AusPlots point-intercept diversity, and how the two halves fit together — see the package vignette:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"saltbush"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
