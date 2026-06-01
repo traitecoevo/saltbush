@@ -85,9 +85,6 @@ metrics <- calculate_spectral_metrics(
 metrics
 ```
 
-See the manuscript referenced in `?saltbush` for the full definitions
-and a discussion of when each metric is most useful.
-
 ## 4. Compute on-the-ground taxonomic diversity
 
 For the from-the-ground side, the package ships a cached AusPlots

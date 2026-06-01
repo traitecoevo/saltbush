@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/traitecoevo/saltbush/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://app.codecov.io/gh/traitecoevo/saltbush)
@@ -21,14 +21,14 @@ also functions to calculate on-the-ground diversity built on the
 [ausplotsR](https://github.com/ternaustralia/ausplotsR) and
 [vegan](https://github.com/vegandevs/vegan) packages. The statistical
 methods for connecting diversity sampled on the ground to diversity
-sampled from the sky are still developing. This package is aimed at
+sampled from the sky are implemented and tested here. This package is
+aimed at
 making from-the-sky diversity methods development easier for researchers
 across the world.
 
 Specifically we have used this package in a test in the Australian arid
 zone. The results suggest that some of the methods below perform much
-better than others. See our paper *Placeholder to link to the preprint
-once that’s posted.*
+better than others.
 
 ## Installation
 

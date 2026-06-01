@@ -79,5 +79,44 @@ test_that('seed makes rarefaction reproducible', {
   expect_false(isTRUE(all.equal(a$CHV, c$CHV)))
 })
 
+test_that('rarefaction requires n and min_points', {
+  expect_error(
+    calculate_spectral_metrics(df_test, wavelengths = colnames(df_test[, 2:4]),
+                               rarefaction = TRUE),
+    "n and min_points must be provided"
+  )
+  expect_error(
+    calculate_spectral_metrics(df_test, wavelengths = colnames(df_test[, 2:4]),
+                               rarefaction = TRUE, n = 5),
+    "n and min_points must be provided"
+  )
+})
+
+test_that('min_points exceeding available pixels errors clearly', {
+  expect_error(
+    calculate_spectral_metrics(df_test, wavelengths = colnames(df_test[, 2:4]),
+                               rarefaction = TRUE, n = 5, min_points = 10000),
+    "exceeds number of rows"
+  )
+})
+
+test_that('calculate_spectral_metrics keeps sites separate', {
+  multi_site <- rbind(
+    cbind(site_name = "siteA", df_test),
+    cbind(site_name = "siteB", df_test)
+  )
+  metrics <- calculate_spectral_metrics(
+    multi_site, wavelengths = colnames(df_test[, 2:4])
+  )
+  # one row per site x aoi_id (2 sites x 2 aois)
+  expect_equal(nrow(metrics), 4)
+  expect_setequal(unique(metrics$site), c("siteA", "siteB"))
+  # identical input per site -> identical metrics across the two sites
+  a <- metrics[metrics$site == "siteA", ][order(metrics[metrics$site == "siteA", ]$aoi_id), ]
+  b <- metrics[metrics$site == "siteB", ][order(metrics[metrics$site == "siteB", ]$aoi_id), ]
+  expect_equal(a$CV, b$CV)
+  expect_equal(a$SV, b$SV)
+})
+
 
 
