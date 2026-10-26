@@ -13,6 +13,9 @@
   and CRS before stacking, and lists any that differ.
 * The data-frame helpers `calculate_cv()`, `calculate_sv()` and
   `calculate_chv_nopca()` are removed; use `calculate_spectral_metrics()`.
+* `calculate_field_diversity()` gains `species_col`, `exclude` and
+  `abundance_col`, so it works on survey data beyond AusPlots point-intercepts
+  (e.g. cover or count data). Defaults reproduce the previous results exactly.
 * `data.table` and `stringr` are no longer dependencies.
 
 # saltbush 0.1.0

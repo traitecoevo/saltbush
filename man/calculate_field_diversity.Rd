@@ -4,15 +4,33 @@
 \alias{calculate_field_diversity}
 \title{Calculate field diversity}
 \usage{
-calculate_field_diversity(survey_data, group_by_cols = "site_unique")
+calculate_field_diversity(
+  survey_data,
+  group_by_cols = "site_unique",
+  species_col = "standardised_name",
+  exclude = c("Dead grass", "Dead shrub"),
+  abundance_col = NULL
+)
 }
 \arguments{
-\item{survey_data}{a df obtained from ausplotsR package with survey data for appropriate sites}
+\item{survey_data}{a data frame of survey records, e.g. AusPlots
+point-intercept data from ausplotsR, with one row per record.}
 
 \item{group_by_cols}{character vector of column names in \code{survey_data} to
 group by. Defaults to \code{"site_unique"}, which gives one row per survey visit.
 Pass e.g. \code{c("site_unique", "subplot_id")} to compute diversity per subplot
 within each site.}
+
+\item{species_col}{name of the column holding species names. Defaults to
+\code{"standardised_name"} (ausplotsR).}
+
+\item{exclude}{values of \code{species_col} to leave out, such as dead material.
+Defaults to \code{c("Dead grass", "Dead shrub")}; use \code{NULL} to keep everything.}
+
+\item{abundance_col}{optional name of a numeric column holding the abundance
+of each record (e.g. counts or percent cover). When \code{NULL} (default), each
+row counts as one hit, as in point-intercept data. Records with zero
+abundance are treated as absent; negative or missing values are an error.}
 }
 \value{
 a list, containing 'taxonomic_diversity' - values of species richness,
@@ -23,11 +41,12 @@ the grouping values; each matrix has the \code{group_by_cols} as leading id
 columns followed by one column per species.
 }
 \description{
-Takes ausplot survey data and calculates field diversity at the
-grouping specified by \code{group_by_cols}. The default groups by \code{site_unique}
-(one row per survey visit, matching the prior behaviour); passing
-\code{c("site_unique", "subplot_id")} (or any other vector of column names in
-\code{survey_data}) computes diversity at that finer granularity.
+Takes species survey data and calculates field diversity at the
+grouping specified by \code{group_by_cols}. The defaults suit AusPlots
+point-intercept data from ausplotsR: grouping by \code{site_unique} (one row per
+survey visit), species in \code{standardised_name}, dead material excluded, and
+each row counted as one hit. Other survey data can be used by changing
+\code{species_col}, \code{exclude} and \code{abundance_col}.
 }
 \examples{
 # Default: one row per survey visit, using the bundled synthetic data.

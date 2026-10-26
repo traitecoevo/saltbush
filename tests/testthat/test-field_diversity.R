@@ -76,3 +76,62 @@ test_that("calculate_field_diversity matches a live ausplotsR query", {
       length(na.omit(unique(ausplot.pi.data$standardised_name)))
   )
 })
+
+# generic (non-AusPlots) survey data -----------------------------------------
+
+cover_survey <- data.frame(
+  plot  = c("A", "A", "B", "B", "B", "B"),
+  taxon = c("sp1", "sp2", "sp1", "sp1", "sp3", "bare"),
+  cover = c(50, 50, 30, 10, 0, 60)
+)
+
+test_that("species_col, exclude and abundance_col work on generic data", {
+  res <- calculate_field_diversity(cover_survey, group_by_cols = "plot",
+                                   species_col = "taxon", exclude = "bare",
+                                   abundance_col = "cover")
+  div <- res$taxonomic_diversity
+
+  # plot A: two species with equal cover
+  a <- div[div$plot == "A", ]
+  expect_equal(a$species_richness, 2)
+  expect_equal(a$shannon_diversity, log(2))
+  expect_equal(a$simpson_diversity, 0.5)
+
+  # plot B: sp1's two records are summed, zero-cover sp3 is absent,
+  # and "bare" is excluded, leaving a single species
+  b <- div[div$plot == "B", ]
+  expect_equal(b$species_richness, 1)
+  expect_equal(b$shannon_diversity, 0)
+  expect_equal(res$community_matrices$B$sp1, 40)
+  expect_false("sp3" %in% names(res$community_matrices$B))
+  expect_false("bare" %in% names(res$community_matrices$B))
+})
+
+test_that("without abundance_col each row is one hit", {
+  hits <- calculate_field_diversity(cover_survey, "plot", species_col = "taxon",
+                                    exclude = NULL)
+  # plot B: sp1 has 2 rows, sp3 and bare 1 row each
+  expect_equal(hits$taxonomic_diversity$species_richness[2], 3)
+  expect_equal(hits$community_matrices$B$sp1, 2L)
+
+  # an abundance column of all 1s gives the same result
+  ones <- calculate_field_diversity(transform(cover_survey, one = 1), "plot",
+                                    species_col = "taxon", exclude = NULL,
+                                    abundance_col = "one")
+  expect_equal(ones$taxonomic_diversity, hits$taxonomic_diversity)
+})
+
+test_that("bad species_col or abundance_col errors clearly", {
+  expect_error(calculate_field_diversity(cover_survey, "plot", species_col = "nope"),
+               "species_col 'nope' not found")
+  expect_error(calculate_field_diversity(cover_survey, "plot", species_col = "taxon",
+                                         abundance_col = "nope"),
+               "abundance_col 'nope' not found")
+  expect_error(calculate_field_diversity(cover_survey, "plot", species_col = "taxon",
+                                         abundance_col = "plot"),
+               "must be numeric")
+  negative <- transform(cover_survey, cover = -cover)
+  expect_error(calculate_field_diversity(negative, "plot", species_col = "taxon",
+                                         abundance_col = "cover"),
+               "missing or negative")
+})
