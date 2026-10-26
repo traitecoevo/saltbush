@@ -40,3 +40,5 @@ rsconnect/
 docs
 # Claude Code notes
 CLAUDE*.md
+# local script for regenerating test reference metrics
+data-raw/make_reference_metrics.R

@@ -15,7 +15,6 @@ Drone data is complex and extracting spectral diversity values requires several 
 \itemize{
 \item \link{create_masked_raster}
 \item \link{create_multiband_image}
-\item \link{extract_pixel_values}
 }
 
 \strong{Spectral diversity}
@@ -41,6 +40,7 @@ submit an issue at our
 Useful links:
 \itemize{
   \item \url{https://github.com/traitecoevo/saltbush}
+  \item \url{https://traitecoevo.github.io/saltbush/}
   \item Report bugs at \url{https://github.com/traitecoevo/saltbush/issues}
 }
 
@@ -50,7 +50,6 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Adele Gemmell \email{adelegemmell@hotmail.com} (\href{https://orcid.org/0009-0005-2419-7287}{ORCID})
   \item Will Cornwell \email{w.cornwell@unsw.edu.au} (\href{https://orcid.org/0000-0003-4080-4073}{ORCID}) [contributor]
 }
 

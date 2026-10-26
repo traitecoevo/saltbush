@@ -1,3 +1,17 @@
+# saltbush (development version)
+
+* `calculate_spectral_metrics()` now calculates CV, SV and CHV directly from
+  rasters and AOI files, replacing `extract_pixel_values()`, which is removed.
+  Results match the previous pipeline (see `tests/testthat/test-reference_metrics.R`).
+* AOI files can be GeoJSON or GeoPackage as well as shapefiles. AOIs in a
+  different coordinate system from the imagery are reprojected, with a message.
+* Rarefaction now checks `min_points` against each AOI rather than the whole
+  site, and `seed` is set once per call so sites get independent draws.
+* `find_optimum_thresholds()` now handles several `class_value`s correctly.
+* `calculate_cv()`, `calculate_sv()` and `calculate_chv_nopca()` no longer
+  convert the caller's data frame to a data.table in place.
+* `stringr` is no longer a dependency.
+
 # saltbush 0.1.0
 
 * Initial release.

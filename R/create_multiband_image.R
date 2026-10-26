@@ -60,7 +60,7 @@ create_multiband_image <- function(input_dir,
     # reorder the bands based on the desired band order
     combined_image <- combined_image[[match(desired_band_order, band_names)]]
 
-    # create output file as .tif and as .envi
+    # create output file as .tif
     output_filename <- file.path(output_dir, paste0(basename(folder), "_multiband_image"))
     # write .tif file
     terra::writeRaster(

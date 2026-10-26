@@ -77,12 +77,8 @@ aoi_files <- list.files(
   system.file("extdata/aoi", package = "saltbush"),
   pattern = "NSABHC0009_aoi\\.shp$", full.names = TRUE
 )
-pixel_values <- extract_pixel_values(
-  raster_files, aoi_files,
-  c("blue", "green", "red", "red_edge", "nir")
-)
 metrics <- calculate_spectral_metrics(
-  pixel_values,
+  raster_files, aoi_files,
   wavelengths = c("blue", "green", "red", "red_edge", "nir"),
   masked = FALSE, rarefaction = FALSE
 )
@@ -92,9 +88,8 @@ The resulting spectral metrics for each area of interest:
 
 ``` r
 metrics
-#>          site aoi_id       CV          SV          CHV image_type
-#>        <char>  <num>    <num>       <num>        <num>     <char>
-#> 1: NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked
+#>         site aoi_id       CV          SV          CHV image_type
+#> 1 NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked
 ```
 
 ## Worked example

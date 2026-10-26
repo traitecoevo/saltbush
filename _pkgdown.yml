@@ -12,7 +12,6 @@ reference:
       - create_multiband_image
       - create_masked_raster
       - find_optimum_thresholds
-      - extract_pixel_values
 
   - title: Spectral diversity
     desc: >

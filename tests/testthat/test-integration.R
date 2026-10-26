@@ -1,7 +1,7 @@
-test_that("full pipeline: multiband image -> pixel values -> spectral metrics", {
+test_that("full pipeline: multiband image -> spectral metrics", {
   wavelengths <- c("blue", "green", "red", "red_edge", "nir")
 
-  # AOI matched by extract_pixel_values via the raster's site-name prefix, so the
+  # AOI matched by calculate_spectral_metrics via the raster's site-name prefix, so the
   # combined raster must be named so its prefix matches "multiband_image_aoi".
   aoi_files <- list.files(
     system.file("extdata/aoi", package = "saltbush"),
@@ -26,14 +26,9 @@ test_that("full pipeline: multiband image -> pixel values -> spectral metrics", 
   combined <- list.files(out_dir, pattern = "\\.tif$", full.names = TRUE)
   expect_length(combined, 1)
 
-  # 2. extract pixel values inside the AOIs
-  pixel_values <- extract_pixel_values(combined, aoi_files, wavelengths)
-  expect_true(all(c(wavelengths, "site_name", "aoi_id") %in% names(pixel_values)))
-  expect_gt(nrow(pixel_values), 0)
-
-  # 3. compute spectral metrics
+  # 2. compute spectral metrics directly from the raster
   metrics <- calculate_spectral_metrics(
-    pixel_values, wavelengths = wavelengths,
+    combined, aoi_files, wavelengths = wavelengths,
     masked = FALSE, rarefaction = FALSE
   )
 

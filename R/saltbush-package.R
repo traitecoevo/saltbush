@@ -15,7 +15,6 @@
 #'
 #' * [create_masked_raster]
 #' * [create_multiband_image]
-#' * [extract_pixel_values]
 #'
 #' **Spectral diversity**
 #'
@@ -40,7 +39,7 @@ utils::globalVariables(
     "n_distinct", "count", "spread", "n", "diversity", "mutate",
     "species_richness", "bind_rows", "site_name", "left_join", "SS",
     "SV", "points", "file_path_sans_ext", "str_extract", "read_sf",
-    "as", "crop", "mask", "getValues", "na.omit", "sd","site_location_name","everything"
+    "as", "crop", "mask", "getValues", "na.omit", "sd","site_location_name","everything", "N"
   )
 )
 
