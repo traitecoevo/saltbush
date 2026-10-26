@@ -17,12 +17,15 @@ coverage](https://codecov.io/gh/traitecoevo/saltbush/graph/badge.svg)](https://a
 values as part of the assessment of the ‘spectral variability
 hypothesis’ or the ‘spectral-biodiversity relationship’. This was
 specifically implemented to connect *from-the-sky* diversity with
-*on-the-ground* diversity as measured in the AusPlots project. This package is
+*on-the-ground* diversity as measured in the AusPlots project. 
+There are functions to calculate on-the-ground diversity built on the
+[ausplotsR](https://github.com/ternaustralia/ausplotsR) and
+[vegan](https://github.com/vegandevs/vegan) packages. This package is
 aimed at making from-the-sky diversity methods development easier for
 researchers across the world.
 
 Specifically we have used this package in a test in the Australian arid
-zone. The results suggest that some of the methods below perform much
+zone.  The results suggest that some of the methods below perform much
 better than others. The code that reproduces that full analysis is
 available at
 [adelegem/multispectral_drone_svh](https://github.com/adelegem/multispectral_drone_svh).

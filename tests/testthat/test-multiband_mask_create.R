@@ -112,3 +112,34 @@ test_that('create_masked_raster errors when no files are found', {
     "No files found"
   )
 })
+
+test_that('create_multiband_image errors clearly when bands do not align', {
+  band_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
+  bands <- list.files(band_dir, pattern = "\\.tif$", full.names = TRUE)
+  wavelengths <- c('blue', 'green', 'red', 'red_edge', 'nir')
+
+  # copy the bands to a fresh folder, then replace red with a modified version
+  make_folder <- function(modify) {
+    dir <- file.path(tempfile("misaligned_"), "plot")
+    dir.create(dir, recursive = TRUE)
+    file.copy(bands, file.path(dir, basename(bands)))
+    red <- terra::rast(file.path(band_dir, "red.tif"))
+    terra::writeRaster(modify(red), file.path(dir, "red.tif"), overwrite = TRUE)
+    dir
+  }
+
+  # different extent: drop the last row and column
+  shifted <- make_folder(function(r) terra::crop(r, terra::ext(r) - terra::res(r)))
+  expect_error(create_multiband_image(shifted, wavelengths, tempdir()),
+               "do not align:.*red\\.tif: extent")
+
+  # different resolution
+  coarse <- make_folder(function(r) terra::aggregate(r, 2))
+  expect_error(create_multiband_image(coarse, wavelengths, tempdir()),
+               "red\\.tif: resolution")
+
+  # different CRS (same grid, relabelled)
+  relabelled <- make_folder(function(r) { terra::crs(r) <- "EPSG:4326"; r })
+  expect_error(create_multiband_image(relabelled, wavelengths, tempdir()),
+               "red\\.tif: CRS differs")
+})

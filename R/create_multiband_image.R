@@ -3,7 +3,9 @@
   #' @description This function combines single reflectance band TIF files into a multiband image.
   #' By default, it saves the combined multiband image to a file rather than returning an object.
   #' The function supports reordering bands according to a specified wavelength order and
-  #' optionally creates a plot to visualize the output.
+  #' optionally creates a plot to visualize the output. All bands in a folder must
+  #' share the same extent, resolution and coordinate reference system (CRS);
+  #' otherwise the function stops and lists the bands that differ.
   #'
   #' @param input_dir A directory containing folders with waveband TIF files to be combined,
   #' or a single folder with waveband TIF files to be combined.
@@ -32,8 +34,8 @@
 create_multiband_image <- function(input_dir,
                                    desired_band_order,
                                    output_dir = tempdir(),
-                                   make_plot = FALSE,
-                                   return_raster = FALSE) {
+                                   make_plot = TRUE,
+                                   return_raster = TRUE) {
   # folder list | recursive = won't pick folders within folders
   folders <- list.dirs(input_dir, full.names = T, recursive = FALSE)
 
@@ -52,6 +54,9 @@ create_multiband_image <- function(input_dir,
 
     # load as raster
     rasters <- lapply(tif_files, terra::rast)
+
+    # bands must share extent, resolution and CRS to be stacked
+    check_bands_align(rasters, tif_files, folder)
 
     # stack rasters and assign band names
     combined_image <- terra::rast(rasters)
@@ -86,4 +91,39 @@ create_multiband_image <- function(input_dir,
   }
 
   return(invisible(NULL))
+}
+
+# error clearly if any band differs from the first in extent, resolution or CRS
+check_bands_align <- function(rasters, tif_files, folder) {
+  ref <- rasters[[1]]
+  ref_name <- basename(tif_files[1])
+  problems <- character()
+
+  for (i in seq_along(rasters)[-1]) {
+    r <- rasters[[i]]
+    name <- basename(tif_files[i])
+
+    if (!terra::same.crs(r, ref)) {
+      problems <- c(problems, sprintf("  %s: CRS differs from %s", name, ref_name))
+    }
+    if (!isTRUE(all.equal(terra::res(r), terra::res(ref)))) {
+      problems <- c(problems, sprintf("  %s: resolution %s differs from %s (%s)",
+                                      name, paste(signif(terra::res(r), 6), collapse = " x "),
+                                      ref_name, paste(signif(terra::res(ref), 6), collapse = " x ")))
+    }
+    if (!isTRUE(all.equal(as.vector(terra::ext(r)), as.vector(terra::ext(ref))))) {
+      problems <- c(problems, sprintf("  %s: extent %s differs from %s (%s)",
+                                      name, format_ext(r), ref_name, format_ext(ref)))
+    }
+  }
+
+  if (length(problems) > 0) {
+    stop(sprintf("Bands in '%s' cannot be stacked because they do not align:\n%s",
+                 basename(folder), paste(problems, collapse = "\n")),
+         call. = FALSE)
+  }
+}
+
+format_ext <- function(r) {
+  paste(signif(as.vector(terra::ext(r)), 10), collapse = ", ")
 }

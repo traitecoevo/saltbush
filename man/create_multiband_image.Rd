@@ -8,8 +8,8 @@ create_multiband_image(
   input_dir,
   desired_band_order,
   output_dir = tempdir(),
-  make_plot = FALSE,
-  return_raster = FALSE
+  make_plot = TRUE,
+  return_raster = TRUE
 )
 }
 \arguments{
@@ -37,7 +37,9 @@ the combined multiband image.
 This function combines single reflectance band TIF files into a multiband image.
 By default, it saves the combined multiband image to a file rather than returning an object.
 The function supports reordering bands according to a specified wavelength order and
-optionally creates a plot to visualize the output.
+optionally creates a plot to visualize the output. All bands in a folder must
+share the same extent, resolution and coordinate reference system (CRS);
+otherwise the function stops and lists the bands that differ.
 }
 \examples{
 

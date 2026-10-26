@@ -19,9 +19,6 @@ Drone data is complex and extracting spectral diversity values requires several 
 
 \strong{Spectral diversity}
 \itemize{
-\item \link{calculate_cv}
-\item \link{calculate_sv}
-\item \link{calculate_chv_nopca}
 \item \link{calculate_spectral_metrics}
 }
 

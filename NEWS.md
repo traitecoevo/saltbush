@@ -6,11 +6,14 @@
 * AOI files can be GeoJSON or GeoPackage as well as shapefiles. AOIs in a
   different coordinate system from the imagery are reprojected, with a message.
 * Rarefaction now checks `min_points` against each AOI rather than the whole
-  site, and `seed` is set once per call so sites get independent draws.
+  site, uses the same subsample for CV and CHV in each draw, and sets `seed`
+  once per call so sites get independent draws.
 * `find_optimum_thresholds()` now handles several `class_value`s correctly.
-* `calculate_cv()`, `calculate_sv()` and `calculate_chv_nopca()` no longer
-  convert the caller's data frame to a data.table in place.
-* `stringr` is no longer a dependency.
+* `create_multiband_image()` checks that all bands share extent, resolution
+  and CRS before stacking, and lists any that differ.
+* The data-frame helpers `calculate_cv()`, `calculate_sv()` and
+  `calculate_chv_nopca()` are removed; use `calculate_spectral_metrics()`.
+* `data.table` and `stringr` are no longer dependencies.
 
 # saltbush 0.1.0
 

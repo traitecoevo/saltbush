@@ -65,6 +65,32 @@ test_that("non-AOI files are ignored and unmatched or ambiguous sites error", {
   )
 })
 
+test_that("site name is the whole file name when it has no underscore", {
+  dir <- tempfile("no_underscore_")
+  dir.create(dir)
+  file.copy(raster_file, file.path(dir, "siteA.tif"))
+  sf::st_write(sf::read_sf(aoi_shp), file.path(dir, "siteA_aoi.geojson"), quiet = TRUE)
+
+  metrics <- calculate_spectral_metrics(
+    file.path(dir, "siteA.tif"), file.path(dir, "siteA_aoi.geojson"), wavelengths)
+  expect_true(all(metrics$site == "siteA"))
+})
+
+test_that("site name also ends at a '.'", {
+  dir <- tempfile("dot_names_")
+  dir.create(dir)
+  file.copy(raster_file, file.path(dir, "siteB.ortho.tif"))
+  sf::st_write(sf::read_sf(aoi_shp), file.path(dir, "siteB.aoi.geojson"), quiet = TRUE)
+  # a different site sharing the prefix must not match
+  sf::st_write(sf::read_sf(aoi_shp), file.path(dir, "siteBB_aoi.geojson"), quiet = TRUE)
+
+  metrics <- calculate_spectral_metrics(
+    file.path(dir, "siteB.ortho.tif"),
+    list.files(dir, pattern = "geojson$", full.names = TRUE),
+    wavelengths)
+  expect_true(all(metrics$site == "siteB"))
+})
+
 test_that("calculate_spectral_metrics honours aoi_id_col", {
   # pick whichever non-geometry column the bundled AOI shapefile happens to expose
   aoi_cols <- setdiff(names(sf::read_sf(aoi_shp)), "geometry")

@@ -18,7 +18,6 @@ Depends:
 Imports:
     dplyr,
     pROC,
-    data.table,
     sf,
     tidyr,
     vegan,
