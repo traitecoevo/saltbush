@@ -38,3 +38,5 @@ rsconnect/
 /doc/
 /Meta/
 docs
+# Claude Code notes
+CLAUDE*.md
