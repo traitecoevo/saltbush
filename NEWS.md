@@ -1,4 +1,4 @@
-# saltbush (development version)
+# saltbush 0.2.0
 
 * `calculate_spectral_metrics()` now calculates CV, SV and CHV directly from
   rasters and AOI files, replacing `extract_pixel_values()`, which is removed.
