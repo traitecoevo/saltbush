@@ -16,9 +16,13 @@ create_multiband_image(
 \item{input_dir}{A directory containing folders with waveband TIF files to be combined,
 or a single folder with waveband TIF files to be combined.}
 
-\item{desired_band_order}{A character vector specifying the desired order of the bands.
-The order should match the file basenames (excluding extensions) and represent
-the wavelength order.}
+\item{desired_band_order}{A character vector of band names, in wavelength
+order. Each band is matched to the TIF whose file name (excluding extension)
+is the band name or ends with it after a separator, so both \code{blue.tif} and
+Pix4D output such as \code{NSABHC0009_transparent_reflectance_blue.tif} match
+\code{"blue"}. Matching ignores case, and treats spaces, hyphens and dots as
+underscores (\code{"red edge"} matches \code{"red_edge"}). Other TIFs in the folder
+are ignored. The output layers are named by these band names.}
 
 \item{output_dir}{A directory where the combined multiband TIF file will be saved.}
 

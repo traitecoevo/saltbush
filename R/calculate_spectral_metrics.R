@@ -86,6 +86,16 @@ calculate_spectral_metrics <- function(raster_files,
       aoi_id <- aois$ids[i]
       aoi_vect <- aois$vect[i]
 
+      # an aoi outside the image has no pixels: warn and return NA metrics
+      if (is.null(terra::intersect(terra::ext(aoi_vect), terra::ext(raster_data)))) {
+        warning(sprintf("aoi '%s' of site '%s' does not overlap the image; metrics are NA",
+                        aoi_id, site_name), call. = FALSE)
+        results[[length(results) + 1]] <- data.frame(
+          site = site_name, aoi_id = aoi_id, CV = NA_real_, SV = NA_real_, CHV = NA_real_
+        )
+        next
+      }
+
       # crop and mask raster using current aoi
       aoi_raster <- terra::mask(terra::crop(raster_data, aoi_vect), aoi_vect)
 
@@ -114,6 +124,11 @@ calculate_spectral_metrics <- function(raster_files,
       } else {
         cv <- NULL
         chv <- chv_from_matrix(pixels)
+        if (is.na(chv)) {
+          warning(sprintf("CHV is NA for aoi '%s' of site '%s': its %s pixels cannot form a hull in %s bands (need at least %s, not all in a flat plane)",
+                          aoi_id, site_name, nrow(pixels), ncol(pixels), ncol(pixels) + 1),
+                  call. = FALSE)
+        }
       }
 
       # per-band mean and sample sd, calculated by terra from the raster
@@ -168,6 +183,10 @@ read_aoi <- function(site_name, aoi_files, raster_data, aoi_id_col = NULL) {
       stop(sprintf("aoi_id_col '%s' not found in %s", aoi_id_col, basename(aoi_file)))
     }
     aoi_ids <- aois[[aoi_id_col]]
+    if (anyDuplicated(aoi_ids)) {
+      warning(sprintf("aoi_id_col '%s' in %s has duplicate values, so some rows will share an aoi_id",
+                      aoi_id_col, basename(aoi_file)), call. = FALSE)
+    }
   } else {
     aoi_ids <- seq_len(nrow(aois))
   }
@@ -194,5 +213,8 @@ cv_from_moments <- function(means, sds) {
 
 # CHV: volume of the convex hull of the pixels in spectral space
 chv_from_matrix <- function(pixels) {
-  geometry::convhulln(pixels, option = "FA")$vol
+  # NA when there are too few (or degenerate) points to build a hull
+  if (nrow(pixels) <= ncol(pixels)) return(NA_real_)
+  tryCatch(geometry::convhulln(pixels, option = "FA")$vol,
+           error = function(e) NA_real_)
 }

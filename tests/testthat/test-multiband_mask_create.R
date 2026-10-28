@@ -143,3 +143,47 @@ test_that('create_multiband_image errors clearly when bands do not align', {
   expect_error(create_multiband_image(relabelled, wavelengths, tempdir()),
                "red\\.tif: CRS differs")
 })
+
+test_that('create_multiband_image matches Pix4D-style band file names', {
+  band_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
+  wavelengths <- c('blue', 'green', 'red', 'red_edge', 'nir')
+
+  # rename as Pix4D Mapper does, with a space in "red edge", plus an extra
+  # non-band TIF that should be ignored
+  dir <- file.path(tempfile("pix4d_"), "NSABHC0009")
+  dir.create(dir, recursive = TRUE)
+  pix4d_names <- c(blue = "blue", green = "green", red = "red",
+                   red_edge = "red edge", nir = "nir")
+  for (band in wavelengths) {
+    file.copy(file.path(band_dir, paste0(band, ".tif")),
+              file.path(dir, paste0("NSABHC0009_transparent_reflectance_",
+                                    pix4d_names[[band]], ".tif")))
+  }
+  file.copy(file.path(band_dir, "blue.tif"),
+            file.path(dir, "NSABHC0009_dsm.tif"))
+
+  out <- create_multiband_image(dir, wavelengths, tempdir(), make_plot = FALSE)
+  plain <- create_multiband_image(band_dir, wavelengths, tempdir(), make_plot = FALSE)
+
+  expect_equal(names(out), wavelengths)
+  expect_equal(terra::values(out), terra::values(plain))
+})
+
+test_that('create_multiband_image errors on missing or ambiguous bands', {
+  band_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
+  wavelengths <- c('blue', 'green', 'red', 'red_edge', 'nir')
+
+  missing <- file.path(tempfile("missing_"), "plot")
+  dir.create(missing, recursive = TRUE)
+  file.copy(file.path(band_dir, c("blue.tif", "green.tif")), missing)
+  expect_error(create_multiband_image(missing, wavelengths, tempdir()),
+               "No TIF file for band 'red'")
+
+  ambiguous <- file.path(tempfile("ambiguous_"), "plot")
+  dir.create(ambiguous, recursive = TRUE)
+  file.copy(list.files(band_dir, full.names = TRUE), ambiguous)
+  file.copy(file.path(band_dir, "blue.tif"),
+            file.path(ambiguous, "site_reflectance_blue.tif"))
+  expect_error(create_multiband_image(ambiguous, wavelengths, tempdir()),
+               "More than one TIF file for band 'blue'")
+})
