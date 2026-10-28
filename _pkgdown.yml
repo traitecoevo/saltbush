@@ -12,17 +12,13 @@ reference:
       - create_multiband_image
       - create_masked_raster
       - find_optimum_thresholds
-      - extract_pixel_values
 
   - title: Spectral diversity
     desc: >
       Calculate coefficient of variation (CV), spectral variance (SV), and
-      convex hull volume (CHV) from extracted pixel values.
+      convex hull volume (CHV) directly from drone imagery.
     contents:
       - calculate_spectral_metrics
-      - calculate_cv
-      - calculate_sv
-      - calculate_chv_nopca
 
   - title: On-the-ground diversity
     desc: >
@@ -38,6 +34,7 @@ reference:
     contents:
       - synthetic_survey
       - ausplots_NSABHC0009
+      - cover_survey
 
 articles:
   - title: Getting started

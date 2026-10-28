@@ -112,3 +112,78 @@ test_that('create_masked_raster errors when no files are found', {
     "No files found"
   )
 })
+
+test_that('create_multiband_image errors clearly when bands do not align', {
+  band_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
+  bands <- list.files(band_dir, pattern = "\\.tif$", full.names = TRUE)
+  wavelengths <- c('blue', 'green', 'red', 'red_edge', 'nir')
+
+  # copy the bands to a fresh folder, then replace red with a modified version
+  make_folder <- function(modify) {
+    dir <- file.path(tempfile("misaligned_"), "plot")
+    dir.create(dir, recursive = TRUE)
+    file.copy(bands, file.path(dir, basename(bands)))
+    red <- terra::rast(file.path(band_dir, "red.tif"))
+    terra::writeRaster(modify(red), file.path(dir, "red.tif"), overwrite = TRUE)
+    dir
+  }
+
+  # different extent: drop the last row and column
+  shifted <- make_folder(function(r) terra::crop(r, terra::ext(r) - terra::res(r)))
+  expect_error(create_multiband_image(shifted, wavelengths, tempdir()),
+               "do not align:.*red\\.tif: extent")
+
+  # different resolution
+  coarse <- make_folder(function(r) terra::aggregate(r, 2))
+  expect_error(create_multiband_image(coarse, wavelengths, tempdir()),
+               "red\\.tif: resolution")
+
+  # different CRS (same grid, relabelled)
+  relabelled <- make_folder(function(r) { terra::crs(r) <- "EPSG:4326"; r })
+  expect_error(create_multiband_image(relabelled, wavelengths, tempdir()),
+               "red\\.tif: CRS differs")
+})
+
+test_that('create_multiband_image matches Pix4D-style band file names', {
+  band_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
+  wavelengths <- c('blue', 'green', 'red', 'red_edge', 'nir')
+
+  # rename as Pix4D Mapper does, with a space in "red edge", plus an extra
+  # non-band TIF that should be ignored
+  dir <- file.path(tempfile("pix4d_"), "NSABHC0009")
+  dir.create(dir, recursive = TRUE)
+  pix4d_names <- c(blue = "blue", green = "green", red = "red",
+                   red_edge = "red edge", nir = "nir")
+  for (band in wavelengths) {
+    file.copy(file.path(band_dir, paste0(band, ".tif")),
+              file.path(dir, paste0("NSABHC0009_transparent_reflectance_",
+                                    pix4d_names[[band]], ".tif")))
+  }
+  file.copy(file.path(band_dir, "blue.tif"),
+            file.path(dir, "NSABHC0009_dsm.tif"))
+
+  out <- create_multiband_image(dir, wavelengths, tempdir(), make_plot = FALSE)
+  plain <- create_multiband_image(band_dir, wavelengths, tempdir(), make_plot = FALSE)
+
+  expect_equal(names(out), wavelengths)
+  expect_equal(terra::values(out), terra::values(plain))
+})
+
+test_that('create_multiband_image errors on missing or ambiguous bands', {
+  band_dir <- system.file("extdata/create_multiband_image", package = "saltbush")
+  wavelengths <- c('blue', 'green', 'red', 'red_edge', 'nir')
+
+  missing <- file.path(tempfile("missing_"), "plot")
+  dir.create(missing, recursive = TRUE)
+  file.copy(file.path(band_dir, c("blue.tif", "green.tif")), missing)
+  expect_error(create_multiband_image(missing, wavelengths, tempdir()),
+               "No TIF file for band 'red'")
+
+  ambiguous <- file.path(tempfile("ambiguous_"), "plot")
+  dir.create(ambiguous, recursive = TRUE)
+  file.copy(list.files(band_dir, full.names = TRUE), ambiguous)
+  file.copy(file.path(band_dir, "blue.tif"),
+            file.path(ambiguous, "site_reflectance_blue.tif"))
+  expect_error(create_multiband_image(ambiguous, wavelengths, tempdir()),
+               "More than one TIF file for band 'blue'")
+})
