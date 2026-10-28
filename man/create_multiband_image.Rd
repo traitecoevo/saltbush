@@ -27,21 +27,22 @@ are ignored. The output layers are named by these band names.}
 \item{output_dir}{A directory where the combined multiband TIF file will be saved.}
 
 \item{make_plot}{Logical. If \code{TRUE}, a plot is generated to visualize the output for verification.
-Default is \code{FALSE}.}
+Default is \code{TRUE}.}
 
 \item{return_raster}{Logical. If \code{TRUE}, the combined raster object is returned.
-Default is \code{FALSE}.}
+Default is \code{TRUE}.}
 }
 \value{
 Saves a combined multiband TIF file in the specified \code{output_dir}.
-If \code{return_raster = TRUE}, the function returns a \code{terra} raster object representing
-the combined multiband image.
+If \code{return_raster = TRUE} (default), the function also returns the combined
+multiband image as a \code{terra} raster, or a named list of rasters when
+\code{input_dir} holds several folders.
 }
 \description{
 This function combines single reflectance band TIF files into a multiband image.
-By default, it saves the combined multiband image to a file rather than returning an object.
-The function supports reordering bands according to a specified wavelength order and
-optionally creates a plot to visualize the output. All bands in a folder must
+It saves the combined multiband image to a file and, by default, also returns
+it and plots it for checking. Bands are ordered by the specified wavelength
+order. All bands in a folder must
 share the same extent, resolution and coordinate reference system (CRS);
 otherwise the function stops and lists the bands that differ.
 }
