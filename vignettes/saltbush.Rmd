@@ -43,13 +43,13 @@ multiband <- create_multiband_image(
 )
 ```
 
-## 2. Extract pixel values inside areas of interest
+## 2. Choose areas of interest
 
-We then combine the multiband image with an area-of-interest shapefile.
+We then pair the multiband image with an area-of-interest (AOI) file.
 The package ships a small aggregated raster and matching AOI for
 demonstration:
 
-```{r extract-pixels}
+```{r aoi-files}
 raster_files <- list.files(
   system.file("extdata/example", package = "saltbush"),
   pattern = "\\.tif$", full.names = TRUE
@@ -59,17 +59,15 @@ aoi_files <- list.files(
   system.file("extdata/aoi", package = "saltbush"),
   pattern = "NSABHC0009_aoi\\.shp$", full.names = TRUE
 )
-
-pixel_values <- extract_pixel_values(
-  raster_files, aoi_files,
-  c("blue", "green", "red", "red_edge", "nir")
-)
-head(pixel_values)
 ```
+
+AOI files can be shapefiles, GeoJSON or GeoPackage. If an AOI's coordinate
+system differs from the imagery's, it is reprojected to match.
 
 ## 3. Calculate spectral metrics
 
-`calculate_spectral_metrics()` returns three metrics per AOI:
+`calculate_spectral_metrics()` works directly from the rasters, cropping and
+masking them to each AOI, and returns three metrics per AOI:
 
 - **CV** — coefficient of variation
 - **SV** — spectral variance
@@ -77,7 +75,7 @@ head(pixel_values)
 
 ```{r spectral-metrics}
 metrics <- calculate_spectral_metrics(
-  pixel_values,
+  raster_files, aoi_files,
   wavelengths = c("blue", "green", "red", "red_edge", "nir"),
   masked = FALSE,
   rarefaction = FALSE

@@ -1,6 +1,6 @@
 Package: saltbush
 Title: Spectral Diversity from Drone Images
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person(given = "Adele", family = "Gemmell", email = "adelegemmell@hotmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0005-2419-7287")),
@@ -18,8 +18,6 @@ Depends:
 Imports:
     dplyr,
     pROC,
-    data.table,
-    stringr,
     sf,
     tidyr,
     vegan,

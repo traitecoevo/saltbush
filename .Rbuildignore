@@ -13,3 +13,4 @@
 ^docs$
 ^pkgdown$
 ^man/figures/README-.*\.png$
+^CLAUDE.*\.md$

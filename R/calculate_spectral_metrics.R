@@ -1,217 +1,220 @@
 #' @title Calculate spectral metrics
 #'
-#' @description Calculates CV, SV, and CHV from a pixel values dataframe with columns for each wavelength, `site_name`, and `aoi_id`.
-#' This help file applies to the functions `calculate_cv`, `calculate_sv`, `calculate_chv_nopca`, and `calculate_spectral_metrics`.
+#' @description Calculates CV, SV, and CHV for each area of interest (AOI)
+#' directly from multiband rasters, without first extracting every pixel into
+#' a data frame. Each raster is cropped and masked to each AOI polygon; CV and
+#' SV are calculated from per-band summary statistics (`terra::global()`), and
+#' CHV from the matrix of pixel values within the AOI.
 #'
-#' @param pixel_values_df A data frame containing pixel values, typically obtained from the `extract_pixel_values` function.
-#' @param wavelengths A list of wavelengths that correspond to column names in `pixel_values_df`.
-#' @param rarefaction Logical; if TRUE, applies a rarefaction step that increases processing time.
-#' @param min_points Integer; minimum number of pixels per `aoi` to standardize uneven pixel numbers across sites (used if `rarefaction = TRUE`).
-#' @param n Integer; number of subset permutations if `rarefaction = TRUE`.
-#' @param seed Integer or NULL; if provided, `set.seed(seed)` is called once at the
-#'   start of the function so the rarefaction sampling is reproducible. Default
-#'   `NULL` preserves the prior unseeded behaviour.
-#' @return A dataframe containing spectral metrics for each `aoi` within each site/raster.
-#' @aliases calculate_cv calculate_sv calculate_chv_nopca calculate_spectral_metrics
-#' @export
-#' @import data.table
+#' Spectral variance (SV) is standardized by the number of spectral points, so
+#' it is not rarefied; `rarefaction` applies to CV and CHV only.
+#'
+#' @param raster_files Character vector of multiband raster file paths. The
+#'   site name is taken from the start of each file name, up to the first `_`
+#'   or `.` (or the whole name, minus extension, if there is neither), so
+#'   `NSABHC0009_ortho.tif`, `NSABHC0009.ortho.tif` and `NSABHC0009.tif` all
+#'   give the site `NSABHC0009`.
+#' @param aoi_files Character vector of AOI file paths: shapefiles (`.shp`),
+#'   GeoJSON (`.geojson`/`.json`) or GeoPackage (`.gpkg`), each containing one
+#'   or more AOI polygons. Each raster is matched to the AOI file with the same
+#'   site name, found the same way (e.g. `NSABHC0009_aoi.shp`). Files with other
+#'   extensions (e.g. a shapefile's `.dbf`) are ignored. If an AOI's coordinate
+#'   system differs from its raster's, the AOI is reprojected to match.
+#' @param wavelengths Character vector naming the wavelength of each raster
+#'   layer, in layer order.
+#' @param aoi_id_col Optional character; name of a column in the AOI file to
+#'   use as the `aoi_id`. When `NULL` (default), AOIs are numbered `1:n`.
+#' @param masked Logical; labels the output `image_type` as `"masked"` or
+#'   `"unmasked"`. It does not mask the image.
+#' @param rarefaction Logical; if `TRUE`, CV and CHV are averaged over `n`
+#'   random subsamples of `min_points` pixels per AOI, which standardizes uneven
+#'   pixel numbers across AOIs and increases processing time.
+#' @param min_points Integer; pixels sampled per AOI when `rarefaction = TRUE`.
+#' @param n Integer; number of subsamples when `rarefaction = TRUE`.
+#' @param seed Integer or `NULL`; if provided, `set.seed(seed)` is called once
+#'   at the start so the rarefaction sampling is reproducible.
+#' @return A data frame with one row per AOI per raster, and columns `site`,
+#'   `aoi_id`, `CV`, `SV`, `CHV` and `image_type`.
 #' @examples
-#' set.seed(123)
-#' df <- data.frame(
-#'   site_name = rep(c("site_one", "site_two", "site_three", "site_four"), each = 5000),
-#'   aoi_id = 1,
-#'   blue = runif(20000, min = 0, max = 1),
-#'   green = runif(20000, min = 0, max = 1),
-#'   red = runif(20000, min = 0, max = 1),
-#'   red_edge = runif(20000, min = 0, max = 1),
-#'   nir = runif(20000, min = 0, max = 1))
-#' spectral_metrics <- calculate_spectral_metrics(df,
-#'    wavelengths = c('blue','green','red','red_edge','nir'),
-#'    rarefaction = TRUE, min_points = 50, n = 5)
-
-calculate_cv <- function(pixel_values_df,
-                         wavelengths,
-                         rarefaction = FALSE,
-                         min_points = NULL,
-                         n = NULL,
-                         seed = NULL) {
-
-  if (!is.null(seed)) set.seed(seed)
-
-  # convert to a data.table for efficiency
-  data.table::setDT(pixel_values_df)
-
-  if (rarefaction) {
-    # initialize a list to store CV values for each replication
-    cv_list <- vector("list", n)
-
-    # resample and calculate CV for each iteration
-    for (i in seq_len(n)) {
-      # sample to the minimum number of points per aoi
-      sampled_df <- pixel_values_df[, .SD[sample(.N, min_points)], by = aoi_id, .SDcols = wavelengths]
-
-      # calculate CV for each wavelength within each aoi
-      cv_data <- sampled_df[, lapply(.SD, function(x) sd(x) / abs(mean(x, na.rm = TRUE))), by = aoi_id]
-
-      # sum across wavelengths and normalize by the number of bands (ignoring NAs)
-      cv_data[, CV := rowSums(.SD, na.rm = TRUE) / (length(wavelengths) - rowSums(is.na(.SD))), .SDcols = wavelengths]
-
-      # store CV values along with aoi_id
-      cv_list[[i]] <- cv_data[, .(aoi_id, CV)]
-    }
-
-    # collapse the list of CV data tables into a single data table and calculate the average CV for each aoi
-    cv <- rbindlist(cv_list)[, .(CV = mean(CV, na.rm = TRUE)), by = aoi_id]
-
-  } else {
-    # if rarefaction is FALSE, directly calculate the CV without resampling
-    cv <- pixel_values_df[, lapply(.SD, function(x) sd(x) / abs(mean(x, na.rm = TRUE))), by = aoi_id, .SDcols = wavelengths]
-
-    # sum across wavelengths and normalize by the number of bands (ignoring NAs)
-    cv[, CV := rowSums(.SD, na.rm = TRUE) / (length(wavelengths) - rowSums(is.na(.SD))), .SDcols = wavelengths]
-
-    # keep aoi_id in the output
-    cv <- cv[, .(aoi_id, CV)]
-  }
-
-  return(cv)
-}
-
-
-
-# sv function
-#' @import data.table
+#' aoi_files <- list.files(
+#'   system.file("extdata/aoi", package = "saltbush"),
+#'   pattern = "image_aoi\\.shp$", full.names = TRUE
+#' )
+#' raster_files <- list.files(
+#'   system.file("extdata/multiband_image", package = "saltbush"),
+#'   pattern = "\\.tif$", full.names = TRUE
+#' )
+#' metrics <- calculate_spectral_metrics(
+#'   raster_files, aoi_files,
+#'   wavelengths = c("blue", "green", "red", "red_edge", "nir"),
+#'   masked = FALSE
+#' )
+#' metrics
 #' @export
-calculate_sv <- function(pixel_values_df, wavelengths) {
-  # convert pixel_values_df to data.table for better performance
-  setDT(pixel_values_df)
 
-  # calculate the number of points per aoi
-  spectral_points <- pixel_values_df[, .(points = .N), by = aoi_id]
-
-  # calculate spectral variance (SV)
-  sv <- pixel_values_df[, lapply(.SD, function(x) sum((x - mean(x, na.rm = TRUE))^2)),
-                        .SDcols = wavelengths,
-                        by = aoi_id]
-
-  # cum across wavelengths
-  sv[, SS := rowSums(.SD), .SDcols = wavelengths]
-
-  # join with the spectral points
-  sv <- sv[spectral_points, on = "aoi_id"]
-
-  # calculate SV
-  sv[, SV := SS / (points - 1)]
-
-  return(sv[, .(aoi_id, SV)])
-}
-
-
-
-
-# function to calculate chv for each aoi
-#' @import data.table
-#' @export
-calculate_chv_nopca <- function(df,
-                                wavelengths,
-                                rarefaction = FALSE,
-                                min_points = NULL,
-                                n = NULL,
-                                seed = NULL) {
-
-  if (!is.null(seed)) set.seed(seed)
-
-  # convert to data.table for better performance
-  setDT(df)
-
-  results <- data.table::data.table(aoi_id = double(), CHV = double())
-
-  # loop through each aoi_id
-  for (aoi in unique(df$aoi_id)) {
-    # subset data for current aoi_id
-    aoi_sample <- df[aoi_id == aoi, ..wavelengths]
-
-    if (rarefaction) {
-      # resample CHV n times and calculate the mean
-      chv_values <- replicate(n, {
-        resampled <- aoi_sample[sample(.N, min_points, replace = FALSE)]
-
-        # convert to matrix for convex hull calculation
-        CHV_matrix <- as.matrix(resampled)
-
-        # calculate CHV
-        chv_out <- geometry::convhulln(CHV_matrix, option = "FA")
-        return(chv_out$vol)
-      })
-
-      mean_chv <- mean(chv_values)
-    } else {
-      # calculate CHV without rarefaction
-      CHV_matrix <- as.matrix(aoi_sample)
-      chv_out <- geometry::convhulln(CHV_matrix, option = "FA")
-      mean_chv <- chv_out$vol
-    }
-
-    # store results in data.table
-    results <- rbind(results, data.table::data.table(aoi_id = aoi, CHV = mean_chv), fill = TRUE)
-  }
-
-  return(results)
-}
-
-
-#' @export
-calculate_spectral_metrics <- function(pixel_values_df,
-                                       masked = TRUE,
+calculate_spectral_metrics <- function(raster_files,
+                                       aoi_files,
                                        wavelengths,
+                                       aoi_id_col = NULL,
+                                       masked = TRUE,
                                        rarefaction = FALSE,
                                        min_points = NULL,
                                        n = NULL,
                                        seed = NULL) {
-  results <- list()
 
-  # add site name if not included in df
-  if (!"site_name" %in% colnames(pixel_values_df)) {
-    pixel_values_df$site_name <- "site1"
+  if (rarefaction && (is.null(n) || is.null(min_points))) {
+    stop("if rarefaction = TRUE, n and min_points must be provided")
   }
 
-  # loop thru different sites
-   for (site in unique(pixel_values_df$site_name)) {
-     # create df for site pixel values
-    site_pixel_values <- pixel_values_df |> dplyr::filter(site_name == site)
+  # seed once, so each site and AOI gets its own independent draws
+  if (!is.null(seed)) set.seed(seed)
 
+  results <- list()
 
-    #add error msg if n and/or min_points not provided
-    if (rarefaction){
-      if(is.null(n) || is.null(min_points)) {
-        stop("if rarefaction = T, n and min_points must be provided")
+  for (raster_file in raster_files) {
+
+    # identify the string that represents the site name
+    site_name <- site_from_path(raster_file)
+
+    # read in raster file and apply consistent band names
+    raster_data <- terra::rast(raster_file)
+    names(raster_data) <- wavelengths
+
+    aois <- read_aoi(site_name, aoi_files, raster_data, aoi_id_col)
+
+    for (i in seq_along(aois$ids)) {
+      aoi_id <- aois$ids[i]
+      aoi_vect <- aois$vect[i]
+
+      # an aoi outside the image has no pixels: warn and return NA metrics
+      if (is.null(terra::intersect(terra::ext(aoi_vect), terra::ext(raster_data)))) {
+        warning(sprintf("aoi '%s' of site '%s' does not overlap the image; metrics are NA",
+                        aoi_id, site_name), call. = FALSE)
+        results[[length(results) + 1]] <- data.frame(
+          site = site_name, aoi_id = aoi_id, CV = NA_real_, SV = NA_real_, CHV = NA_real_
+        )
+        next
       }
 
-    # add error msg if min_points exceeds rows in site_pixel_values df
-    if (min_points > nrow(site_pixel_values)){
-      stop(paste("'min points' (",min_points,") exceeds number of rows in site_pixel_values for site:",site))
+      # crop and mask raster using current aoi
+      aoi_raster <- terra::mask(terra::crop(raster_data, aoi_vect), aoi_vect)
+
+      # drop cells that are NA in any band, so every band has the same pixels
+      aoi_raster <- terra::mask(aoi_raster, any(is.na(aoi_raster)),
+                                maskvalues = TRUE)
+
+      # pixel matrix (one row per pixel, one column per band) for CHV
+      pixels <- terra::values(aoi_raster, mat = TRUE)
+      pixels <- pixels[stats::complete.cases(pixels), , drop = FALSE]
+
+      if (rarefaction) {
+        if (min_points > nrow(pixels)) {
+          stop(sprintf("min_points (%s) exceeds the number of pixels (%s) in aoi '%s' of site '%s'",
+                       min_points, nrow(pixels), aoi_id, site_name))
+        }
+
+        # draw the same subsample for CV and CHV in each iteration
+        draws <- replicate(n, {
+          sampled <- pixels[sample.int(nrow(pixels), min_points), , drop = FALSE]
+          c(CV = cv_from_moments(colMeans(sampled), apply(sampled, 2, stats::sd)),
+            CHV = chv_from_matrix(sampled))
+        })
+        cv <- mean(draws["CV", ], na.rm = TRUE)
+        chv <- mean(draws["CHV", ])
+      } else {
+        cv <- NULL
+        chv <- chv_from_matrix(pixels)
+        if (is.na(chv)) {
+          warning(sprintf("CHV is NA for aoi '%s' of site '%s': its %s pixels cannot form a hull in %s bands (need at least %s, not all in a flat plane)",
+                          aoi_id, site_name, nrow(pixels), ncol(pixels), ncol(pixels) + 1),
+                  call. = FALSE)
+        }
+      }
+
+      # per-band mean and sample sd, calculated by terra from the raster
+      stats <- terra::global(aoi_raster, c("mean", "sd"), na.rm = TRUE)
+      if (is.null(cv)) cv <- cv_from_moments(stats$mean, stats$sd)
+
+      # SV = sum over bands of sum of squared deviations / (points - 1)
+      sv <- sum(stats$sd^2)
+
+      results[[length(results) + 1]] <- data.frame(
+        site = site_name, aoi_id = aoi_id, CV = cv, SV = sv, CHV = chv
+      )
     }
   }
 
-    # calculate metrics, pass rarefaction where needed
-    cv <- calculate_cv(site_pixel_values, wavelengths = wavelengths, rarefaction = rarefaction, n = n, min_points = min_points, seed = seed)
-    sv <- calculate_sv(site_pixel_values, wavelengths = wavelengths)
-    chv <- calculate_chv_nopca(site_pixel_values, wavelengths, rarefaction = rarefaction, n = n, min_points = min_points, seed = seed)
-
-    results[[site]] <- list(CV = cv, SV = sv, CHV = chv)
-  }
-
-  combined_cv <- dplyr::bind_rows(lapply(results, function(x) x$CV), .id = 'site')
-  combined_sv <- dplyr::bind_rows(lapply(results, function(x) x$SV), .id = 'site')
-  combined_chv <- dplyr::bind_rows(lapply(results, function(x) x$CHV), .id = 'site')
-
-  # create a data frame for combined metrics
-  combined_metrics <- combined_cv |>
-    dplyr::left_join(combined_sv, by = c("site", "aoi_id")) |>
-    dplyr::left_join(combined_chv, by = c("site", "aoi_id"))
-
-  combined_metrics <- combined_metrics |>
-    dplyr::mutate(image_type = ifelse(masked, 'masked', 'unmasked'))
+  combined_metrics <- do.call(rbind, results)
+  combined_metrics$image_type <- ifelse(masked, "masked", "unmasked")
 
   return(combined_metrics)
+}
+
+
+# site name: file name without extension, up to the first "_" or "."
+site_from_path <- function(path) {
+  sub("[_.].*$", "", tools::file_path_sans_ext(basename(path)))
+}
+
+# AOI file extensions accepted by calculate_spectral_metrics()
+aoi_extensions <- c("shp", "geojson", "json", "gpkg")
+
+# find, read and (if needed) reproject the AOI file for one site
+read_aoi <- function(site_name, aoi_files, raster_data, aoi_id_col = NULL) {
+
+  aoi_files <- aoi_files[tolower(tools::file_ext(aoi_files)) %in% aoi_extensions]
+
+  # choose the corresponding aoi file
+  aoi_file <- aoi_files[site_from_path(aoi_files) == site_name]
+
+  if (length(aoi_file) == 0) {
+    stop(sprintf("No AOI file (%s) found for site '%s'; AOI file names must start with the site name",
+                 paste0(".", aoi_extensions, collapse = "/"), site_name))
+  }
+  if (length(aoi_file) > 1) {
+    stop(sprintf("More than one AOI file found for site '%s': %s",
+                 site_name, paste(basename(aoi_file), collapse = ", ")))
+  }
+
+  # read in aoi file and select the id column if requested
+  aois <- sf::read_sf(aoi_file)
+  if (!is.null(aoi_id_col)) {
+    if (!aoi_id_col %in% names(aois)) {
+      stop(sprintf("aoi_id_col '%s' not found in %s", aoi_id_col, basename(aoi_file)))
+    }
+    aoi_ids <- aois[[aoi_id_col]]
+    if (anyDuplicated(aoi_ids)) {
+      warning(sprintf("aoi_id_col '%s' in %s has duplicate values, so some rows will share an aoi_id",
+                      aoi_id_col, basename(aoi_file)), call. = FALSE)
+    }
+  } else {
+    aoi_ids <- seq_len(nrow(aois))
+  }
+
+  aoi_vect <- terra::vect(sf::st_geometry(aois))
+
+  # reproject the aoi if its coordinate system differs from the imagery
+  if (terra::crs(aoi_vect) == "" || terra::crs(raster_data) == "") {
+    warning(sprintf("Coordinate system missing for %s or its imagery; assuming they match",
+                    basename(aoi_file)))
+  } else if (!terra::same.crs(aoi_vect, raster_data)) {
+    aoi_vect <- terra::project(aoi_vect, raster_data)
+    message(sprintf("AOI reprojected to match coordinate system of imagery: %s",
+                    basename(aoi_file)))
+  }
+
+  list(vect = aoi_vect, ids = aoi_ids)
+}
+
+# CV: per-band sd / |mean|, averaged across bands (ignoring NA bands)
+cv_from_moments <- function(means, sds) {
+  mean(sds / abs(means), na.rm = TRUE)
+}
+
+# CHV: volume of the convex hull of the pixels in spectral space
+chv_from_matrix <- function(pixels) {
+  # NA when there are too few (or degenerate) points to build a hull
+  if (nrow(pixels) <= ncol(pixels)) return(NA_real_)
+  tryCatch(geometry::convhulln(pixels, option = "FA")$vol,
+           error = function(e) NA_real_)
 }

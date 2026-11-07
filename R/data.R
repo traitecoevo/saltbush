@@ -41,3 +41,29 @@
 #' @source Cached from [ausplotsR::get_ausplots()] with
 #'   `my.Plot_IDs = "NSABHC0009"`. See `data-raw/ausplots_NSABHC0009.R`.
 "ausplots_NSABHC0009"
+
+
+#' Synthetic percent-cover survey data
+#'
+#' A small, hand-crafted percent-cover survey for three plots, with species
+#' typical of chenopod shrubland at Fowlers Gap, NSW. Each row is one species'
+#' cover estimate in a plot (unlike [synthetic_survey], where each row is a
+#' point-intercept hit), and non-plant categories are included. Used to show
+#' [calculate_field_diversity()] on survey data other than AusPlots, via
+#' `species_col`, `exclude` and `abundance_col`. The values are made up.
+#'
+#' @format A data frame with 15 rows and 3 columns:
+#' \describe{
+#'   \item{plot_id}{Character. Plot identifier.}
+#'   \item{species}{Character. Species name, or a non-plant category
+#'     (`"Bare ground"`, `"Litter"`).}
+#'   \item{cover_pct}{Numeric. Percent cover of the species in the plot.}
+#' }
+#' @source Hand-crafted for package examples. See `data-raw/cover_survey.R`.
+#' @examples
+#' calculate_field_diversity(cover_survey,
+#'                           aoi_cols = "plot_id",
+#'                           species_col = "species",
+#'                           exclude = c("Bare ground", "Litter"),
+#'                           abundance_col = "cover_pct")$taxonomic_diversity
+"cover_survey"

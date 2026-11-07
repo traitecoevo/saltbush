@@ -34,7 +34,7 @@ find_optimum_thresholds <- function(df, class_col, band_or_index_col, site_col, 
     site_data <- subset(df, df[[site_col]] == site_name)
 
     # binary outcome variable for veg and non-veg
-    site_data$binary_class <- ifelse(site_data[[class_col]] == class_value, 1, 0)
+    site_data$binary_class <- ifelse(site_data[[class_col]] %in% class_value, 1, 0)
 
     # ROC curve
     roc_result <- pROC::roc(site_data$binary_class, site_data[[band_or_index_col]])
