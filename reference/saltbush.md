@@ -12,17 +12,9 @@ workflow for analyzing these images
 
 - [create_multiband_image](https://traitecoevo.github.io/saltbush/reference/create_multiband_image.md)
 
-- [extract_pixel_values](https://traitecoevo.github.io/saltbush/reference/extract_pixel_values.md)
-
 **Spectral diversity**
 
-- [calculate_cv](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md)
-
-- [calculate_sv](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md)
-
-- [calculate_chv_nopca](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md)
-
-- [calculate_spectral_metrics](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md)
+- [calculate_spectral_metrics](https://traitecoevo.github.io/saltbush/reference/calculate_spectral_metrics.md)
 
 **On the ground diversity**
 
@@ -40,6 +32,8 @@ Useful links:
 
 - <https://github.com/traitecoevo/saltbush>
 
+- <https://traitecoevo.github.io/saltbush/>
+
 - Report bugs at <https://github.com/traitecoevo/saltbush/issues>
 
 ## Author
@@ -48,9 +42,6 @@ Useful links:
 ([ORCID](https://orcid.org/0009-0005-2419-7287))
 
 Authors:
-
-- Adele Gemmell <adelegemmell@hotmail.com>
-  ([ORCID](https://orcid.org/0009-0005-2419-7287))
 
 - Will Cornwell <w.cornwell@unsw.edu.au>
   ([ORCID](https://orcid.org/0000-0003-4080-4073)) \[contributor\]

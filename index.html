@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">saltbush</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="saltbush-">saltbush <img src="reference/figures/saltbush_hex.png" alt="saltbush hex sticker" align="right" width="200"><a class="anchor" aria-label="anchor" href="#saltbush-"></a>
 </h1></div>
-<p><em>saltbush</em> processes drone imagery to calculate spectral diversity values as part of the assessment of the ‘spectral variability hypothesis’ or the ‘spectral-biodiversity relationship’. This was specifically implemented to connect <em>from-the-sky</em> diversity with <em>on-the-ground</em> diversity as measured in the AusPlots project. There are also functions to calculate on-the-ground diversity built on the <a href="https://github.com/ternaustralia/ausplotsR" class="external-link">ausplotsR</a> and <a href="https://github.com/vegandevs/vegan" class="external-link">vegan</a> packages. The statistical methods for connecting diversity sampled on the ground to diversity sampled from the sky are implemented and tested here. This package is aimed at making from-the-sky diversity methods development easier for researchers across the world.</p>
+<p><em>saltbush</em> processes drone imagery to calculate spectral diversity values as part of the assessment of the ‘spectral variability hypothesis’ or the ‘spectral-biodiversity relationship’. This was specifically implemented to connect <em>from-the-sky</em> diversity with <em>on-the-ground</em> diversity as measured in the AusPlots project. There are functions to calculate on-the-ground diversity built on the <a href="https://github.com/ternaustralia/ausplotsR" class="external-link">ausplotsR</a> and <a href="https://github.com/vegandevs/vegan" class="external-link">vegan</a> packages. This package is aimed at making from-the-sky diversity methods development easier for researchers across the world.</p>
 <p>Specifically we have used this package in a test in the Australian arid zone. The results suggest that some of the methods below perform much better than others. The code that reproduces that full analysis is available at <a href="https://github.com/adelegem/multispectral_drone_svh" class="external-link">adelegem/multispectral_drone_svh</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -61,65 +61,154 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"traitecoevo/saltbush"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="a-quick-taste">A quick taste<a class="anchor" aria-label="anchor" href="#a-quick-taste"></a>
+<h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h2>
-<p><code>saltbush</code> ships with a small synthetic dataset and a cached AusPlots query so you can try the on-the-ground side without any external data:</p>
+<p><strong>From the sky</strong>: drone imagery to spectral diversity</p>
+<ol style="list-style-type: decimal">
+<li>
+<code><a href="reference/create_multiband_image.html">create_multiband_image()</a></code>: stack single-band reflectance TIFs into one multiband image</li>
+<li>
+<code><a href="reference/find_optimum_thresholds.html">find_optimum_thresholds()</a></code>: <em>(optional)</em> choose NDVI/NIR thresholds from ground-truth points</li>
+<li>
+<code><a href="reference/create_masked_raster.html">create_masked_raster()</a></code>: mask out bare ground and shadow</li>
+<li>
+<code><a href="reference/calculate_spectral_metrics.html">calculate_spectral_metrics()</a></code>: CV, SV and CHV for each area of interest (AOI)</li>
+</ol>
+<p><strong>On the ground</strong>: survey data to taxonomic diversity</p>
+<ol start="5" style="list-style-type: decimal">
+<li>
+<code><a href="reference/calculate_field_diversity.html">calculate_field_diversity()</a></code>: species richness, Shannon, Simpson and more</li>
+</ol>
+<p><strong>Together</strong>: join the two by site or AOI to test the spectral-biodiversity relationship.</p>
+<p>The example below runs every step on data bundled with the package, all from AusPlots site NSABHC0009 at Fowlers Gap, NSW. For more detail on each step, see <code><a href="articles/saltbush.html">vignette("saltbush")</a></code>.</p>
+<div class="section level3">
+<h3 id="id_1-build-a-multiband-image">1. Build a multiband image<a class="anchor" aria-label="anchor" href="#id_1-build-a-multiband-image"></a>
+</h3>
+<p>For users using Pix4D mapper to pre-process imagery, single-band TIFs will be saved in a folder per site. You can optionally use this function to create a multiband image - each file name must be the band name or end with it, so Pix4D output such as <code>NSABHC0009_transparent_reflectance_blue.tif</code> works without renaming. Output files are named after the folder.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">field_diversity</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_field_diversity.html">calculate_field_diversity</a></span><span class="op">(</span><span class="va">ausplots_NSABHC0009</span><span class="op">)</span></span>
-<span><span class="va">field_diversity</span><span class="op">$</span><span class="va">taxonomic_diversity</span></span>
+<code class="sourceCode R"><span><span class="va">wavelengths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>, <span class="st">"red_edge"</span>, <span class="st">"nir"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">band_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/create_multiband_image"</span>, package <span class="op">=</span> <span class="st">"saltbush"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">band_dir</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "blue.tif"     "green.tif"    "nir.tif"      "red.tif"      "red_edge.tif"</span></span>
+<span></span>
+<span><span class="va">multiband</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/create_multiband_image.html">create_multiband_image</a></span><span class="op">(</span><span class="va">band_dir</span>, </span>
+<span>                                    desired_band_order <span class="op">=</span> <span class="va">wavelengths</span>,</span>
+<span>                                    output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                                    make_plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>The five bands of the resulting image:</p>
+<p><img src="reference/figures/README-drone-clip-bands-1.png" alt="The five spectral bands (blue, green, red, red edge, NIR) of the example drone image" width="100%"></p>
+<p>and as a true-colour composite:</p>
+<p><img src="reference/figures/README-drone-clip-rgb-1.png" alt="True-colour composite of the example drone image" width="60%"></p>
+</div>
+<div class="section level3">
+<h3 id="id_2-choose-masking-thresholds-optional">2. Choose masking thresholds <em>(optional)</em>
+<a class="anchor" aria-label="anchor" href="#id_2-choose-masking-thresholds-optional"></a>
+</h3>
+<p>If you have ground-truth points labelled by class (e.g. vegetation vs bare ground), <code><a href="reference/find_optimum_thresholds.html">find_optimum_thresholds()</a></code> finds the NDVI or NIR value that best separates them, per site:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ndvi_thresholds</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/find_optimum_thresholds.html">find_optimum_thresholds</a></span><span class="op">(</span><span class="va">ground_truth</span>,</span>
+<span>                                           site_col <span class="op">=</span> <span class="st">"site"</span>,</span>
+<span>                                           band_or_index_col <span class="op">=</span> <span class="st">"ndvi"</span>,</span>
+<span>                                           class_col <span class="op">=</span> <span class="st">"class"</span>,</span>
+<span>                                           class_value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bare_ground"</span>, <span class="st">"rocks"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Otherwise, pass single threshold values to the next step, as below.</p>
+</div>
+<div class="section level3">
+<h3 id="id_3-mask-out-non-vegetation">3. Mask out non-vegetation<a class="anchor" aria-label="anchor" href="#id_3-mask-out-non-vegetation"></a>
+</h3>
+<p>The image above is a small clip, so from here on we use a bundled image of the whole NSABHC0009 plot (aggregated to 1.5 m pixels to keep the package small). Pixels with NDVI below <code>ndvi_threshold</code> (bare ground) or NIR below <code>nir_threshold</code> (shadow) are set to <code>NA</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example/NSABHC0009_aggregated.tif"</span>,</span>
+<span>                          package <span class="op">=</span> <span class="st">"saltbush"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/create_masked_raster.html">create_masked_raster</a></span><span class="op">(</span><span class="va">plot_image</span>,</span>
+<span>                     output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                     ndvi_threshold <span class="op">=</span> <span class="fl">0.02</span>,</span>
+<span>                     nir_threshold <span class="op">=</span> <span class="fl">0.04</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">masked_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"NSABHC0009_aggregated_masked.tif"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="id_4-calculate-spectral-metrics">4. Calculate spectral metrics<a class="anchor" aria-label="anchor" href="#id_4-calculate-spectral-metrics"></a>
+</h3>
+<p><code><a href="reference/calculate_spectral_metrics.html">calculate_spectral_metrics()</a></code> crops and masks each image to its AOI polygons and calculates the metrics directly from the raster. Rasters and AOI files are matched by site name, the start of the file name up to the first <code>_</code> or <code>.</code> (here <code>NSABHC0009</code>). AOIs can be shapefiles, GeoJSON or GeoPackage, and are reprojected to the image’s coordinate system if needed.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">aoi_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/aoi/NSABHC0009_aoi.shp"</span>, package <span class="op">=</span> <span class="st">"saltbush"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">spectral</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_spectral_metrics.html">calculate_spectral_metrics</a></span><span class="op">(</span><span class="va">masked_image</span>, <span class="va">aoi_file</span>, <span class="va">wavelengths</span><span class="op">)</span></span>
+<span><span class="va">spectral</span></span>
+<span><span class="co">#&gt;         site aoi_id        CV           SV          CHV image_type</span></span>
+<span><span class="co">#&gt; 1 NSABHC0009      1 0.2502227 0.0008364104 1.544037e-10     masked</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="id_5-calculate-field-diversity">5. Calculate field diversity<a class="anchor" aria-label="anchor" href="#id_5-calculate-field-diversity"></a>
+</h3>
+<p>For AusPlots point-intercept data (e.g. from <code><a href="https://rdrr.io/pkg/ausplotsR/man/get_ausplots.html" class="external-link">ausplotsR::get_ausplots()</a></code>), the defaults work as is, each row in one point-observation, and dead material is excluded:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">field</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_field_diversity.html">calculate_field_diversity</a></span><span class="op">(</span><span class="va">ausplots_NSABHC0009</span><span class="op">)</span></span>
+<span><span class="va">field</span><span class="op">$</span><span class="va">taxonomic_diversity</span></span>
 <span><span class="co">#&gt;        site_unique site_location_name species_richness shannon_diversity</span></span>
 <span><span class="co">#&gt; 1 NSABHC0009-58026         NSABHC0009               52          3.056908</span></span>
 <span><span class="co">#&gt; 2 NSABHC0009-53604         NSABHC0009               38          2.843074</span></span>
 <span><span class="co">#&gt;   simpson_diversity pielou_evenness exp_shannon inv_simpson</span></span>
 <span><span class="co">#&gt; 1         0.9203249       0.7736571    21.26171    12.55097</span></span>
 <span><span class="co">#&gt; 2         0.9043699       0.7815826    17.16846    10.45696</span></span></code></pre></div>
-<p>For the from-the-sky side, <code>saltbush</code> turns multispectral drone imagery into spectral-diversity metrics. Here is an example scene from Fowlers Gap, NSW — its five spectral bands:</p>
-<p><img src="reference/figures/README-drone-clip-bands-1.png" alt="The five spectral bands (blue, green, red, red edge, NIR) of the example drone image" width="100%"></p>
-<p>and the same scene as a true-colour composite:</p>
-<p><img src="reference/figures/README-drone-clip-rgb-1.png" alt="True-colour composite of the example drone image" width="60%"></p>
-<p>The package bundles a small example image and a matching area of interest, so you can go from imagery to spectral metrics:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">raster_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example"</span>, package <span class="op">=</span> <span class="st">"saltbush"</span><span class="op">)</span>,</span>
-<span>  pattern <span class="op">=</span> <span class="st">"\\.tif$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">aoi_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/aoi"</span>, package <span class="op">=</span> <span class="st">"saltbush"</span><span class="op">)</span>,</span>
-<span>  pattern <span class="op">=</span> <span class="st">"NSABHC0009_aoi\\.shp$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">pixel_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/extract_pixel_values.html">extract_pixel_values</a></span><span class="op">(</span></span>
-<span>  <span class="va">raster_files</span>, <span class="va">aoi_files</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>, <span class="st">"red_edge"</span>, <span class="st">"nir"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_cv.html">calculate_spectral_metrics</a></span><span class="op">(</span></span>
-<span>  <span class="va">pixel_values</span>,</span>
-<span>  wavelengths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>, <span class="st">"red_edge"</span>, <span class="st">"nir"</span><span class="op">)</span>,</span>
-<span>  masked <span class="op">=</span> <span class="cn">FALSE</span>, rarefaction <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>The resulting spectral metrics for each area of interest:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">metrics</span></span>
-<span><span class="co">#&gt;          site aoi_id       CV          SV          CHV image_type</span></span>
-<span><span class="co">#&gt;        &lt;char&gt;  &lt;num&gt;    &lt;num&gt;       &lt;num&gt;        &lt;num&gt;     &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked</span></span></code></pre></div>
+<p>For other surveys, name the species column, any categories to exclude, and an abundance column such as percent cover or counts. Here, using the bundled example cover data:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cover_survey</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   plot_id                species cover_pct</span></span>
+<span><span class="co">#&gt; 1  plot_A     Atriplex vesicaria        18</span></span>
+<span><span class="co">#&gt; 2  plot_A    Maireana pyramidata        15</span></span>
+<span><span class="co">#&gt; 3  plot_A Sclerolaena divaricata        12</span></span>
+<span><span class="co">#&gt; 4  plot_A   Enneapogon avenaceus        10</span></span>
+<span><span class="co">#&gt; 5  plot_A            Bare ground        35</span></span>
+<span><span class="co">#&gt; 6  plot_A                 Litter        10</span></span>
+<span></span>
+<span><span class="va">cover</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/calculate_field_diversity.html">calculate_field_diversity</a></span><span class="op">(</span><span class="va">cover_survey</span>,</span>
+<span>                                   aoi_cols <span class="op">=</span> <span class="st">"plot_id"</span>,</span>
+<span>                                   species_col <span class="op">=</span> <span class="st">"species"</span>,</span>
+<span>                                   exclude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bare ground"</span>, <span class="st">"Litter"</span><span class="op">)</span>,</span>
+<span>                                   abundance_col <span class="op">=</span> <span class="st">"cover_pct"</span><span class="op">)</span></span>
+<span><span class="va">cover</span><span class="op">$</span><span class="va">taxonomic_diversity</span></span>
+<span><span class="co">#&gt;   plot_id species_richness shannon_diversity simpson_diversity pielou_evenness</span></span>
+<span><span class="co">#&gt; 1  plot_A                4         1.3620209         0.7378512       0.9824904</span></span>
+<span><span class="co">#&gt; 2  plot_B                3         0.5608217         0.2907986       0.5104820</span></span>
+<span><span class="co">#&gt; 3  plot_C                2         0.5004024         0.3200000       0.7219281</span></span>
+<span><span class="co">#&gt;   exp_shannon inv_simpson</span></span>
+<span><span class="co">#&gt; 1    3.904075    3.814628</span></span>
+<span><span class="co">#&gt; 2    1.752112    1.410037</span></span>
+<span><span class="co">#&gt; 3    1.649385    1.470588</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="worked-example">Worked example<a class="anchor" aria-label="anchor" href="#worked-example"></a>
-</h2>
-<p>For a full walkthrough — multiband-image construction, AOI extraction, spectral metrics, AusPlots point-intercept diversity, and how the two halves fit together — see the package vignette:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"saltbush"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="id_6-bring-them-together">6. Bring them together<a class="anchor" aria-label="anchor" href="#id_6-bring-them-together"></a>
+</h3>
+<p>Join spectral and field diversity by site (or by AOI, if your field plots match your AOIs):</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">spectral</span>, <span class="va">field</span><span class="op">$</span><span class="va">taxonomic_diversity</span>,</span>
+<span>      by.x <span class="op">=</span> <span class="st">"site"</span>, by.y <span class="op">=</span> <span class="st">"site_location_name"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         site aoi_id        CV           SV          CHV image_type</span></span>
+<span><span class="co">#&gt; 1 NSABHC0009      1 0.2502227 0.0008364104 1.544037e-10     masked</span></span>
+<span><span class="co">#&gt; 2 NSABHC0009      1 0.2502227 0.0008364104 1.544037e-10     masked</span></span>
+<span><span class="co">#&gt;        site_unique species_richness shannon_diversity simpson_diversity</span></span>
+<span><span class="co">#&gt; 1 NSABHC0009-58026               52          3.056908         0.9203249</span></span>
+<span><span class="co">#&gt; 2 NSABHC0009-53604               38          2.843074         0.9043699</span></span>
+<span><span class="co">#&gt;   pielou_evenness exp_shannon inv_simpson</span></span>
+<span><span class="co">#&gt; 1       0.7736571    21.26171    12.55097</span></span>
+<span><span class="co">#&gt; 2       0.7815826    17.16846    10.45696</span></span></code></pre></div>
+<p>One site only shows the mechanics. Testing the relationship needs many sites, and the bundled images are too small for that. For a complete real-world analysis built on saltbush, see <a href="https://github.com/adelegem/multispectral_drone_svh" class="external-link">adelegem/multispectral_drone_svh</a>.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="diversity-metrics-computed">Diversity metrics computed<a class="anchor" aria-label="anchor" href="#diversity-metrics-computed"></a>
 </h2>
 <p><strong>Spectral diversity</strong> (from drone imagery):</p>
 <ul>
-<li>coefficient of variance (CV)</li>
+<li>coefficient of variation (CV)</li>
 <li>spectral variance (SV)</li>
 <li>convex hull volume (CHV)</li>
 </ul>
-<p><strong>Taxonomic diversity</strong> (from point-intercept survey data):</p>
+<p><strong>Taxonomic diversity</strong> (from survey data):</p>
 <ul>
 <li>species richness</li>
 <li>Shannon’s diversity index</li>
@@ -128,11 +217,6 @@
 <li>exponential Shannon’s index</li>
 <li>inverse Simpson’s index</li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="comparing-from-the-sky-and-from-the-ground-diversity">Comparing from-the-sky and from-the-ground diversity<a class="anchor" aria-label="anchor" href="#comparing-from-the-sky-and-from-the-ground-diversity"></a>
-</h2>
-<p>High-resolution drone images are very large, and the example data included with the package on GitHub are too small to do this meaningfully. We recommend running the workflow locally on your own imagery following the steps in <code><a href="articles/saltbush.html">vignette("saltbush")</a></code>. For a complete, real-world analysis built on <code>saltbush</code>, see the companion repository <a href="https://github.com/adelegem/multispectral_drone_svh" class="external-link">adelegem/multispectral_drone_svh</a>.</p>
 </div>
 </div>
 
@@ -188,7 +272,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

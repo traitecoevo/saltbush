@@ -1,5 +1,42 @@
 # Changelog
 
+## saltbush 0.2.0
+
+- [`calculate_spectral_metrics()`](https://traitecoevo.github.io/saltbush/reference/calculate_spectral_metrics.md)
+  now calculates CV, SV and CHV directly from rasters and AOI files,
+  replacing `extract_pixel_values()`, which is removed. Results match
+  the previous pipeline (see `tests/testthat/test-reference_metrics.R`).
+- AOI files can be GeoJSON or GeoPackage as well as shapefiles. AOIs in
+  a different coordinate system from the imagery are reprojected, with a
+  message.
+- AOI files can hold several polygons (one row of metrics each). An AOI
+  outside the image, or with too few pixels for a convex hull, now gives
+  NA metrics and a warning instead of stopping the run; duplicate
+  `aoi_id_col` values warn.
+- Rarefaction now checks `min_points` against each AOI rather than the
+  whole site, uses the same subsample for CV and CHV in each draw, and
+  sets `seed` once per call so sites get independent draws.
+- [`find_optimum_thresholds()`](https://traitecoevo.github.io/saltbush/reference/find_optimum_thresholds.md)
+  now handles several `class_value`s correctly.
+- [`create_multiband_image()`](https://traitecoevo.github.io/saltbush/reference/create_multiband_image.md)
+  checks that all bands share extent, resolution and CRS before
+  stacking, and lists any that differ.
+- [`create_multiband_image()`](https://traitecoevo.github.io/saltbush/reference/create_multiband_image.md)
+  matches band files whose names end with the band name, so Pix4D output
+  (e.g. `NSABHC0009_transparent_reflectance_blue.tif`) works without
+  renaming. Other TIFs in the folder are ignored.
+- The data-frame helpers `calculate_cv()`, `calculate_sv()` and
+  `calculate_chv_nopca()` are removed; use
+  [`calculate_spectral_metrics()`](https://traitecoevo.github.io/saltbush/reference/calculate_spectral_metrics.md).
+- [`calculate_field_diversity()`](https://traitecoevo.github.io/saltbush/reference/calculate_field_diversity.md):
+  `group_by_cols` is renamed `aoi_cols`; the old name still works with a
+  deprecation warning.
+- [`calculate_field_diversity()`](https://traitecoevo.github.io/saltbush/reference/calculate_field_diversity.md)
+  gains `species_col`, `exclude` and `abundance_col`, so it works on
+  survey data beyond AusPlots point-intercepts (e.g. cover or count
+  data). Defaults reproduce the previous results exactly.
+- `data.table` and `stringr` are no longer dependencies.
+
 ## saltbush 0.1.0
 
 - Initial release.
@@ -9,15 +46,12 @@
   mask non-vegetation pixels with NDVI/NIR thresholds
   ([`create_masked_raster()`](https://traitecoevo.github.io/saltbush/reference/create_masked_raster.md),
   [`find_optimum_thresholds()`](https://traitecoevo.github.io/saltbush/reference/find_optimum_thresholds.md)),
-  extract per-AOI pixel values
-  ([`extract_pixel_values()`](https://traitecoevo.github.io/saltbush/reference/extract_pixel_values.md)),
-  and compute spectral metrics — coefficient of variation, spectral
-  variance, and convex hull volume
-  ([`calculate_spectral_metrics()`](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md)
-  and the underlying
-  [`calculate_cv()`](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md),
-  [`calculate_sv()`](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md),
-  [`calculate_chv_nopca()`](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md)).
+  extract per-AOI pixel values (`extract_pixel_values()`), and compute
+  spectral metrics — coefficient of variation, spectral variance, and
+  convex hull volume
+  ([`calculate_spectral_metrics()`](https://traitecoevo.github.io/saltbush/reference/calculate_spectral_metrics.md)
+  and the underlying `calculate_cv()`, `calculate_sv()`,
+  `calculate_chv_nopca()`).
 - From-the-ground taxonomic diversity from AusPlots point-intercept
   surveys
   ([`calculate_field_diversity()`](https://traitecoevo.github.io/saltbush/reference/calculate_field_diversity.md)):

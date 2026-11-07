@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">saltbush</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,13 +87,14 @@ over Fowlers Gap, NSW (<code>blue</code>, <code>green</code>,
 <span>  output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  return_raster <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p><img src="vignette-build-multiband-1.png" class="r-plt" alt="" width="90%"></p>
 </div>
 <div class="section level2">
-<h2 id="extract-pixel-values-inside-areas-of-interest">2. Extract pixel values inside areas of interest<a class="anchor" aria-label="anchor" href="#extract-pixel-values-inside-areas-of-interest"></a>
+<h2 id="choose-areas-of-interest">2. Choose areas of interest<a class="anchor" aria-label="anchor" href="#choose-areas-of-interest"></a>
 </h2>
-<p>We then combine the multiband image with an area-of-interest
-shapefile. The package ships a small aggregated raster and matching AOI
-for demonstration:</p>
+<p>We then pair the multiband image with an area-of-interest (AOI) file.
+The package ships a small aggregated raster and matching AOI for
+demonstration:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">raster_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example"</span>, package <span class="op">=</span> <span class="st">"saltbush"</span><span class="op">)</span>,</span>
@@ -103,26 +104,17 @@ for demonstration:</p>
 <span><span class="va">aoi_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/aoi"</span>, package <span class="op">=</span> <span class="st">"saltbush"</span><span class="op">)</span>,</span>
 <span>  pattern <span class="op">=</span> <span class="st">"NSABHC0009_aoi\\.shp$"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">pixel_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_pixel_values.html">extract_pixel_values</a></span><span class="op">(</span></span>
-<span>  <span class="va">raster_files</span>, <span class="va">aoi_files</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>, <span class="st">"red_edge"</span>, <span class="st">"nir"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pixel_values</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    site_name       blue      green        red   red_edge        nir aoi_id</span></span>
-<span><span class="co">#&gt; 1 NSABHC0009 0.05511368 0.05600401 0.07633078 0.06699516 0.08160288      1</span></span>
-<span><span class="co">#&gt; 2 NSABHC0009 0.06224341 0.06684195 0.09760323 0.08534835 0.10119278      1</span></span>
-<span><span class="co">#&gt; 3 NSABHC0009 0.05985198 0.06332091 0.08991133 0.07894940 0.09560681      1</span></span>
-<span><span class="co">#&gt; 4 NSABHC0009 0.05927841 0.06296582 0.08709560 0.07646009 0.09347322      1</span></span>
-<span><span class="co">#&gt; 5 NSABHC0009 0.04356062 0.04587397 0.06008397 0.05540059 0.07216450      1</span></span>
-<span><span class="co">#&gt; 6 NSABHC0009 0.03945594 0.03824322 0.04755034 0.04384791 0.05770193      1</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
+<p>AOI files can be shapefiles, GeoJSON or GeoPackage. If an AOI’s
+coordinate system differs from the imagery’s, it is reprojected to
+match.</p>
 </div>
 <div class="section level2">
 <h2 id="calculate-spectral-metrics">3. Calculate spectral metrics<a class="anchor" aria-label="anchor" href="#calculate-spectral-metrics"></a>
 </h2>
-<p><code><a href="../reference/calculate_cv.html">calculate_spectral_metrics()</a></code> returns three metrics per
-AOI:</p>
+<p><code><a href="../reference/calculate_spectral_metrics.html">calculate_spectral_metrics()</a></code> works directly from the
+rasters, cropping and masking them to each AOI, and returns three
+metrics per AOI:</p>
 <ul>
 <li>
 <strong>CV</strong> — coefficient of variation</li>
@@ -132,16 +124,15 @@ AOI:</p>
 <strong>CHV</strong> — convex hull volume</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_cv.html">calculate_spectral_metrics</a></span><span class="op">(</span></span>
-<span>  <span class="va">pixel_values</span>,</span>
+<code class="sourceCode R"><span><span class="va">metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_spectral_metrics.html">calculate_spectral_metrics</a></span><span class="op">(</span></span>
+<span>  <span class="va">raster_files</span>, <span class="va">aoi_files</span>,</span>
 <span>  wavelengths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>, <span class="st">"red_edge"</span>, <span class="st">"nir"</span><span class="op">)</span>,</span>
 <span>  masked <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  rarefaction <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">metrics</span></span>
-<span><span class="co">#&gt;          site aoi_id       CV          SV          CHV image_type</span></span>
-<span><span class="co">#&gt;        &lt;char&gt;  &lt;num&gt;    &lt;num&gt;       &lt;num&gt;        &lt;num&gt;     &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked</span></span></code></pre></div>
+<span><span class="co">#&gt;         site aoi_id       CV          SV          CHV image_type</span></span>
+<span><span class="co">#&gt; 1 NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="compute-on-the-ground-taxonomic-diversity">4. Compute on-the-ground taxonomic diversity<a class="anchor" aria-label="anchor" href="#compute-on-the-ground-taxonomic-diversity"></a>
@@ -191,7 +182,7 @@ repository <a href="https://github.com/adelegem/multispectral_drone_svh" class="
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -27,9 +27,11 @@ multiband <- create_multiband_image(
 )
 ```
 
-## 2. Extract pixel values inside areas of interest
+![](vignette-build-multiband-1.png)
 
-We then combine the multiband image with an area-of-interest shapefile.
+## 2. Choose areas of interest
+
+We then pair the multiband image with an area-of-interest (AOI) file.
 The package ships a small aggregated raster and matching AOI for
 demonstration:
 
@@ -44,25 +46,17 @@ aoi_files <- list.files(
   system.file("extdata/aoi", package = "saltbush"),
   pattern = "NSABHC0009_aoi\\.shp$", full.names = TRUE
 )
-
-pixel_values <- extract_pixel_values(
-  raster_files, aoi_files,
-  c("blue", "green", "red", "red_edge", "nir")
-)
-head(pixel_values)
-#>    site_name       blue      green        red   red_edge        nir aoi_id
-#> 1 NSABHC0009 0.05511368 0.05600401 0.07633078 0.06699516 0.08160288      1
-#> 2 NSABHC0009 0.06224341 0.06684195 0.09760323 0.08534835 0.10119278      1
-#> 3 NSABHC0009 0.05985198 0.06332091 0.08991133 0.07894940 0.09560681      1
-#> 4 NSABHC0009 0.05927841 0.06296582 0.08709560 0.07646009 0.09347322      1
-#> 5 NSABHC0009 0.04356062 0.04587397 0.06008397 0.05540059 0.07216450      1
-#> 6 NSABHC0009 0.03945594 0.03824322 0.04755034 0.04384791 0.05770193      1
 ```
+
+AOI files can be shapefiles, GeoJSON or GeoPackage. If an AOI’s
+coordinate system differs from the imagery’s, it is reprojected to
+match.
 
 ## 3. Calculate spectral metrics
 
-[`calculate_spectral_metrics()`](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md)
-returns three metrics per AOI:
+[`calculate_spectral_metrics()`](https://traitecoevo.github.io/saltbush/reference/calculate_spectral_metrics.md)
+works directly from the rasters, cropping and masking them to each AOI,
+and returns three metrics per AOI:
 
 - **CV** — coefficient of variation
 - **SV** — spectral variance
@@ -71,15 +65,14 @@ returns three metrics per AOI:
 ``` r
 
 metrics <- calculate_spectral_metrics(
-  pixel_values,
+  raster_files, aoi_files,
   wavelengths = c("blue", "green", "red", "red_edge", "nir"),
   masked = FALSE,
   rarefaction = FALSE
 )
 metrics
-#>          site aoi_id       CV          SV          CHV image_type
-#>        <char>  <num>    <num>       <num>        <num>     <char>
-#> 1: NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked
+#>         site aoi_id       CV          SV          CHV image_type
+#> 1 NSABHC0009      1 0.334488 0.001761305 3.347609e-10   unmasked
 ```
 
 ## 4. Compute on-the-ground taxonomic diversity

@@ -1,40 +1,71 @@
 # Calculate field diversity
 
-Takes ausplot survey data and calculates field diversity at the grouping
-specified by `group_by_cols`. The default groups by `site_unique` (one
-row per survey visit, matching the prior behaviour); passing
-`c("site_unique", "subplot_id")` (or any other vector of column names in
-`survey_data`) computes diversity at that finer granularity.
+Takes species survey data and calculates field diversity at the grouping
+specified by `aoi_cols`. The defaults suit AusPlots point-intercept data
+from ausplotsR: grouping by `site_unique` (one row per survey visit),
+species in `standardised_name`, dead material excluded, and each row
+counted as one hit. Other survey data can be used by changing
+`species_col`, `exclude` and `abundance_col`.
 
 ## Usage
 
 ``` r
-calculate_field_diversity(survey_data, group_by_cols = "site_unique")
+calculate_field_diversity(
+  survey_data,
+  aoi_cols = "site_unique",
+  species_col = "standardised_name",
+  exclude = c("Dead grass", "Dead shrub"),
+  abundance_col = NULL,
+  group_by_cols = NULL
+)
 ```
 
 ## Arguments
 
 - survey_data:
 
-  a df obtained from ausplotsR package with survey data for appropriate
-  sites
+  a data frame of survey records, e.g. AusPlots point-intercept data
+  from ausplotsR, with one row per record.
+
+- aoi_cols:
+
+  character vector of column names in `survey_data` that identify each
+  area of interest (AOI), i.e. the unit diversity is calculated for.
+  Defaults to `"site_unique"`, which gives one row per survey visit.
+  Pass e.g. `c("site_unique", "subplot_id")` to compute diversity per
+  subplot within each site, to match subplot AOIs in
+  [`calculate_spectral_metrics()`](https://traitecoevo.github.io/saltbush/reference/calculate_spectral_metrics.md).
+  (Previously `group_by_cols`.)
+
+- species_col:
+
+  name of the column holding species names. Defaults to
+  `"standardised_name"` (ausplotsR).
+
+- exclude:
+
+  values of `species_col` to leave out, such as dead material. Defaults
+  to `c("Dead grass", "Dead shrub")`; use `NULL` to keep everything.
+
+- abundance_col:
+
+  optional name of a numeric column holding the abundance of each record
+  (e.g. counts or percent cover). When `NULL` (default), each row counts
+  as one hit, as in point-intercept data. Records with zero abundance
+  are treated as absent; negative or missing values are an error.
 
 - group_by_cols:
 
-  character vector of column names in `survey_data` to group by.
-  Defaults to `"site_unique"`, which gives one row per survey visit.
-  Pass e.g. `c("site_unique", "subplot_id")` to compute diversity per
-  subplot within each site.
+  deprecated; use `aoi_cols`.
 
 ## Value
 
 a list, containing 'taxonomic_diversity' - values of species richness,
 shannon's index, simpsons index, exponential shannon's, inverse simpson,
-pielou's evenness, with one row per unique combination of
-`group_by_cols`, and 'community_matrices' - a list of per-group
-community matrices keyed by the grouping values; each matrix has the
-`group_by_cols` as leading id columns followed by one column per
-species.
+pielou's evenness, with one row per unique combination of `aoi_cols`,
+and 'community_matrices' - a list of per-group community matrices keyed
+by the grouping values; each matrix has the `aoi_cols` as leading id
+columns followed by one column per species.
 
 ## Examples
 
@@ -52,7 +83,7 @@ site_div$taxonomic_diversity
 # Subplot-level diversity within each visit:
 subplot_div <- calculate_field_diversity(
   synthetic_survey,
-  group_by_cols = c("site_unique", "subplot_id")
+  aoi_cols = c("site_unique", "subplot_id")
 )
 subplot_div$taxonomic_diversity
 #>   site_unique subplot_id site_location_name species_richness shannon_diversity

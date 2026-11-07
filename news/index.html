@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">saltbush</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,13 +34,35 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="saltbush-020">saltbush 0.2.0<a class="anchor" aria-label="anchor" href="#saltbush-020"></a></h2>
+<ul><li>
+<code><a href="../reference/calculate_spectral_metrics.html">calculate_spectral_metrics()</a></code> now calculates CV, SV and CHV directly from rasters and AOI files, replacing <code>extract_pixel_values()</code>, which is removed. Results match the previous pipeline (see <code>tests/testthat/test-reference_metrics.R</code>).</li>
+<li>AOI files can be GeoJSON or GeoPackage as well as shapefiles. AOIs in a different coordinate system from the imagery are reprojected, with a message.</li>
+<li>AOI files can hold several polygons (one row of metrics each). An AOI outside the image, or with too few pixels for a convex hull, now gives NA metrics and a warning instead of stopping the run; duplicate <code>aoi_id_col</code> values warn.</li>
+<li>Rarefaction now checks <code>min_points</code> against each AOI rather than the whole site, uses the same subsample for CV and CHV in each draw, and sets <code>seed</code> once per call so sites get independent draws.</li>
+<li>
+<code><a href="../reference/find_optimum_thresholds.html">find_optimum_thresholds()</a></code> now handles several <code>class_value</code>s correctly.</li>
+<li>
+<code><a href="../reference/create_multiband_image.html">create_multiband_image()</a></code> checks that all bands share extent, resolution and CRS before stacking, and lists any that differ.</li>
+<li>
+<code><a href="../reference/create_multiband_image.html">create_multiband_image()</a></code> matches band files whose names end with the band name, so Pix4D output (e.g. <code>NSABHC0009_transparent_reflectance_blue.tif</code>) works without renaming. Other TIFs in the folder are ignored.</li>
+<li>The data-frame helpers <code>calculate_cv()</code>, <code>calculate_sv()</code> and <code>calculate_chv_nopca()</code> are removed; use <code><a href="../reference/calculate_spectral_metrics.html">calculate_spectral_metrics()</a></code>.</li>
+<li>
+<code><a href="../reference/calculate_field_diversity.html">calculate_field_diversity()</a></code>: <code>group_by_cols</code> is renamed <code>aoi_cols</code>; the old name still works with a deprecation warning.</li>
+<li>
+<code><a href="../reference/calculate_field_diversity.html">calculate_field_diversity()</a></code> gains <code>species_col</code>, <code>exclude</code> and <code>abundance_col</code>, so it works on survey data beyond AusPlots point-intercepts (e.g. cover or count data). Defaults reproduce the previous results exactly.</li>
+<li>
+<code>data.table</code> and <code>stringr</code> are no longer dependencies.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="saltbush-010">saltbush 0.1.0<a class="anchor" aria-label="anchor" href="#saltbush-010"></a></h2>
 <ul><li>Initial release.</li>
-<li>From-the-sky spectral diversity: build multiband images from single-band drone TIFs (<code><a href="../reference/create_multiband_image.html">create_multiband_image()</a></code>), mask non-vegetation pixels with NDVI/NIR thresholds (<code><a href="../reference/create_masked_raster.html">create_masked_raster()</a></code>, <code><a href="../reference/find_optimum_thresholds.html">find_optimum_thresholds()</a></code>), extract per-AOI pixel values (<code><a href="../reference/extract_pixel_values.html">extract_pixel_values()</a></code>), and compute spectral metrics — coefficient of variation, spectral variance, and convex hull volume (<code><a href="../reference/calculate_cv.html">calculate_spectral_metrics()</a></code> and the underlying <code><a href="../reference/calculate_cv.html">calculate_cv()</a></code>, <code><a href="../reference/calculate_cv.html">calculate_sv()</a></code>, <code><a href="../reference/calculate_cv.html">calculate_chv_nopca()</a></code>).</li>
+<li>From-the-sky spectral diversity: build multiband images from single-band drone TIFs (<code><a href="../reference/create_multiband_image.html">create_multiband_image()</a></code>), mask non-vegetation pixels with NDVI/NIR thresholds (<code><a href="../reference/create_masked_raster.html">create_masked_raster()</a></code>, <code><a href="../reference/find_optimum_thresholds.html">find_optimum_thresholds()</a></code>), extract per-AOI pixel values (<code>extract_pixel_values()</code>), and compute spectral metrics — coefficient of variation, spectral variance, and convex hull volume (<code><a href="../reference/calculate_spectral_metrics.html">calculate_spectral_metrics()</a></code> and the underlying <code>calculate_cv()</code>, <code>calculate_sv()</code>, <code>calculate_chv_nopca()</code>).</li>
 <li>From-the-ground taxonomic diversity from AusPlots point-intercept surveys (<code><a href="../reference/calculate_field_diversity.html">calculate_field_diversity()</a></code>): species richness, Shannon, Simpson, Pielou’s evenness, exponential Shannon, and inverse Simpson.</li>
 <li>Bundled example data (<code>synthetic_survey</code>, <code>ausplots_NSABHC0009</code>, and example drone rasters) so examples, tests, and the vignette run offline.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
@@ -48,7 +70,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

@@ -11,15 +11,13 @@ pixel values from drone imagery.
   : Create masked raster from multiband image
 - [`find_optimum_thresholds()`](https://traitecoevo.github.io/saltbush/reference/find_optimum_thresholds.md)
   : Find optimum thresholds
-- [`extract_pixel_values()`](https://traitecoevo.github.io/saltbush/reference/extract_pixel_values.md)
-  : Extract pixel values
 
 ## Spectral diversity
 
 Calculate coefficient of variation (CV), spectral variance (SV), and
-convex hull volume (CHV) from extracted pixel values.
+convex hull volume (CHV) directly from drone imagery.
 
-- [`calculate_cv()`](https://traitecoevo.github.io/saltbush/reference/calculate_cv.md)
+- [`calculate_spectral_metrics()`](https://traitecoevo.github.io/saltbush/reference/calculate_spectral_metrics.md)
   : Calculate spectral metrics
 
 ## On-the-ground diversity
@@ -39,3 +37,5 @@ vignette.
   : Synthetic point-intercept survey data
 - [`ausplots_NSABHC0009`](https://traitecoevo.github.io/saltbush/reference/ausplots_NSABHC0009.md)
   : Cached AusPlots point-intercept data for site NSABHC0009
+- [`cover_survey`](https://traitecoevo.github.io/saltbush/reference/cover_survey.md)
+  : Synthetic percent-cover survey data
